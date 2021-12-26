@@ -44,8 +44,8 @@ class FirebaseService {
         webRecaptchaSiteKey: '6LeVDcodAAAAAFLXdyTIcFjcEGN-Gjl2nWrU08q5',
       );
     } catch (e) {
+      // This will throw after a hot reload
       _logger.e(e);
-      // App Check will throw after a hot reload
     }
   }
 }

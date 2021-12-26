@@ -49,7 +49,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '602612349235',
     projectId: 'pub-stats-collector',
     authDomain: 'pub-stats-collector.firebaseapp.com',
-    databaseURL: 'https://pub-stats-collector-default-rtdb.firebaseio.com',
+    databaseURL:
+        'https://pub-stats-collector-default-rtdb.firebaseio.com?ns=pub-stats-collector',
     storageBucket: 'pub-stats-collector.appspot.com',
     measurementId: 'G-SVB0V0S48E',
   );

@@ -10,7 +10,5 @@ void main() async {
   GetIt.I.registerSingleton(Logger());
   await FirebaseService.create();
 
-  final score = 
-
   runApp(const PubStatsApp());
 }

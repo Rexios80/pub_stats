@@ -1,24 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:flutter/services.dart';
 
 class SearchBar extends StatelessWidget {
-  const SearchBar({Key? key}) : super(key: key);
+  final _textController = TextEditingController();
+
+  SearchBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FloatingSearchBar(
-      isScrollControlled: true,
-      builder: (context, transition) => ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Material(
-          color: Colors.white,
-          elevation: 4.0,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: Colors.accents.map((color) {
-              return Container(height: 112, color: color);
-            }).toList(),
-          ),
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(100),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {},
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: TextField(
+                controller: _textController,
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Enter a package name',
+                ),
+                inputFormatters: [
+                  // Don't allow spaces
+                  FilteringTextInputFormatter.deny(' '),
+                ],
+                onSubmitted: (value) {},
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -11,10 +11,11 @@ class PubStatsApp extends StatelessWidget {
       navigatorKey:
           FastNav.init(FastOverlays.init(GlobalKey<NavigatorState>())),
       title: 'pubstats.dev',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      // TODO: Custom theme
+      themeMode: ThemeMode.dark,
+      darkTheme: ThemeData.dark(),
       home: const Home(),
+      // TODO: Icons
     );
   }
 }

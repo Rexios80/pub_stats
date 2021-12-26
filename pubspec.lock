@@ -57,6 +57,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
+  fast_extensions:
+    dependency: transitive
+    description:
+      name: fast_extensions
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1"
   fast_nav:
     dependency: transitive
     description:
@@ -84,7 +91,7 @@ packages:
       name: fast_ui
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.4"
+    version: "0.0.5"
   firebase:
     dependency: transitive
     description:
@@ -310,13 +317,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.11"
-  material_floating_search_bar:
-    dependency: "direct main"
-    description:
-      name: material_floating_search_bar
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.6"
   meta:
     dependency: transitive
     description:
@@ -346,7 +346,7 @@ packages:
     source: hosted
     version: "2.0.2"
   pub_api_client:
-    dependency: "direct main"
+    dependency: transitive
     description:
       path: "."
       ref: "9b994209070472159a4f401fea5d803b2164264b"
@@ -396,6 +396,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  sliver_tools:
+    dependency: "direct main"
+    description:
+      name: sliver_tools
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.5"
   source_span:
     dependency: transitive
     description:

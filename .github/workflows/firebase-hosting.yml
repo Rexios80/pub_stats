@@ -7,10 +7,6 @@ name: Deploy to Firebase Hosting on merge
     branches:
       - master
 
-defaults:
-  run:
-    working-directory: pub_stats
-
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest

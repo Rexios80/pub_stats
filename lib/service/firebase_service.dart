@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:pub_stats/firebase_options.dart';
-// import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 
@@ -15,7 +15,7 @@ class FirebaseService {
     await _activateAppCheck();
 
     // Initialize services
-    // FirebaseAnalytics.instance;
+    FirebaseAnalytics.instance;
     FirebasePerformance.instance;
 
     return FirebaseService._();

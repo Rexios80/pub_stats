@@ -11,6 +11,16 @@ dependencies:
 
   fast_ui: ^0.0.4
   get_it: ^7.2.0
+  material_floating_search_bar: ^0.3.6
+  logger: ^1.1.0
+  pub_stats_core:
+    git:
+      url: https://github.com/Rexios80/pub_stats_core
+      ref: ad79857dd96ebaa7babcb1738dfc02010466f178
+  pub_api_client:
+    git:
+      url: https://github.com/Rexios80/pub_api_client
+      ref: 9b994209070472159a4f401fea5d803b2164264b
 
 dev_dependencies:
   flutter_test:

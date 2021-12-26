@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:pub_stats/view/widget/search_bar.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -6,11 +8,10 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-      ),
-      body: const Center(
-        child: Text('Home'),
+      body: Stack(
+        children: [
+          SearchBar(),
+        ],
       ),
     );
   }

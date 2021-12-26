@@ -1,0 +1,12 @@
+{
+  "rules": {
+    "stats": {
+      "$package": {
+        ".read": "auth != null"
+      }
+    },
+    "global_stats": {
+      ".read": "auth != null"
+    }
+  }
+}

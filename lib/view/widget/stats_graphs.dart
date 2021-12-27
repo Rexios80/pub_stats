@@ -1,15 +1,19 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:pub_stats/constant/app_theme.dart';
+import 'package:pub_stats/constant/constants.dart';
 import 'package:pub_stats/format/formatting.dart';
 import 'package:pub_stats/model/package_score_snapshot.dart';
 import 'package:fast_ui/fast_ui.dart';
 import 'package:collection/collection.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class StatsCharts extends StatelessWidget {
+  final String package;
   final List<PackageScoreSnapshot> stats;
 
-  const StatsCharts({Key? key, required this.stats}) : super(key: key);
+  const StatsCharts({Key? key, required this.package, required this.stats})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +23,15 @@ class StatsCharts extends StatelessWidget {
 
     return Column(
       children: [
+        InkWell(
+          borderRadius: AppTheme.pillRadius,
+          onTap: () => launch(Constants.pubPackageBaseUrl + package),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Text(package, style: context.textTheme.headline6),
+          ),
+        ),
+        const SizedBox(height: 32),
         if (AppTheme.isWide(context))
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

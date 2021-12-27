@@ -20,7 +20,7 @@ dependencies:
   pub_stats_core:
     git:
       url: https://github.com/Rexios80/pub_stats_core
-      ref: ad79857dd96ebaa7babcb1738dfc02010466f178
+      ref: 44419e997d8c74e09f5f09684ee8ffbed9f1fcf5
 
 dev_dependencies:
   flutter_test:

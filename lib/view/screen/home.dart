@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:pub_stats/controller/data_controller.dart';
 import 'package:pub_stats/view/widget/footer.dart';
 import 'package:pub_stats/view/widget/header.dart';
 import 'package:pub_stats/view/widget/search_bar.dart';
-import 'package:fast_ui/fast_ui.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 class Home extends StatelessWidget {
-  final _controller = GetIt.I<DataController>();
-
-  Home({Key? key}) : super(key: key);
+  const Home({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,15 +29,13 @@ class Home extends StatelessWidget {
                   ),
                 ),
               ),
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
+              Column(
+                children: [
+                  Padding(
                     padding: const EdgeInsets.all(16),
                     child: Footer(),
                   ),
-                ),
+                ],
               ),
             ],
           ),

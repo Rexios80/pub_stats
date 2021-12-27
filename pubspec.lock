@@ -379,8 +379,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: ad79857dd96ebaa7babcb1738dfc02010466f178
-      resolved-ref: ad79857dd96ebaa7babcb1738dfc02010466f178
+      ref: "44419e997d8c74e09f5f09684ee8ffbed9f1fcf5"
+      resolved-ref: "44419e997d8c74e09f5f09684ee8ffbed9f1fcf5"
       url: "https://github.com/Rexios80/pub_stats_core"
     source: git
     version: "1.0.0"

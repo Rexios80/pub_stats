@@ -43,8 +43,9 @@ class Home extends StatelessWidget {
                       child: StatsView(),
                     ),
                     const Spacer(),
+                    const SizedBox(height: 40),
                     const Padding(
-                      padding: EdgeInsets.all(16),
+                      padding: EdgeInsets.only(bottom: 16),
                       child: Footer(),
                     ),
                   ],

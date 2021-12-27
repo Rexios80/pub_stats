@@ -5,6 +5,8 @@ import 'package:pub_stats_core/pub_stats_core.dart';
 import 'package:fast_ui/fast_ui.dart';
 
 class GlobalStatsView extends StatelessWidget {
+  static const _constraints = BoxConstraints(maxWidth: 250);
+
   final GlobalStats stats;
 
   const GlobalStatsView({
@@ -37,7 +39,7 @@ class GlobalStatsView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            constraints: const BoxConstraints(maxWidth: 300),
+            constraints: _constraints,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -47,7 +49,7 @@ class GlobalStatsView extends StatelessWidget {
             ),
           ),
           Container(
-            constraints: const BoxConstraints(maxWidth: 300),
+            constraints: _constraints,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -59,9 +61,12 @@ class GlobalStatsView extends StatelessWidget {
         ],
       );
     } else {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: statItems,
+      return Container(
+        constraints: _constraints,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: statItems,
+        ),
       );
     }
   }

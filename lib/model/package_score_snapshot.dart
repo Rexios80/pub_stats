@@ -22,4 +22,9 @@ class PackageScoreSnapshot {
       popularityScore: score.p,
     );
   }
+
+  @override
+  String toString() {
+    return 'PackageScoreSnapshot{captureTimestamp: $captureTimestamp, likeCount: $likeCount, popularityScore: $popularityScore}';
+  }
 }

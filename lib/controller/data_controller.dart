@@ -23,8 +23,8 @@ class DataController {
   }
 
   void fetchStats(String package) async {
-    submittedPackageName.value = package;
     loading.value = true;
+    submittedPackageName.value = package;
     final List<PackageScoreSnapshot> stats;
     try {
       stats = await _database.getScoreSnapshots(package);
@@ -35,8 +35,18 @@ class DataController {
       );
       return;
     }
+
+    loading.value = false;
+
+    if (stats.isEmpty) {
+      // If there are no stats for the submitted package, don't update the view
+      FastOverlays.showSnackBar(
+        SnackBar(content: Text('No stats for $package')),
+      );
+      return;
+    }
+
     loadedStats.clear();
     loadedStats.addAll(stats);
-    loading.value = false;
   }
 }

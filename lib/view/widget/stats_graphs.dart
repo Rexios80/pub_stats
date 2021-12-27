@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:pub_stats/model/package_score_snapshot.dart';
 
 class StatsGraphs extends StatelessWidget {
-  const StatsGraphs({Key? key}) : super(key: key);
+  final List<PackageScoreSnapshot> stats;
+
+  const StatsGraphs({Key? key, required this.stats}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return Text(stats.toString());
   }
-  
 }

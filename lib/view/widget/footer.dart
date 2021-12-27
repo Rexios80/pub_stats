@@ -37,6 +37,7 @@ class Footer extends StatelessWidget {
             ),
             const FooterTextLink(
               label: 'Licenses',
+              // TODO: Customize the license page
               onTap: FastOverlays.showLicensePage,
             ),
           ],

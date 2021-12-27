@@ -17,22 +17,30 @@ class StatsCharts extends StatelessWidget {
     final popularityScoreChart =
         PopularityScoreChart(spots: _createPopularityScoreSpots());
 
-    if (AppTheme.isWide(context)) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          likeCountChart,
-          popularityScoreChart,
-        ],
-      );
-    } else {
-      return Column(
-        children: [
-          likeCountChart,
-          popularityScoreChart,
-        ],
-      );
-    }
+    return Column(
+      children: [
+        if (AppTheme.isWide(context))
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              likeCountChart,
+              popularityScoreChart,
+            ],
+          )
+        else
+          Column(
+            children: [
+              likeCountChart,
+              popularityScoreChart,
+            ],
+          ),
+        const SizedBox(height: 16),
+        Text(
+          'Hover/touch the charts for more information',
+          style: context.textTheme.caption,
+        ),
+      ],
+    );
   }
 
   List<FlSpot> _createLikeCountSpots() {

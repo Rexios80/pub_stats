@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pub_stats/constant/app_theme.dart';
+import 'package:pub_stats/format/formatting.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
+import 'package:fast_ui/fast_ui.dart';
 
 class GlobalStatsView extends StatelessWidget {
   final GlobalStats stats;
@@ -11,7 +14,56 @@ class GlobalStatsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.shrink();
+    final statItems = [
+      GlobalStatItem(
+        stat: stats.mostPopularPackage,
+        label: 'Most popular package',
+      ),
+      GlobalStatItem(
+        stat: stats.mostLikedPackage,
+        label: 'Most liked package',
+      ),
+      GlobalStatItem(
+        stat: Formatting.number(stats.packageCount),
+        label: 'Packages scanned',
+      ),
+      GlobalStatItem(
+        stat: Formatting.timeAgo(stats.lastUpdated),
+        label: 'Last updated',
+      ),
+    ];
+    if (AppTheme.isWide(context)) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            constraints: const BoxConstraints(maxWidth: 300),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                statItems[0],
+                statItems[2],
+              ],
+            ),
+          ),
+          Container(
+            constraints: const BoxConstraints(maxWidth: 300),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                statItems[1],
+                statItems[3],
+              ],
+            ),
+          ),
+        ],
+      );
+    } else {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: statItems,
+      );
+    }
   }
 }
 
@@ -27,6 +79,19 @@ class GlobalStatItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.shrink();
+    return Card(
+      // TODO: Put in theme
+      shape: RoundedRectangleBorder(borderRadius: AppTheme.pillRadius),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Text(stat, style: context.textTheme.headline6),
+            const SizedBox(height: 4),
+            Text(label, style: context.textTheme.caption),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:pub_stats/view/widget/footer.dart';
 import 'package:pub_stats/view/widget/header.dart';
 import 'package:pub_stats/view/widget/search_bar.dart';
+import 'package:pub_stats/view/widget/stats_view.dart';
 import 'package:sliver_tools/sliver_tools.dart';
+import 'package:fast_ui/fast_ui.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -17,8 +19,10 @@ class Home extends StatelessWidget {
               const SizedBox(height: 100),
               const Header(),
               const SizedBox(height: 20),
-              SliverPinnedHeader(
-                child: Center(
+              SliverAppBar(
+                pinned: true,
+                backgroundColor: context.theme.scaffoldBackgroundColor,
+                title: Center(
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 32,
@@ -29,13 +33,22 @@ class Home extends StatelessWidget {
                   ),
                 ),
               ),
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Footer(),
-                  ),
-                ],
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 40),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: StatsView(),
+                    ),
+                    const Spacer(),
+                    const Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Footer(),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

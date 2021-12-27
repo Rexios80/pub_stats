@@ -49,4 +49,11 @@ class DataController {
     loadedStats.clear();
     loadedStats.addAll(stats);
   }
+
+  /// Reset to show global stats
+  void reset() {
+    loading.value = false;
+    submittedPackageName.value = '';
+    loadedStats.clear();
+  }
 }

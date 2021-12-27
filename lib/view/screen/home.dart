@@ -17,7 +17,7 @@ class Home extends StatelessWidget {
           MultiSliver(
             children: [
               const SizedBox(height: 100),
-              const Header(),
+              Header(),
               const SizedBox(height: 20),
               SliverAppBar(
                 pinned: true,

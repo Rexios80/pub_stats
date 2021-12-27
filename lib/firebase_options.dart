@@ -2,7 +2,7 @@
 // ignore_for_file: lines_longer_than_80_chars
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
-    show defaultTargetPlatform, kIsWeb, TargetPlatform;
+    show TargetPlatform, defaultTargetPlatform, kDebugMode, kIsWeb;
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -49,8 +49,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '602612349235',
     projectId: 'pub-stats-collector',
     authDomain: 'pub-stats-collector.firebaseapp.com',
-    databaseURL:
-        'https://pub-stats-collector-default-rtdb.firebaseio.com?ns=pub-stats-collector',
+    databaseURL: 'https://pub-stats-collector-default-rtdb.firebaseio.com' +
+        (kDebugMode ? '?ns=pub-stats-collector' : ''),
     storageBucket: 'pub-stats-collector.appspot.com',
     measurementId: 'G-SVB0V0S48E',
   );

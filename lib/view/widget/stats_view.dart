@@ -19,7 +19,7 @@ class StatsView extends StatelessWidget {
           // If the user has not submitted a package name and data is not loading
           return GlobalStatsView(stats: _controller.globalStats);
         } else {
-          return StatsGraphs(stats: _controller.loadedStats);
+          return StatsCharts(stats: _controller.loadedStats);
         }
       },
     );

@@ -17,6 +17,7 @@ dependencies:
   get_time_ago: ^1.1.1
   font_awesome_flutter: ^10.0.0-beta
   url_launcher: ^6.0.17
+  fl_chart: ^0.40.6
   pub_stats_core:
     git:
       url: https://github.com/Rexios80/pub_stats_core

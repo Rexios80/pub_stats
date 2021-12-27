@@ -28,16 +28,18 @@ class Footer extends StatelessWidget {
             ),
           ],
         ),
-        InkWell(
-          borderRadius: AppTheme.pillRadius,
-          onTap: () => launch(Links.fastUi),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: Text(
-              'Made with fast_ui',
-              style: context.textTheme.caption,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            FooterTextLink(
+              label: 'Built with fast_ui',
+              onTap: () => launch(Links.fastUi),
             ),
-          ),
+            const FooterTextLink(
+              label: 'Licenses',
+              onTap: FastOverlays.showLicensePage,
+            ),
+          ],
         ),
       ],
     );
@@ -63,6 +65,32 @@ class FooterIconLink extends StatelessWidget {
       onPressed: () => launch(url),
       tooltip: tooltip,
       icon: FaIcon(icon),
+    );
+  }
+}
+
+class FooterTextLink extends StatelessWidget {
+  final String label;
+  final VoidCallback onTap;
+
+  const FooterTextLink({
+    Key? key,
+    required this.label,
+    required this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        child: Text(
+          label,
+          style: context.textTheme.caption,
+        ),
+      ),
+      onTap: onTap,
+      borderRadius: AppTheme.pillRadius,
     );
   }
 }

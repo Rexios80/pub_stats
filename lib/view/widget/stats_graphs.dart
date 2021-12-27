@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:pub_stats/constant/app_theme.dart';
+import 'package:pub_stats/format/formatting.dart';
 import 'package:pub_stats/model/package_score_snapshot.dart';
 import 'package:fast_ui/fast_ui.dart';
 import 'package:collection/collection.dart';
@@ -58,9 +59,16 @@ class StatsCharts extends StatelessWidget {
 }
 
 class BaseStatChart extends StatelessWidget {
+  static final defaultGridData = FlGridData(show: false);
+  static final defaultTitlesData = FlTitlesData(
+    topTitles: SideTitles(showTitles: false),
+    bottomTitles: SideTitles(showTitles: false),
+    rightTitles: SideTitles(showTitles: false),
+  );
+
   final List<FlSpot> spots;
   final String label;
-  final Widget Function(bool singleY) builder;
+  final Widget Function(bool singleY, LineChartBarData barData) builder;
 
   const BaseStatChart({
     Key? key,
@@ -90,12 +98,50 @@ class BaseStatChart extends StatelessWidget {
                 ),
                 const Spacer(),
                 const Text('Not enough data to show chart'),
-              ] else
-                Expanded(child: builder(_singleY())),
+              ] else ...[
+                const SizedBox(height: 24),
+                Expanded(child: builder(_singleY(), _createLineChartBarData())),
+              ]
             ],
           ),
         ),
       ),
+    );
+  }
+
+  static FlBorderData createDefaultBorderData(BuildContext context) {
+    return FlBorderData(
+      border: Border(
+        top: BorderSide.none,
+        bottom: BorderSide(color: context.textTheme.bodyText1!.color!),
+        left: BorderSide(color: context.textTheme.bodyText1!.color!),
+        right: BorderSide.none,
+      ),
+    );
+  }
+
+  static LineTouchData createDefaultLineTouchData(BuildContext context) {
+    return LineTouchData(
+      touchTooltipData: LineTouchTooltipData(
+        getTooltipItems: (spots) => spots.map((e) {
+          final valueString = e.y.toInt().toString();
+          final date = DateTime.fromMillisecondsSinceEpoch(e.x.toInt());
+          final dateString = Formatting.shortDate(date);
+          return LineTooltipItem(
+            '$valueString\n$dateString',
+            context.textTheme.bodyText1!,
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  LineChartBarData _createLineChartBarData() {
+    return LineChartBarData(
+      spots: spots,
+      isCurved: true,
+      preventCurveOverShooting: true,
+      dotData: FlDotData(show: false),
     );
   }
 
@@ -105,7 +151,6 @@ class BaseStatChart extends StatelessWidget {
   }
 }
 
-// TODO: Absract these somehow?
 class LikeCountChart extends StatelessWidget {
   final List<FlSpot> spots;
 
@@ -116,28 +161,7 @@ class LikeCountChart extends StatelessWidget {
     return BaseStatChart(
       spots: spots,
       label: 'Like Count',
-      builder: (_) => LineChart(
-        LineChartData(
-          minY: 0,
-          maxY: 100,
-          lineBarsData: [LineChartBarData(spots: spots)],
-        ),
-      ),
-    );
-  }
-}
-
-class PopularityScoreChart extends StatelessWidget {
-  final List<FlSpot> spots;
-
-  const PopularityScoreChart({Key? key, required this.spots}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BaseStatChart(
-      spots: spots,
-      label: 'Popularity Score',
-      builder: (singleY) {
+      builder: (singleY, barData) {
         // If there is one unique Y value, the min/max Y values must be set manually
         final double? minY;
         final double? maxY;
@@ -153,10 +177,39 @@ class PopularityScoreChart extends StatelessWidget {
           LineChartData(
             minY: minY,
             maxY: maxY,
-            lineBarsData: [LineChartBarData(spots: spots)],
+            lineBarsData: [barData],
+            gridData: BaseStatChart.defaultGridData,
+            borderData: BaseStatChart.createDefaultBorderData(context),
+            titlesData: BaseStatChart.defaultTitlesData,
+            lineTouchData: BaseStatChart.createDefaultLineTouchData(context),
           ),
         );
       },
+    );
+  }
+}
+
+class PopularityScoreChart extends StatelessWidget {
+  final List<FlSpot> spots;
+
+  const PopularityScoreChart({Key? key, required this.spots}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BaseStatChart(
+      spots: spots,
+      label: 'Popularity Score',
+      builder: (singleY, barData) => LineChart(
+        LineChartData(
+          minY: 0,
+          maxY: 100,
+          lineBarsData: [barData],
+          gridData: BaseStatChart.defaultGridData,
+          borderData: BaseStatChart.createDefaultBorderData(context),
+          titlesData: BaseStatChart.defaultTitlesData,
+          lineTouchData: BaseStatChart.createDefaultLineTouchData(context),
+        ),
+      ),
     );
   }
 }

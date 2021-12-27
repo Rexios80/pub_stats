@@ -13,6 +13,10 @@ dependencies:
   get_it: ^7.2.0
   logger: ^1.1.0
   sliver_tools: ^0.2.5
+  intl: ^0.17.0
+  get_time_ago: ^1.1.1
+  font_awesome_flutter: ^10.0.0-beta
+  url_launcher: ^6.0.17
   pub_stats_core:
     git:
       url: https://github.com/Rexios80/pub_stats_core

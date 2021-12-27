@@ -17,13 +17,11 @@ class Footer extends StatelessWidget {
           children: const [
             FooterIconLink(
               url: Links.github,
-              tooltip: 'GitHub',
               icon: FontAwesomeIcons.github,
             ),
             SizedBox(width: 16),
             FooterIconLink(
               url: Links.discord,
-              tooltip: 'Discord',
               icon: FontAwesomeIcons.discord,
             ),
           ],
@@ -49,13 +47,11 @@ class Footer extends StatelessWidget {
 
 class FooterIconLink extends StatelessWidget {
   final String url;
-  final String tooltip;
   final IconData icon;
 
   const FooterIconLink({
     Key? key,
     required this.url,
-    required this.tooltip,
     required this.icon,
   }) : super(key: key);
 
@@ -64,7 +60,6 @@ class FooterIconLink extends StatelessWidget {
     return IconButton(
       padding: EdgeInsets.zero,
       onPressed: () => launch(url),
-      tooltip: tooltip,
       icon: FaIcon(icon),
     );
   }

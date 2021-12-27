@@ -61,11 +61,13 @@ class GlobalStatsView extends StatelessWidget {
         ],
       );
     } else {
-      return Container(
-        constraints: _constraints,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: statItems,
+      return Center(
+        child: Container(
+          constraints: _constraints,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: statItems,
+          ),
         ),
       );
     }
@@ -85,7 +87,6 @@ class GlobalStatItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      // TODO: Put in theme
       shape: RoundedRectangleBorder(borderRadius: AppTheme.pillRadius),
       child: Padding(
         padding: const EdgeInsets.all(16),

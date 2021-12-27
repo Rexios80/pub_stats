@@ -6,5 +6,5 @@ class AppTheme {
 
   static final pillRadius = BorderRadius.circular(100);
 
-  static bool isWide(BuildContext context) => context.screenWidth > 600;
+  static bool isWide(BuildContext context) => context.screenWidth > 900;
 }

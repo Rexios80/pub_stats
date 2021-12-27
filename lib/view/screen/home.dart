@@ -33,18 +33,18 @@ class Home extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(height: 40),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: StatsView(),
+              ),
               SliverFillRemaining(
                 hasScrollBody: false,
                 child: Column(
-                  children: [
-                    const SizedBox(height: 40),
+                  children: const [
+                    Spacer(),
+                    SizedBox(height: 40),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: StatsView(),
-                    ),
-                    const Spacer(),
-                    const SizedBox(height: 40),
-                    const Padding(
                       padding: EdgeInsets.only(bottom: 16),
                       child: Footer(),
                     ),

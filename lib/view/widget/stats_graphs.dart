@@ -3,25 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:pub_stats/constant/app_theme.dart';
 import 'package:pub_stats/model/package_score_snapshot.dart';
 import 'package:fast_ui/fast_ui.dart';
+import 'package:collection/collection.dart';
 
 class StatsCharts extends StatelessWidget {
-  static const _chartConstraints =
-      BoxConstraints(maxWidth: 400, maxHeight: 300);
-
   final List<PackageScoreSnapshot> stats;
 
   const StatsCharts({Key? key, required this.stats}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final likeCountChart = Container(
-      constraints: _chartConstraints,
-      child: LikeCountChart(spots: _createLikeCountSpots()),
-    );
-    final popularityScoreChart = Container(
-      constraints: _chartConstraints,
-      child: PopularityScoreChart(spots: _createPopularityScoreSpots()),
-    );
+    final likeCountChart = LikeCountChart(spots: _createLikeCountSpots());
+    final popularityScoreChart =
+        PopularityScoreChart(spots: _createPopularityScoreSpots());
 
     if (AppTheme.isWide(context)) {
       return Row(
@@ -66,45 +59,49 @@ class StatsCharts extends StatelessWidget {
 
 class BaseStatChart extends StatelessWidget {
   final List<FlSpot> spots;
-  final String notEnoughDataLabel;
-  final Widget child;
+  final String label;
+  final Widget Function(bool singleY) builder;
 
   const BaseStatChart({
     Key? key,
     required this.spots,
-    required this.notEnoughDataLabel,
-    required this.child,
+    required this.label,
+    required this.builder,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      // TODO: Part of theme
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Builder(
-          builder: (context) {
-            if (spots.length < 2) {
-              return Column(
-                children: [
-                  const Spacer(),
-                  Text(
-                    spots.first.y.toInt().toString(),
-                    style: context.textTheme.headline6,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(notEnoughDataLabel, style: context.textTheme.caption),
-                  const Spacer(),
-                  const Text('Not enough data to show chart'),
-                ],
-              );
-            }
-            return child;
-          },
+    return SizedBox(
+      width: 400,
+      height: 300,
+      child: Card(
+        // TODO: Part of theme
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            children: [
+              Text(label),
+              if (spots.length < 2) ...[
+                const Spacer(),
+                Text(
+                  spots.first.y.toInt().toString(),
+                  style: context.textTheme.headline6,
+                ),
+                const Spacer(),
+                const Text('Not enough data to show chart'),
+              ] else
+                Expanded(child: builder(_singleY())),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  /// If the spots only have one unique y value
+  bool _singleY() {
+    return groupBy(spots, (FlSpot e) => e.y.toInt()).keys.length == 1;
   }
 }
 
@@ -118,8 +115,8 @@ class LikeCountChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseStatChart(
       spots: spots,
-      notEnoughDataLabel: 'Current like count',
-      child: LineChart(
+      label: 'Like Count',
+      builder: (_) => LineChart(
         LineChartData(
           minY: 0,
           maxY: 100,
@@ -138,15 +135,28 @@ class PopularityScoreChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseStatChart(
-      notEnoughDataLabel: 'Current popularity score',
       spots: spots,
-      child: LineChart(
-        LineChartData(
-          minY: 0,
-          maxY: 100,
-          lineBarsData: [LineChartBarData(spots: spots)],
-        ),
-      ),
+      label: 'Popularity Score',
+      builder: (singleY) {
+        // If there is one unique Y value, the min/max Y values must be set manually
+        final double? minY;
+        final double? maxY;
+        if (singleY) {
+          final y = spots.first.y;
+          minY = y < 10 ? 0 : y - 10;
+          maxY = y + 10;
+        } else {
+          minY = null;
+          maxY = null;
+        }
+        return LineChart(
+          LineChartData(
+            minY: minY,
+            maxY: maxY,
+            lineBarsData: [LineChartBarData(spots: spots)],
+          ),
+        );
+      },
     );
   }
 }

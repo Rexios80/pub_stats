@@ -3,8 +3,6 @@ import 'package:pub_stats/view/widget/footer.dart';
 import 'package:pub_stats/view/widget/header.dart';
 import 'package:pub_stats/view/widget/search_bar.dart';
 import 'package:pub_stats/view/widget/stats_view.dart';
-import 'package:sliver_tools/sliver_tools.dart';
-import 'package:fast_ui/fast_ui.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -14,44 +12,30 @@ class Home extends StatelessWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          MultiSliver(
-            children: [
-              const SizedBox(height: 100),
-              Header(),
-              const SizedBox(height: 20),
-              SliverAppBar(
-                pinned: true,
-                backgroundColor: context.theme.scaffoldBackgroundColor,
-                title: Center(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 32,
-                      vertical: 16,
-                    ),
-                    constraints: const BoxConstraints(maxWidth: 800),
-                    child: SearchBar(),
-                  ),
+          SliverPadding(
+            padding: const EdgeInsets.only(top: 100, bottom: 40),
+            sliver: SliverToBoxAdapter(child: Header()),
+          ),
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: SearchBar(),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(top: 40, left: 16, right: 16),
+            sliver: SliverToBoxAdapter(child: StatsView()),
+          ),
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: Column(
+              children: const [
+                Spacer(),
+                SizedBox(height: 40),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 16),
+                  child: Footer(),
                 ),
-              ),
-              const SizedBox(height: 40),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: StatsView(),
-              ),
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: Column(
-                  children: const [
-                    Spacer(),
-                    SizedBox(height: 40),
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 16),
-                      child: Footer(),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

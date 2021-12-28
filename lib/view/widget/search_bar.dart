@@ -4,54 +4,71 @@ import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pub_stats/controller/data_controller.dart';
 
-class SearchBar extends StatelessWidget {
+class SearchBar extends SliverPersistentHeaderDelegate {
+  static const _searchBarSize = 56.0;
+
   final _dataController = GetIt.I<DataController>();
   final _textController = TextEditingController();
 
-  SearchBar({Key? key}) : super(key: key);
+  SearchBar({Key? key});
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 24,
-              child: FastBuilder(() {
-                if (_dataController.loading.value) {
-                  return const Center(
-                    child: SizedBox(
-                      height: 24,
-                      child: CircularProgressIndicator(),
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    overlapsContent = shrinkOffset > 0;
+    return Material(
+      color: context.theme.scaffoldBackgroundColor,
+      elevation: overlapsContent ? 4 : 0,
+      child: Center(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Card(
+            clipBehavior: Clip.antiAlias,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 24,
+                    child: FastBuilder(() {
+                      if (_dataController.loading.value) {
+                        return const Center(
+                          child: SizedBox(
+                            height: 24,
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      } else {
+                        return IconButton(
+                          icon: const Icon(Icons.search),
+                          onPressed: _submit,
+                        );
+                      }
+                    }),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: TextField(
+                      controller: _textController,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Enter a package name',
+                      ),
+                      inputFormatters: [
+                        // Don't allow spaces
+                        FilteringTextInputFormatter.deny(' '),
+                      ],
+                      onSubmitted: (value) => _submit(),
                     ),
-                  );
-                } else {
-                  return IconButton(
-                    icon: const Icon(Icons.search),
-                    onPressed: _submit,
-                  );
-                }
-              }),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: TextField(
-                controller: _textController,
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Enter a package name',
-                ),
-                inputFormatters: [
-                  // Don't allow spaces
-                  FilteringTextInputFormatter.deny(' '),
+                  ),
                 ],
-                onSubmitted: (value) => _submit(),
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -61,5 +78,16 @@ class SearchBar extends StatelessWidget {
     if (_textController.text.isNotEmpty) {
       _dataController.fetchStats(_textController.text);
     }
+  }
+
+  @override
+  double get maxExtent => _searchBarSize;
+
+  @override
+  double get minExtent => _searchBarSize;
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
+    return true;
   }
 }

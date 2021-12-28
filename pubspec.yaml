@@ -12,7 +12,6 @@ dependencies:
   fast_ui: ^0.0.5
   get_it: ^7.2.0
   logger: ^1.1.0
-  sliver_tools: ^0.2.5
   intl: ^0.17.0
   get_time_ago: ^1.1.1
   font_awesome_flutter: ^10.0.0-beta

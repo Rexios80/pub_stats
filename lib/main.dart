@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:pub_stats/controller/data_controller.dart';
+import 'package:pub_stats/repo/analytics_repo.dart';
 import 'package:pub_stats/repo/database_repo.dart';
 import 'package:pub_stats/service/firebase_service.dart';
 import 'package:pub_stats/view/app.dart';
@@ -16,6 +17,7 @@ void main() async {
   await FirebaseService.create();
 
   // Register repos
+  GetIt.I.registerSingleton(AnalyticsRepo());
   GetIt.I.registerSingleton(DatabaseRepo());
 
   // Register controllers

@@ -22,7 +22,7 @@ class FirebaseService {
     await _activateAppCheck();
 
     // Initialize services
-    FirebaseAnalytics.instance;
+    final analytics = FirebaseAnalytics.instance;
     FirebasePerformance.instance;
 
     final database = FirebaseDatabase.instance;
@@ -31,6 +31,9 @@ class FirebaseService {
     if (kDebugMode) {
       database.useDatabaseEmulator('localhost', 9000);
       await auth.useAuthEmulator('localhost', 9099);
+    } else {
+      // Log the app open event on startup
+      await analytics.logAppOpen();
     }
 
     await auth.signInAnonymously();

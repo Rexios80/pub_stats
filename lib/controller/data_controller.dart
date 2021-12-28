@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:pub_stats/model/package_score_snapshot.dart';
+import 'package:pub_stats/repo/analytics_repo.dart';
 import 'package:pub_stats/repo/database_repo.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 
 class DataController {
   static final _database = GetIt.I<DatabaseRepo>();
+  final _analytics = GetIt.I<AnalyticsRepo>();
   final _logger = GetIt.I<Logger>();
 
   final GlobalStats globalStats;
@@ -23,6 +25,8 @@ class DataController {
   }
 
   void fetchStats(String package) async {
+    _analytics.logSearch(package);
+
     loading.value = true;
     submittedPackageName.value = package;
     final List<PackageScoreSnapshot> stats;

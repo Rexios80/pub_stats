@@ -1,5 +1,6 @@
 import 'package:fast_ui/fast_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:pub_stats/constant/app_theme.dart';
 import 'package:pub_stats/view/screen/home.dart';
 
 class PubStatsApp extends StatelessWidget {
@@ -11,9 +12,8 @@ class PubStatsApp extends StatelessWidget {
       navigatorKey:
           FastNav.init(FastOverlays.init(GlobalKey<NavigatorState>())),
       title: 'pubstats.dev',
-      // TODO: Custom theme
       themeMode: ThemeMode.dark,
-      darkTheme: ThemeData.dark(),
+      darkTheme: AppTheme.theme,
       home: const Home(),
       // TODO: Icons
     );

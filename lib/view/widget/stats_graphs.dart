@@ -104,8 +104,6 @@ class BaseStatChart extends StatelessWidget {
       width: 400,
       height: 300,
       child: Card(
-        // TODO: Part of theme
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Padding(
           padding: const EdgeInsets.all(32),
           child: Column(

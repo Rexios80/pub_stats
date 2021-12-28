@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="500px" height="475px" viewBox="0 0 500 475" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>stacked_line_chart_black_48dp</title>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icon-Center-Image-Artwork" transform="translate(-161.000000, -175.000000)" fill-rule="nonzero">
+            <g id="stacked_line_chart_black_48dp" transform="translate(161.919283, 175.681592)">
+                <polygon id="Path" fill="#5AB3F0" points="37.3633505 323.906285 186.816752 173.931187 286.452354 273.748224 498.178006 35.1855056 463.056457 0 286.452354 198.885446 186.816752 99.0684093 0 286.474896"></polygon>
+                <polygon id="Path" fill="#235696" points="0 436.200452 186.816752 248.793965 286.452354 348.611002 463.056457 149.725556 498.178006 184.911061 286.452354 423.47378 186.816752 323.656743 37.3633505 473.631841"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fast_ui/fast_ui.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
+import 'package:pub_stats/constant/app_image.dart';
 import 'package:pub_stats/constant/app_theme.dart';
 import 'package:pub_stats/controller/data_controller.dart';
 
@@ -23,7 +24,7 @@ class Header extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 SvgPicture.asset(
-                  'assets/images/logo.svg',
+                  AppImage.logo,
                   width: 75,
                 ),
                 const SizedBox(width: 20),

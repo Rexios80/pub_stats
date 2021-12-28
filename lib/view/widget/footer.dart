@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pub_stats/constant/app_image.dart';
 import 'package:pub_stats/constant/app_theme.dart';
 import 'package:pub_stats/constant/links.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -33,10 +35,14 @@ class Footer extends StatelessWidget {
               label: 'Built with fast_ui',
               onTap: () => launch(Links.fastUi),
             ),
-            const FooterTextLink(
+            FooterTextLink(
               label: 'Licenses',
-              // TODO: Customize the license page
-              onTap: FastOverlays.showLicensePage,
+              onTap: () => FastOverlays.showLicensePage(
+                applicationIcon: Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: SvgPicture.asset(AppImage.logo, height: 75),
+                ),
+              ),
             ),
           ],
         ),

@@ -160,7 +160,7 @@ class BaseStatChart extends StatelessWidget {
       spots: spots,
       isCurved: true,
       preventCurveOverShooting: true,
-      dotData: FlDotData(show: false),
+      dotData: FlDotData(show: spots.length > 10),
     );
   }
 

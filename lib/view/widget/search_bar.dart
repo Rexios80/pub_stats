@@ -30,43 +30,7 @@ class SearchBar extends SliverPersistentHeaderDelegate {
             clipBehavior: Clip.antiAlias,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 24,
-                    child: FastBuilder(() {
-                      if (_dataController.loading.value) {
-                        return const Center(
-                          child: SizedBox(
-                            height: 24,
-                            child: CircularProgressIndicator(),
-                          ),
-                        );
-                      } else {
-                        return IconButton(
-                          icon: const Icon(Icons.search),
-                          onPressed: _submit,
-                        );
-                      }
-                    }),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: TextField(
-                      controller: _textController,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Enter a package name',
-                      ),
-                      inputFormatters: [
-                        // Don't allow spaces
-                        FilteringTextInputFormatter.deny(' '),
-                      ],
-                      onSubmitted: (value) => _submit(),
-                    ),
-                  ),
-                ],
-              ),
+              child: _buildSearchBar(),
             ),
           ),
         ),
@@ -74,9 +38,50 @@ class SearchBar extends SliverPersistentHeaderDelegate {
     );
   }
 
+  Widget _buildSearchBar() {
+    return Row(
+      children: [
+        SizedBox(
+          width: 24,
+          child: FastBuilder(() {
+            if (_dataController.loading.value) {
+              return const Center(
+                child: SizedBox(
+                  height: 24,
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            } else {
+              return IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: _submit,
+              );
+            }
+          }),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: TextField(
+            controller: _textController,
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              hintText: 'Enter a package name',
+            ),
+            inputFormatters: [
+              // Don't allow spaces
+              FilteringTextInputFormatter.deny(' '),
+            ],
+            onSubmitted: (_) => _submit(),
+          ),
+        ),
+      ],
+    );
+  }
+
   void _submit() {
-    if (_textController.text.isNotEmpty) {
-      _dataController.fetchStats(_textController.text);
+    final text = _textController.text;
+    if (text.isNotEmpty) {
+      _dataController.fetchStats(text);
     }
   }
 

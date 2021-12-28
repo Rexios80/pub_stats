@@ -9,9 +9,16 @@ import 'package:pub_stats/view/app.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Register logger
   GetIt.I.registerSingleton(Logger());
+
+  // Register services
   await FirebaseService.create();
+
+  // Register repos
   GetIt.I.registerSingleton(DatabaseRepo());
+
+  // Register controllers
   GetIt.I.registerSingleton(await DataController.create());
 
   runApp(const PubStatsApp());

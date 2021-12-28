@@ -14,7 +14,6 @@ class DataController {
   final loading = false.rx;
   final submittedPackageName = ''.rx;
   final loadedStats = <PackageScoreSnapshot>[].rx;
-  final packageSearchResults = <String>[].rx;
 
   DataController._(this.globalStats);
 

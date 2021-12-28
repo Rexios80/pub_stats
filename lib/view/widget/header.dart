@@ -18,11 +18,21 @@ class Header extends StatelessWidget {
           onTap: _controller.reset,
           child: Padding(
             padding: const EdgeInsets.all(20),
-            child: Text(
-              'pubstats.dev',
-              textAlign: TextAlign.center,
-              style: context.textTheme.headline2!
-                  .copyWith(color: context.textTheme.bodyText1!.color),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(
+                  'assets/images/logo.png',
+                  width: 75,
+                ),
+                const SizedBox(width: 20),
+                Text(
+                  'pubstats.dev',
+                  textAlign: TextAlign.center,
+                  style: context.textTheme.headline2!
+                      .copyWith(color: context.textTheme.bodyText1!.color),
+                ),
+              ],
             ),
           ),
         ),

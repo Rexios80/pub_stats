@@ -49,6 +49,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '602612349235',
     projectId: 'pub-stats-collector',
     authDomain: 'pub-stats-collector.firebaseapp.com',
+    // The database emulator needs the namespace query parameter to function
     databaseURL: 'https://pub-stats-collector-default-rtdb.firebaseio.com' +
         (kDebugMode ? '?ns=pub-stats-collector' : ''),
     storageBucket: 'pub-stats-collector.appspot.com',

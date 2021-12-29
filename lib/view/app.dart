@@ -15,7 +15,6 @@ class PubStatsApp extends StatelessWidget {
       themeMode: ThemeMode.dark,
       darkTheme: AppTheme.theme,
       home: const Home(),
-      // TODO: Icons
     );
   }
 }

@@ -18,6 +18,8 @@ class SearchBar extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
+    // overlapsContent does not work if a header is pinned
+    // https://github.com/flutter/flutter/issues/26667#issuecomment-937974056
     overlapsContent = shrinkOffset > 0;
     return Material(
       color: context.theme.scaffoldBackgroundColor,

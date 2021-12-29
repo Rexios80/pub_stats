@@ -16,7 +16,7 @@ class StatsView extends StatelessWidget {
       () {
         if (_controller.submittedPackageName.value.isEmpty ||
             _controller.loadedStats.isEmpty) {
-          // If the user has not submitted a package name and data is not loading
+          // If the user has not submitted a package name or the loaded stats is empty
           return GlobalStatsView(stats: _controller.globalStats);
         } else {
           return StatsCharts(

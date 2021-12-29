@@ -28,7 +28,6 @@ class DataController {
     _analytics.logSearch(package);
 
     loading.value = true;
-    submittedPackageName.value = package;
     final List<PackageScoreSnapshot> stats;
     try {
       stats = await _database.getScoreSnapshots(package);
@@ -50,6 +49,7 @@ class DataController {
       return;
     }
 
+    submittedPackageName.value = package;
     loadedStats.clear();
     loadedStats.addAll(stats);
   }

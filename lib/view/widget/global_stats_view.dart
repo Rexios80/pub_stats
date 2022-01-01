@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:pub_stats/constant/app_theme.dart';
-import 'package:pub_stats/constant/constants.dart';
+import 'package:pub_stats/controller/data_controller.dart';
 import 'package:pub_stats/format/formatting.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 import 'package:fast_ui/fast_ui.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class GlobalStatsView extends StatelessWidget {
   static const _constraints = BoxConstraints(maxWidth: 250);
+  final _dataController = GetIt.I<DataController>();
 
   final GlobalStats stats;
 
-  const GlobalStatsView({
+  GlobalStatsView({
     Key? key,
     required this.stats,
   }) : super(key: key);
@@ -22,12 +23,12 @@ class GlobalStatsView extends StatelessWidget {
       GlobalStatItem(
         stat: stats.mostPopularPackage,
         label: 'Most popular package',
-        url: Constants.pubPackageBaseUrl + stats.mostPopularPackage,
+        onTap: () => _dataController.fetchStats(stats.mostPopularPackage),
       ),
       GlobalStatItem(
         stat: stats.mostLikedPackage,
         label: 'Most liked package',
-        url: Constants.pubPackageBaseUrl + stats.mostLikedPackage,
+        onTap: () => _dataController.fetchStats(stats.mostLikedPackage),
       ),
       GlobalStatItem(
         stat: Formatting.number(stats.packageCount),
@@ -81,13 +82,13 @@ class GlobalStatsView extends StatelessWidget {
 class GlobalStatItem extends StatelessWidget {
   final String stat;
   final String label;
-  final String? url;
+  final VoidCallback? onTap;
 
   const GlobalStatItem({
     Key? key,
     required this.stat,
     required this.label,
-    this.url,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -96,7 +97,7 @@ class GlobalStatItem extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: AppTheme.pillRadius),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: url != null ? () => launch(url!) : null,
+        onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(

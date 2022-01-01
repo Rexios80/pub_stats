@@ -2,6 +2,7 @@ import 'package:fast_ui/fast_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
+import 'package:pub_stats/model/loaded_stats.dart';
 import 'package:pub_stats/model/package_score_snapshot.dart';
 import 'package:pub_stats/repo/analytics_repo.dart';
 import 'package:pub_stats/repo/database_repo.dart';
@@ -14,8 +15,7 @@ class DataController {
 
   final GlobalStats globalStats;
   final loading = false.rx;
-  final submittedPackageName = ''.rx;
-  final loadedStats = <PackageScoreSnapshot>[].rx;
+  final loadedStats = LoadedStats(package: '', stats: []).rx;
 
   DataController._(this.globalStats);
 
@@ -26,7 +26,6 @@ class DataController {
 
   void fetchStats(String package) async {
     _analytics.logSearch(package);
-
     loading.value = true;
     final List<PackageScoreSnapshot> stats;
     try {
@@ -36,6 +35,7 @@ class DataController {
       FastOverlays.showSnackBar(
         SnackBar(content: Text('Unable to get stats for $package')),
       );
+      loading.value = false;
       return;
     }
 
@@ -49,15 +49,12 @@ class DataController {
       return;
     }
 
-    submittedPackageName.value = package;
-    loadedStats.clear();
-    loadedStats.addAll(stats);
+    loadedStats.value = LoadedStats(package: package, stats: stats);
   }
 
   /// Reset to show global stats
   void reset() {
     loading.value = false;
-    submittedPackageName.value = '';
-    loadedStats.clear();
+    loadedStats.value = LoadedStats(package: '', stats: []);
   }
 }

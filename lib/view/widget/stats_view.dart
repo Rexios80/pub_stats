@@ -14,15 +14,11 @@ class StatsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return FastBuilder(
       () {
-        if (_controller.submittedPackageName.value.isEmpty ||
-            _controller.loadedStats.isEmpty) {
+        if (_controller.loadedStats.value.stats.isEmpty) {
           // If the user has not submitted a package name or the loaded stats is empty
           return GlobalStatsView(stats: _controller.globalStats);
         } else {
-          return StatsCharts(
-            package: _controller.submittedPackageName.value,
-            stats: _controller.loadedStats,
-          );
+          return StatsCharts(stats: _controller.loadedStats.value);
         }
       },
     );

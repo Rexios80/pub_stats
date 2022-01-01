@@ -3,17 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:pub_stats/constant/app_theme.dart';
 import 'package:pub_stats/constant/constants.dart';
 import 'package:pub_stats/format/formatting.dart';
-import 'package:pub_stats/model/package_score_snapshot.dart';
+import 'package:pub_stats/model/loaded_stats.dart';
 import 'package:fast_ui/fast_ui.dart';
 import 'package:collection/collection.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class StatsCharts extends StatelessWidget {
-  final String package;
-  final List<PackageScoreSnapshot> stats;
+  final LoadedStats stats;
 
-  const StatsCharts({Key? key, required this.package, required this.stats})
-      : super(key: key);
+  const StatsCharts({Key? key, required this.stats}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +23,10 @@ class StatsCharts extends StatelessWidget {
       children: [
         InkWell(
           borderRadius: AppTheme.pillRadius,
-          onTap: () => launch(Constants.pubPackageBaseUrl + package),
+          onTap: () => launch(Constants.pubPackageBaseUrl + stats.package),
           child: Padding(
             padding: const EdgeInsets.all(8),
-            child: Text(package, style: context.textTheme.headline6),
+            child: Text(stats.package, style: context.textTheme.headline6),
           ),
         ),
         const SizedBox(height: 32),
@@ -57,7 +55,7 @@ class StatsCharts extends StatelessWidget {
   }
 
   List<FlSpot> _createLikeCountSpots() {
-    return stats
+    return stats.stats
         .map(
           (e) => FlSpot(
             e.captureTimestamp.millisecondsSinceEpoch.toDouble(),
@@ -68,7 +66,7 @@ class StatsCharts extends StatelessWidget {
   }
 
   List<FlSpot> _createPopularityScoreSpots() {
-    return stats
+    return stats.stats
         .map(
           (e) => FlSpot(
             e.captureTimestamp.millisecondsSinceEpoch.toDouble(),

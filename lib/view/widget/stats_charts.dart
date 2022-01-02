@@ -158,8 +158,6 @@ class BaseStatChart extends StatelessWidget {
   LineChartBarData _createLineChartBarData() {
     return LineChartBarData(
       spots: spots,
-      isCurved: true,
-      preventCurveOverShooting: true,
       dotData: FlDotData(show: spots.length < 10),
     );
   }

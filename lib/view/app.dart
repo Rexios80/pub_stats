@@ -14,7 +14,13 @@ class PubStatsApp extends StatelessWidget {
       title: 'pubstats.dev',
       themeMode: ThemeMode.dark,
       darkTheme: AppTheme.theme,
-      home: const Home(),
+      // home: const Home(),
+      onGenerateInitialRoutes: (initialRoute) => [
+        MaterialPageRoute(
+          builder: (context) => const Home(),
+        ),
+      ],
+      onGenerateRoute: (settings) {},
     );
   }
 }

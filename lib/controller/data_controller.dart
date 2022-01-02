@@ -6,10 +6,13 @@ import 'package:pub_stats/model/loaded_stats.dart';
 import 'package:pub_stats/model/package_score_snapshot.dart';
 import 'package:pub_stats/repo/analytics_repo.dart';
 import 'package:pub_stats/repo/database_repo.dart';
+import 'package:pub_stats/repo/url_repo.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 
 class DataController {
   static final _database = GetIt.I<DatabaseRepo>();
+  static final _url = UrlRepo();
+
   final _analytics = GetIt.I<AnalyticsRepo>();
   final _logger = GetIt.I<Logger>();
 
@@ -21,11 +24,22 @@ class DataController {
 
   static Future<DataController> create() async {
     final globalStats = await _database.getGlobalStats();
-    return DataController._(globalStats);
+    final pathPackage = _url.getPackage();
+
+    final instance = DataController._(globalStats);
+    instance.fetchStats(pathPackage);
+
+    return instance;
   }
 
   void fetchStats(String package) async {
+    if (package.isEmpty) {
+      return;
+    }
+
     _analytics.logSearch(package);
+    _url.setPackage(package);
+
     loading.value = true;
     final List<PackageScoreSnapshot> stats;
     try {
@@ -56,5 +70,6 @@ class DataController {
   void reset() {
     loading.value = false;
     loadedStats.value = LoadedStats(package: '', stats: []);
+    _url.reset();
   }
 }

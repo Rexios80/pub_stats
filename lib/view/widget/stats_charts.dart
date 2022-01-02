@@ -116,6 +116,8 @@ class BaseStatChart extends StatelessWidget {
                 const Spacer(),
                 const Text('Not enough data to show chart'),
               ] else ...[
+                const SizedBox(height: 12),
+                Text(spots.last.y.round().toString()),
                 const SizedBox(height: 24),
                 Expanded(child: builder(_singleY(), _createLineChartBarData())),
               ]

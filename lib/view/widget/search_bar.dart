@@ -65,6 +65,9 @@ class SearchBar extends SliverPersistentHeaderDelegate {
         Expanded(
           child: TextField(
             controller: _textController,
+            autofocus: true,
+            autocorrect: false,
+            textCapitalization: TextCapitalization.none,
             decoration: const InputDecoration(
               border: InputBorder.none,
               hintText: 'Enter a package name',

@@ -117,7 +117,7 @@ class BaseStatChart extends StatelessWidget {
                 const Text('Not enough data to show chart'),
               ] else ...[
                 const SizedBox(height: 12),
-                Text(spots.last.y.round().toString()),
+                StatOverview(spots: spots),
                 const SizedBox(height: 24),
                 Expanded(child: builder(_singleY(), _createLineChartBarData())),
               ]
@@ -165,6 +165,41 @@ class BaseStatChart extends StatelessWidget {
   /// If the spots only have one unique y value
   bool _singleY() {
     return groupBy(spots, (FlSpot e) => e.y.toInt()).keys.length == 1;
+  }
+}
+
+class StatOverview extends StatelessWidget {
+  final List<FlSpot> spots;
+
+  const StatOverview({Key? key, required this.spots}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final last = spots.last.y;
+    final secondToLast = spots[spots.length - 2].y;
+    final lastChange = (last - secondToLast).round();
+
+    final String lastChangeText;
+    final Color changeColor;
+    if (lastChange > 0) {
+      lastChangeText = '(+$lastChange)';
+      changeColor = Colors.green;
+    } else if (lastChange < 0) {
+      lastChangeText = '(-$lastChange)';
+      changeColor = Colors.red;
+    } else {
+      lastChangeText = '(+0)';
+      changeColor = Colors.grey;
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(last.round().toString()),
+        const SizedBox(width: 8),
+        Text(lastChangeText, style: TextStyle(color: changeColor)),
+      ],
+    );
   }
 }
 

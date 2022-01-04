@@ -18,7 +18,8 @@ class StatOverview extends StatelessWidget {
       lastChangeText = '(+$lastChange)';
       changeColor = Colors.green;
     } else if (lastChange < 0) {
-      lastChangeText = '(-$lastChange)';
+      // Don't need a negative sign for a negative number
+      lastChangeText = '($lastChange)';
       changeColor = Colors.red;
     } else {
       lastChangeText = '(+0)';

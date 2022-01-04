@@ -39,7 +39,7 @@ class Header extends StatelessWidget {
           ),
         ),
         const Text(
-          'Pub stats tracked over time',
+          'Pub.dev stats tracked over time',
           textAlign: TextAlign.center,
         ),
       ],

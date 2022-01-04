@@ -36,12 +36,12 @@ class DataController {
       globalStats: globalStats,
       packageCounts: packageCounts,
     );
-    instance.fetchStats(pathPackage);
+    await instance.fetchStats(pathPackage);
 
     return instance;
   }
 
-  void fetchStats(String package) async {
+  Future<void> fetchStats(String package) async {
     if (package.isEmpty) {
       return;
     }

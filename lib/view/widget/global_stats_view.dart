@@ -1,8 +1,10 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pub_stats/constant/app_theme.dart';
 import 'package:pub_stats/controller/data_controller.dart';
 import 'package:pub_stats/format/formatting.dart';
+import 'package:pub_stats/view/widget/stats/base_stat_chart.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 import 'package:fast_ui/fast_ui.dart';
 
@@ -39,43 +41,59 @@ class GlobalStatsView extends StatelessWidget {
         label: 'Last updated',
       ),
     ];
-    if (AppTheme.isWide(context)) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            constraints: _constraints,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                statItems[0],
-                statItems[2],
-              ],
+    return Column(
+      children: [
+        if (AppTheme.isWide(context))
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                constraints: _constraints,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    statItems[0],
+                    statItems[2],
+                  ],
+                ),
+              ),
+              Container(
+                constraints: _constraints,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    statItems[1],
+                    statItems[3],
+                  ],
+                ),
+              ),
+            ],
+          )
+        else
+          Center(
+            child: Container(
+              constraints: _constraints,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: statItems,
+              ),
             ),
           ),
-          Container(
-            constraints: _constraints,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                statItems[1],
-                statItems[3],
-              ],
-            ),
+        const SizedBox(height: 16),
+        PackageCountChart(spots: _createPackageCountSpots()),
+      ],
+    );
+  }
+
+  List<FlSpot> _createPackageCountSpots() {
+    return _dataController.packageCounts
+        .map(
+          (e) => FlSpot(
+            e.timestamp.millisecondsSinceEpoch.toDouble(),
+            e.count.toDouble(),
           ),
-        ],
-      );
-    } else {
-      return Center(
-        child: Container(
-          constraints: _constraints,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: statItems,
-          ),
-        ),
-      );
-    }
+        )
+        .toList();
   }
 }
 
@@ -107,6 +125,29 @@ class GlobalStatItem extends StatelessWidget {
               Text(label, style: context.textTheme.caption),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class PackageCountChart extends StatelessWidget {
+  final List<FlSpot> spots;
+
+  const PackageCountChart({Key? key, required this.spots}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BaseStatChart(
+      spots: spots,
+      label: 'Total Package Count',
+      builder: (singleY, barData) => LineChart(
+        LineChartData(
+          lineBarsData: [barData],
+          gridData: BaseStatChart.defaultGridData,
+          borderData: BaseStatChart.createDefaultBorderData(context),
+          titlesData: BaseStatChart.defaultTitlesData,
+          lineTouchData: BaseStatChart.createDefaultLineTouchData(context),
         ),
       ),
     );

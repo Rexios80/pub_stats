@@ -2,10 +2,9 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:pub_stats/constant/app_theme.dart';
 import 'package:pub_stats/constant/constants.dart';
-import 'package:pub_stats/format/formatting.dart';
 import 'package:pub_stats/model/loaded_stats.dart';
 import 'package:fast_ui/fast_ui.dart';
-import 'package:collection/collection.dart';
+import 'package:pub_stats/view/widget/stats/base_stat_chart.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class StatsCharts extends StatelessWidget {
@@ -58,7 +57,7 @@ class StatsCharts extends StatelessWidget {
     return stats.stats
         .map(
           (e) => FlSpot(
-            e.captureTimestamp.millisecondsSinceEpoch.toDouble(),
+            e.timestamp.millisecondsSinceEpoch.toDouble(),
             e.likeCount.toDouble(),
           ),
         )
@@ -69,137 +68,11 @@ class StatsCharts extends StatelessWidget {
     return stats.stats
         .map(
           (e) => FlSpot(
-            e.captureTimestamp.millisecondsSinceEpoch.toDouble(),
+            e.timestamp.millisecondsSinceEpoch.toDouble(),
             e.popularityScore.toDouble(),
           ),
         )
         .toList();
-  }
-}
-
-class BaseStatChart extends StatelessWidget {
-  static final defaultGridData = FlGridData(show: false);
-  static final defaultTitlesData = FlTitlesData(
-    topTitles: SideTitles(showTitles: false),
-    bottomTitles: SideTitles(showTitles: false),
-    rightTitles: SideTitles(showTitles: false),
-  );
-
-  final List<FlSpot> spots;
-  final String label;
-  final Widget Function(bool singleY, LineChartBarData barData) builder;
-
-  const BaseStatChart({
-    Key? key,
-    required this.spots,
-    required this.label,
-    required this.builder,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 400,
-      height: 300,
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            children: [
-              Text(label),
-              if (spots.length < 2) ...[
-                const Spacer(),
-                Text(
-                  spots.first.y.toInt().toString(),
-                  style: context.textTheme.headline6,
-                ),
-                const Spacer(),
-                const Text('Not enough data to show chart'),
-              ] else ...[
-                const SizedBox(height: 12),
-                StatOverview(spots: spots),
-                const SizedBox(height: 24),
-                Expanded(child: builder(_singleY(), _createLineChartBarData())),
-              ]
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  static FlBorderData createDefaultBorderData(BuildContext context) {
-    return FlBorderData(
-      border: Border(
-        top: BorderSide.none,
-        bottom: BorderSide(color: context.textTheme.bodyText1!.color!),
-        left: BorderSide(color: context.textTheme.bodyText1!.color!),
-        right: BorderSide.none,
-      ),
-    );
-  }
-
-  static LineTouchData createDefaultLineTouchData(BuildContext context) {
-    return LineTouchData(
-      touchTooltipData: LineTouchTooltipData(
-        getTooltipItems: (spots) => spots.map((e) {
-          final valueString = e.y.toInt().toString();
-          final date = DateTime.fromMillisecondsSinceEpoch(e.x.toInt());
-          final dateString = Formatting.shortDate(date);
-          return LineTooltipItem(
-            '$valueString\n$dateString',
-            context.textTheme.bodyText1!,
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  LineChartBarData _createLineChartBarData() {
-    return LineChartBarData(
-      spots: spots,
-      dotData: FlDotData(show: spots.length < 10),
-    );
-  }
-
-  /// If the spots only have one unique y value
-  bool _singleY() {
-    return groupBy(spots, (FlSpot e) => e.y.toInt()).keys.length == 1;
-  }
-}
-
-class StatOverview extends StatelessWidget {
-  final List<FlSpot> spots;
-
-  const StatOverview({Key? key, required this.spots}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final last = spots.last.y;
-    final secondToLast = spots[spots.length - 2].y;
-    final lastChange = (last - secondToLast).round();
-
-    final String lastChangeText;
-    final Color changeColor;
-    if (lastChange > 0) {
-      lastChangeText = '(+$lastChange)';
-      changeColor = Colors.green;
-    } else if (lastChange < 0) {
-      lastChangeText = '(-$lastChange)';
-      changeColor = Colors.red;
-    } else {
-      lastChangeText = '(+0)';
-      changeColor = Colors.grey;
-    }
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(last.round().toString()),
-        const SizedBox(width: 8),
-        Text(lastChangeText, style: TextStyle(color: changeColor)),
-      ],
-    );
   }
 }
 

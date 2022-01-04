@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:pub_stats/model/loaded_stats.dart';
+import 'package:pub_stats/model/package_count_snapshot.dart';
 import 'package:pub_stats/model/package_score_snapshot.dart';
 import 'package:pub_stats/repo/analytics_repo.dart';
 import 'package:pub_stats/repo/database_repo.dart';
@@ -17,16 +18,24 @@ class DataController {
   final _logger = GetIt.I<Logger>();
 
   final GlobalStats globalStats;
+  final List<PackageCountSnapshot> packageCounts;
   final loading = false.rx;
   final loadedStats = LoadedStats(package: '', stats: []).rx;
 
-  DataController._(this.globalStats);
+  DataController._({
+    required this.globalStats,
+    required this.packageCounts,
+  });
 
   static Future<DataController> create() async {
     final globalStats = await _database.getGlobalStats();
+    final packageCounts = await _database.getPackageCounts();
     final pathPackage = _url.getPackage();
 
-    final instance = DataController._(globalStats);
+    final instance = DataController._(
+      globalStats: globalStats,
+      packageCounts: packageCounts,
+    );
     instance.fetchStats(pathPackage);
 
     return instance;

@@ -7,6 +7,9 @@
     },
     "global_stats": {
       ".read": "auth != null"
+    },
+    "package_counts": {
+      ".read": "auth != null"
     }
   }
 }

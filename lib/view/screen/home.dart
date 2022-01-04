@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pub_stats/view/widget/footer.dart';
 import 'package:pub_stats/view/widget/header.dart';
 import 'package:pub_stats/view/widget/search_bar.dart';
-import 'package:pub_stats/view/widget/stats_view.dart';
+import 'package:pub_stats/view/widget/stats/stats_view.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);

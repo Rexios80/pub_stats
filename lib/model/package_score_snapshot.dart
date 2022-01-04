@@ -1,23 +1,22 @@
 import 'package:pub_stats_core/pub_stats_core.dart';
 
 class PackageScoreSnapshot {
-  final DateTime captureTimestamp;
+  final DateTime timestamp;
   final int likeCount;
   final int popularityScore;
 
   PackageScoreSnapshot._({
-    required this.captureTimestamp,
+    required this.timestamp,
     required this.likeCount,
     required this.popularityScore,
   });
 
   factory PackageScoreSnapshot.fromMiniPackageScore({
-    required int captureTimestamp,
+    required int timestamp,
     required MiniPackageScore score,
   }) {
     return PackageScoreSnapshot._(
-      captureTimestamp:
-          DateTime.fromMillisecondsSinceEpoch(captureTimestamp * 1000),
+      timestamp: DateTime.fromMillisecondsSinceEpoch(timestamp * 1000),
       likeCount: score.l,
       popularityScore: score.p,
     );
@@ -25,6 +24,6 @@ class PackageScoreSnapshot {
 
   @override
   String toString() {
-    return 'PackageScoreSnapshot{captureTimestamp: $captureTimestamp, likeCount: $likeCount, popularityScore: $popularityScore}';
+    return 'PackageScoreSnapshot{timestamp: $timestamp, likeCount: $likeCount, popularityScore: $popularityScore}';
   }
 }

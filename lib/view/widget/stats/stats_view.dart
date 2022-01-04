@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pub_stats/controller/data_controller.dart';
 import 'package:pub_stats/view/widget/global_stats_view.dart';
-import 'package:pub_stats/view/widget/stats_charts.dart';
+import 'package:pub_stats/view/widget/stats/stats_charts.dart';
 
 class StatsView extends StatelessWidget {
   final _controller = GetIt.I<DataController>();

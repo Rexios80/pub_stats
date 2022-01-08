@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:pub_stats/constant/app_colors.dart';
 import 'package:pub_stats/format/formatting.dart';
 import 'package:pub_stats/view/widget/stats/stat_overview.dart';
 import 'package:fast_ui/fast_ui.dart';
@@ -87,6 +88,7 @@ class BaseStatChart extends StatelessWidget {
     return LineChartBarData(
       spots: spots,
       dotData: FlDotData(show: spots.length < 10),
+      colors: [AppColors.primarySwatch],
     );
   }
 

@@ -23,7 +23,7 @@ class FirebaseService {
 
     // Initialize services
     final analytics = FirebaseAnalytics.instance;
-    FirebasePerformance.instance;
+    final performance = FirebasePerformance.instance;
 
     final database = FirebaseDatabase.instance;
     final auth = FirebaseAuth.instance;
@@ -34,6 +34,9 @@ class FirebaseService {
     } else {
       // Log the app open event on startup
       await analytics.logAppOpen();
+      final enabled = await performance.isPerformanceCollectionEnabled();
+      _logger
+          .d('Performance collection is ${enabled ? 'enabled' : 'disabled'}');
     }
 
     await auth.signInAnonymously();

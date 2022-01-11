@@ -32,11 +32,16 @@ class FirebaseService {
       database.useDatabaseEmulator('localhost', 9000);
       await auth.useAuthEmulator('localhost', 9099);
     } else {
-      // Log the app open event on startup
-      await analytics.logAppOpen();
-      final enabled = await performance.isPerformanceCollectionEnabled();
-      _logger
-          .d('Performance collection is ${enabled ? 'enabled' : 'disabled'}');
+      try {
+        // Log the app open event on startup
+        await analytics.logAppOpen();
+        final enabled = await performance.isPerformanceCollectionEnabled();
+        _logger
+            .d('Performance collection is ${enabled ? 'enabled' : 'disabled'}');
+      } catch (e) {
+        // These might throw if ad blocking is enabled
+        _logger.e(e);
+      }
     }
 
     await auth.signInAnonymously();

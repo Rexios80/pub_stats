@@ -21,12 +21,12 @@ dependencies:
   pub_api_client:
     git:
       url: https://github.com/Rexios80/pub_api_client
-      ref: f778f4750db78f6ecddae89e918b73bd7acf4d99
+      ref: 271038b5b5a4b19163f624f71df74f629f588d66
 
   pub_stats_core:
     git:
       url: https://github.com/Rexios80/pub_stats_core
-      ref: 97a0af8689c18aabc87cc031692e21cfc0c7deaf
+      ref: 39fc762a9fa66cb6e45083d1d370072e5a9f26a9
 
   # Firebase
   firebase_core: ^1.10.6

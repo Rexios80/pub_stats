@@ -21,7 +21,7 @@ dependencies:
   pub_api_client:
     git:
       url: https://github.com/Rexios80/pub_api_client
-      ref: 5698c22eec982b60049732abfff92171ceaf6bff
+      ref: f778f4750db78f6ecddae89e918b73bd7acf4d99
 
   pub_stats_core:
     git:

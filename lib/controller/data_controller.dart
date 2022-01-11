@@ -105,7 +105,11 @@ class DataController {
     } catch (e) {
       _logger.e(e);
       FastOverlays.showSnackBar(
-        const SnackBar(content: Text('Unable to get developer package stats')),
+        const SnackBar(
+          content: Text(
+            'Unable to get developer package stats. This doesn\'t like to work in non Chromium based browsers.',
+          ),
+        ),
       );
     }
   }

@@ -9,8 +9,10 @@ import 'package:url_launcher/url_launcher.dart';
 
 class StatsCharts extends StatelessWidget {
   final LoadedStats stats;
+  final bool showHint;
 
-  const StatsCharts({Key? key, required this.stats}) : super(key: key);
+  const StatsCharts({Key? key, required this.stats, this.showHint = true})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +46,13 @@ class StatsCharts extends StatelessWidget {
               popularityScoreChart,
             ],
           ),
-        const SizedBox(height: 16),
-        Text(
-          'Hover/touch the charts for more information',
-          style: context.textTheme.caption,
-        ),
+        if (showHint) ...[
+          const SizedBox(height: 16),
+          Text(
+            'Hover/touch the charts for more information',
+            style: context.textTheme.caption,
+          ),
+        ],
       ],
     );
   }

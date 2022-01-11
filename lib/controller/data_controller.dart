@@ -10,6 +10,7 @@ import 'package:pub_stats/repo/database_repo.dart';
 import 'package:pub_stats/repo/pub_repo.dart';
 import 'package:pub_stats/repo/url_repo.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
+import 'package:collection/collection.dart';
 
 class DataController {
   static final _database = DatabaseRepo();
@@ -22,7 +23,8 @@ class DataController {
   final GlobalStats globalStats;
   final List<PackageCountSnapshot> packageCounts;
   final loading = false.rx;
-  final loadedStats = LoadedStats(package: '', stats: []).rx;
+  final loadedStats = LoadedStats.empty().rx;
+  final developerPackageStats = <LoadedStats>[].rx;
 
   DataController._({
     required this.globalStats,
@@ -43,6 +45,12 @@ class DataController {
     return instance;
   }
 
+  Future<LoadedStats> _loadStats(String package) async {
+    final List<PackageScoreSnapshot> stats =
+        await _database.getScoreSnapshots(package);
+    return LoadedStats(package: package, stats: stats);
+  }
+
   Future<void> fetchStats(String package) async {
     if (package.isEmpty) {
       return;
@@ -52,9 +60,9 @@ class DataController {
     _url.setPackage(package);
 
     loading.value = true;
-    final List<PackageScoreSnapshot> stats;
+    final LoadedStats stats;
     try {
-      stats = await _database.getScoreSnapshots(package);
+      stats = await _loadStats(package);
     } catch (e) {
       _logger.e(e);
       FastOverlays.showSnackBar(
@@ -66,7 +74,7 @@ class DataController {
 
     loading.value = false;
 
-    if (stats.isEmpty) {
+    if (stats.stats.isEmpty) {
       // If there are no stats for the submitted package, don't update the view
       FastOverlays.showSnackBar(
         SnackBar(content: Text('No stats for $package')),
@@ -74,13 +82,39 @@ class DataController {
       return;
     }
 
-    loadedStats.value = LoadedStats(package: package, stats: stats);
+    developerPackageStats.clear();
+    loadedStats.value = stats;
+  }
+
+  Future<void> fetchDeveloperPackageStats() async {
+    try {
+      final developerPackages = await _pub.getDeveloperPackages();
+      final developerPackageStatsFutures = developerPackages.map(_loadStats);
+      final developerPackageStats =
+          await Future.wait(developerPackageStatsFutures);
+
+      // Sort by popularity score
+      developerPackageStats.sort(
+        (a, b) => (b.stats.lastOrNull?.popularityScore ?? -1)
+            .compareTo(a.stats.lastOrNull?.popularityScore ?? -1),
+      );
+
+      loadedStats.value = LoadedStats.empty();
+      this.developerPackageStats.clear();
+      this.developerPackageStats.addAll(developerPackageStats);
+    } catch (e) {
+      _logger.e(e);
+      FastOverlays.showSnackBar(
+        const SnackBar(content: Text('Unable to get developer package stats')),
+      );
+    }
   }
 
   /// Reset to show global stats
   void reset() {
     loading.value = false;
-    loadedStats.value = LoadedStats(package: '', stats: []);
+    loadedStats.value = LoadedStats.empty();
+    developerPackageStats.clear();
     _url.reset();
   }
 }

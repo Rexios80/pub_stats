@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pub_stats/controller/data_controller.dart';
 import 'package:pub_stats/view/widget/global_stats_view.dart';
+import 'package:pub_stats/view/widget/stats/developer_package_stats.dart';
 import 'package:pub_stats/view/widget/stats/stats_charts.dart';
 
 class StatsView extends StatelessWidget {
@@ -14,11 +15,14 @@ class StatsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return FastBuilder(
       () {
-        if (_controller.loadedStats.value.stats.isEmpty) {
-          // If the user has not submitted a package name or the loaded stats is empty
-          return GlobalStatsView(stats: _controller.globalStats);
-        } else {
+        if (_controller.loadedStats.value.stats.isNotEmpty) {
           return StatsCharts(stats: _controller.loadedStats.value);
+        } else if (_controller.developerPackageStats.isNotEmpty) {
+          return DeveloperPackageStats(
+            stats: _controller.developerPackageStats,
+          );
+        } else {
+          return GlobalStatsView(stats: _controller.globalStats);
         }
       },
     );

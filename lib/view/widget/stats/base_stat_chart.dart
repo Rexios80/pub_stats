@@ -36,7 +36,11 @@ class BaseStatChart extends StatelessWidget {
           child: Column(
             children: [
               Text(label),
-              if (spots.length < 2) ...[
+              if (spots.isEmpty) ...[
+                const Spacer(),
+                const Text('No data'),
+                const Spacer(),
+              ] else if (spots.length < 2) ...[
                 const Spacer(),
                 Text(
                   spots.first.y.toInt().toString(),

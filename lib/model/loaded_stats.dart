@@ -8,4 +8,6 @@ class LoadedStats {
     required this.package,
     required this.stats,
   });
+
+  LoadedStats.empty() : this(package: '', stats: []);
 }

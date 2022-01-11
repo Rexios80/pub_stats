@@ -27,11 +27,11 @@ class Home extends StatelessWidget {
           SliverFillRemaining(
             hasScrollBody: false,
             child: Column(
-              children: const [
-                Spacer(),
-                SizedBox(height: 40),
+              children: [
+                const Spacer(),
+                const SizedBox(height: 40),
                 Padding(
-                  padding: EdgeInsets.only(bottom: 16),
+                  padding: const EdgeInsets.only(bottom: 16),
                   child: Footer(),
                 ),
               ],

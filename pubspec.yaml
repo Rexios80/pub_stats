@@ -19,6 +19,7 @@ dependencies:
   fl_chart: ^0.41.0
   flutter_svg: ^1.0.0
   pub_api_client: ^2.2.0
+  flutter_typeahead: ^3.2.4
 
   pub_stats_core:
     git:

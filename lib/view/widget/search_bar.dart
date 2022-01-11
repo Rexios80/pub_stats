@@ -1,6 +1,7 @@
 import 'package:fast_ui/fast_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pub_stats/controller/data_controller.dart';
 
@@ -8,7 +9,6 @@ class SearchBar extends SliverPersistentHeaderDelegate {
   static const _searchBarSize = 56.0;
 
   final _dataController = GetIt.I<DataController>();
-  final _textController = TextEditingController();
 
   SearchBar({Key? key});
 
@@ -54,40 +54,45 @@ class SearchBar extends SliverPersistentHeaderDelegate {
                 ),
               );
             } else {
-              return IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: _submit,
-              );
+              return const Icon(Icons.search);
             }
           }),
         ),
         const SizedBox(width: 16),
         Expanded(
-          child: TextField(
-            controller: _textController,
-            autofocus: true,
-            autocorrect: false,
-            textCapitalization: TextCapitalization.none,
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              hintText: 'Enter a package name',
+          child: TypeAheadField<String>(
+            textFieldConfiguration: TextFieldConfiguration(
+              autofocus: true,
+              autocorrect: false,
+              textCapitalization: TextCapitalization.none,
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                hintText: 'Enter a package name',
+              ),
+              inputFormatters: [
+                // Don't allow spaces
+                FilteringTextInputFormatter.deny(' '),
+              ],
+              onSubmitted: _dataController.fetchStats,
             ),
-            inputFormatters: [
-              // Don't allow spaces
-              FilteringTextInputFormatter.deny(' '),
-            ],
-            onSubmitted: (_) => _submit(),
+            suggestionsCallback: (pattern) {
+              if (pattern.isEmpty) {
+                return [];
+              }
+              return _dataController.searchPackages(pattern);
+            },
+            itemBuilder: (context, suggestion) =>
+                ListTile(title: Text(suggestion)),
+            noItemsFoundBuilder: (context) =>
+                const ListTile(title: Text('No packages found')),
+            errorBuilder: (context, error) =>
+                const ListTile(title: Text('Error searching packages')),
+            debounceDuration: Duration.zero,
+            onSuggestionSelected: _dataController.fetchStats,
           ),
         ),
       ],
     );
-  }
-
-  void _submit() {
-    final text = _textController.text;
-    if (text.isNotEmpty) {
-      _dataController.fetchStats(text);
-    }
   }
 
   @override

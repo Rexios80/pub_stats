@@ -52,7 +52,9 @@ class DataController {
   }
 
   Future<void> fetchStats(String package) async {
-    if (package.isEmpty) {
+    if (package.isEmpty || loadedStats.value.package == package) {
+      // Don't load the same package twice
+      _logger.d('Already loaded $package');
       return;
     }
 
@@ -87,6 +89,12 @@ class DataController {
   }
 
   Future<void> fetchDeveloperPackageStats() async {
+    if (developerPackageStats.isNotEmpty) {
+      // Don't fetch if we already have the stats
+      _logger.d('Already loaded developer stats');
+      return;
+    }
+
     try {
       final developerPackages = await _pub.getDeveloperPackages();
       final developerPackageStatsFutures = developerPackages.map(_loadStats);

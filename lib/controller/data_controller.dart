@@ -7,14 +7,16 @@ import 'package:pub_stats/model/package_count_snapshot.dart';
 import 'package:pub_stats/model/package_score_snapshot.dart';
 import 'package:pub_stats/repo/analytics_repo.dart';
 import 'package:pub_stats/repo/database_repo.dart';
+import 'package:pub_stats/repo/pub_repo.dart';
 import 'package:pub_stats/repo/url_repo.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 
 class DataController {
-  static final _database = GetIt.I<DatabaseRepo>();
+  static final _database = DatabaseRepo();
   static final _url = UrlRepo();
+  static final _pub = PubRepo();
 
-  final _analytics = GetIt.I<AnalyticsRepo>();
+  final _analytics = AnalyticsRepo();
   final _logger = GetIt.I<Logger>();
 
   final GlobalStats globalStats;
@@ -73,6 +75,10 @@ class DataController {
     }
 
     loadedStats.value = LoadedStats(package: package, stats: stats);
+  }
+
+  Future<List<String>> searchPackages(String query) {
+    return _pub.searchPackages(query);
   }
 
   /// Reset to show global stats

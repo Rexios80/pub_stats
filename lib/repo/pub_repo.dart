@@ -1,7 +1,7 @@
 import 'package:pub_api_client/pub_api_client.dart';
 
 class PubRepo {
-  final _pub = PubClient(pubUrl: 'https://proxy.pub-stats.dev/pub/');
+  final _pub = PubClient(pubUrl: 'https://proxy.pub-stats.dev/pub');
 
   Future<List<String>> getDeveloperPackages() async {
     final rexiosPublisherResponse =

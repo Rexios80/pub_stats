@@ -77,10 +77,6 @@ class DataController {
     loadedStats.value = LoadedStats(package: package, stats: stats);
   }
 
-  Future<List<String>> searchPackages(String query) {
-    return _pub.searchPackages(query);
-  }
-
   /// Reset to show global stats
   void reset() {
     loading.value = false;

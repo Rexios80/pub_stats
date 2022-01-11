@@ -302,7 +302,7 @@ packages:
       name: freezed_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.14.3"
+    version: "1.1.0"
   get_it:
     dependency: "direct main"
     description:
@@ -432,9 +432,11 @@ packages:
   pub_api_client:
     dependency: "direct main"
     description:
-      name: pub_api_client
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: f778f4750db78f6ecddae89e918b73bd7acf4d99
+      resolved-ref: f778f4750db78f6ecddae89e918b73bd7acf4d99
+      url: "https://github.com/Rexios80/pub_api_client"
+    source: git
     version: "2.2.0"
   pub_semver:
     dependency: transitive
@@ -447,8 +449,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "85841d05a1d3c068da4766cc15e7437bd55d3552"
-      resolved-ref: "85841d05a1d3c068da4766cc15e7437bd55d3552"
+      ref: "97a0af8689c18aabc87cc031692e21cfc0c7deaf"
+      resolved-ref: "97a0af8689c18aabc87cc031692e21cfc0c7deaf"
       url: "https://github.com/Rexios80/pub_stats_core"
     source: git
     version: "1.0.0"

@@ -18,7 +18,10 @@ dependencies:
   url_launcher: ^6.0.17
   fl_chart: ^0.41.0
   flutter_svg: ^1.0.0
-  pub_api_client: ^2.2.0
+  pub_api_client:
+    git:
+      url: https://github.com/Rexios80/pub_api_client
+      ref: 5698c22eec982b60049732abfff92171ceaf6bff
 
   pub_stats_core:
     git:

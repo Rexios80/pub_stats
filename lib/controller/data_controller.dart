@@ -42,6 +42,10 @@ class DataController {
     );
     await instance.fetchStats(pathPackage);
 
+    if (_url.isDeveloperPackages()) {
+      await instance.fetchDeveloperPackageStats();
+    }
+
     return instance;
   }
 
@@ -94,6 +98,8 @@ class DataController {
       _logger.d('Already loaded developer stats');
       return;
     }
+
+    _url.setDeveloperPackages();
 
     try {
       final developerPackages = await _pub.getDeveloperPackages();

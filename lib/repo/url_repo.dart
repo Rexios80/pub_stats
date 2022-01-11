@@ -17,6 +17,14 @@ class UrlRepo {
     }
   }
 
+  void setDeveloperPackages() {
+    _url.setPath('Rexios\'s Packages', 'developer');
+  }
+
+  bool isDeveloperPackages() {
+    return _url.getPath() == 'developer';
+  }
+
   void reset() {
     _url.setPath('pubstats.dev', '');
   }

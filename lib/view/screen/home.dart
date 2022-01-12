@@ -22,7 +22,7 @@ class Home extends StatelessWidget {
           ),
           SliverPadding(
             padding: const EdgeInsets.only(top: 40, left: 16, right: 16),
-            sliver: SliverToBoxAdapter(child: StatsView()),
+            sliver: StatsView(),
           ),
           SliverFillRemaining(
             hasScrollBody: false,

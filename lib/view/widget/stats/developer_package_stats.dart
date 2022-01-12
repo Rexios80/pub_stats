@@ -10,15 +10,16 @@ class DeveloperPackageStats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: stats
-          .expand(
-            (e) => [
-              StatsCharts(stats: e, showHint: false),
-              const SizedBox(height: 32),
-            ],
-          )
-          .toList(),
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) => Padding(
+          // Add padding to every item except the last one
+          padding:
+              EdgeInsets.only(bottom: index == (stats.length - 1) ? 0 : 32),
+          child: StatsCharts(stats: stats[index], showHint: false),
+        ),
+        childCount: stats.length,
+      ),
     );
   }
 }

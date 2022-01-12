@@ -16,13 +16,17 @@ class StatsView extends StatelessWidget {
     return FastBuilder(
       () {
         if (_controller.loadedStats.value.stats.isNotEmpty) {
-          return StatsCharts(stats: _controller.loadedStats.value);
+          return SliverToBoxAdapter(
+            child: StatsCharts(stats: _controller.loadedStats.value),
+          );
         } else if (_controller.developerPackageStats.isNotEmpty) {
           return DeveloperPackageStats(
             stats: _controller.developerPackageStats,
           );
         } else {
-          return GlobalStatsView(stats: _controller.globalStats);
+          return SliverToBoxAdapter(
+            child: GlobalStatsView(stats: _controller.globalStats),
+          );
         }
       },
     );

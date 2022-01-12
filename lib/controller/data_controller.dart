@@ -111,7 +111,6 @@ class DataController {
         for (final stats in packageStats) stats.package: stats
       }.values.toList();
 
-      // Sort by popularity score
       distinctPackageStats.sort(_sortStats);
 
       loadedStats.value = LoadedStats.empty();

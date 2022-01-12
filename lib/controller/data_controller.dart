@@ -102,20 +102,21 @@ class DataController {
     _url.setDeveloperPackages();
 
     try {
-      final developerPackages = await _pub.getDeveloperPackages();
-      final developerPackageStatsFutures = developerPackages.map(_loadStats);
-      final developerPackageStats =
-          await Future.wait(developerPackageStatsFutures);
+      final packages = await _pub.getDeveloperPackages();
+      final packageStatsFutures = packages.map(_loadStats);
+      final packageStats = await Future.wait(packageStatsFutures);
+
+      // Remove duplicates (there shouldn't be any but there are for some reason)
+      final distinctPackageStats = {
+        for (final stats in packageStats) stats.package: stats
+      }.values.toList();
 
       // Sort by popularity score
-      developerPackageStats.sort(
-        (a, b) => (b.stats.lastOrNull?.popularityScore ?? -1)
-            .compareTo(a.stats.lastOrNull?.popularityScore ?? -1),
-      );
+      distinctPackageStats.sort(_sortStats);
 
       loadedStats.value = LoadedStats.empty();
-      this.developerPackageStats.clear();
-      this.developerPackageStats.addAll(developerPackageStats);
+      developerPackageStats.clear();
+      developerPackageStats.addAll(distinctPackageStats);
     } catch (e) {
       _logger.e(e);
       FastOverlays.showSnackBar(
@@ -126,6 +127,25 @@ class DataController {
         ),
       );
     }
+  }
+
+  int _sortStats(LoadedStats a, LoadedStats b) {
+    // Sort by popularity first
+    final popularityComparison = (b.stats.lastOrNull?.popularityScore ?? -1)
+        .compareTo(a.stats.lastOrNull?.popularityScore ?? -1);
+    if (popularityComparison != 0) {
+      return popularityComparison;
+    }
+
+    // Then by like count
+    final likeComparison = (b.stats.lastOrNull?.likeCount ?? -1)
+        .compareTo(a.stats.lastOrNull?.likeCount ?? -1);
+    if (likeComparison != 0) {
+      return likeComparison;
+    }
+
+    // Then by name
+    return a.package.compareTo(b.package);
   }
 
   /// Reset to show global stats

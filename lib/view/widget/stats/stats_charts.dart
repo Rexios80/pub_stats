@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:pub_stats/constant/app_theme.dart';
 import 'package:pub_stats/constant/constants.dart';
+import 'package:pub_stats/format/formatting.dart';
 import 'package:pub_stats/model/loaded_stats.dart';
 import 'package:fast_ui/fast_ui.dart';
 import 'package:pub_stats/view/widget/stats/base_stat_chart.dart';
@@ -29,6 +30,14 @@ class StatsCharts extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: Text(stats.package, style: context.textTheme.headline6),
           ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Last updated ' +
+              (stats.stats.isNotEmpty
+                  ? Formatting.timeAgo(stats.stats.last.timestamp)
+                  : 'never'),
+          style: context.textTheme.caption,
         ),
         const SizedBox(height: 32),
         if (AppTheme.isWide(context))

@@ -24,6 +24,8 @@ class DataController {
   final List<PackageCountSnapshot> packageCounts;
   final loading = false.rx;
   final loadedStats = LoadedStats.empty().rx;
+
+  final loadingDeveloperPackageStats = false.rx;
   final developerPackageStats = <LoadedStats>[].rx;
 
   DataController._({
@@ -101,6 +103,7 @@ class DataController {
 
     _url.setDeveloperPackages();
 
+    loadingDeveloperPackageStats.value = true;
     try {
       final packages = await _pub.getDeveloperPackages();
       final packageStatsFutures = packages.map(_loadStats);
@@ -125,6 +128,8 @@ class DataController {
           ),
         ),
       );
+    } finally {
+      loadingDeveloperPackageStats.value = false;
     }
   }
 

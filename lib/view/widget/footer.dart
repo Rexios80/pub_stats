@@ -39,9 +39,13 @@ class Footer extends StatelessWidget {
               label: 'Built with fast_ui',
               onTap: () => launch(Links.fastUi),
             ),
-            FooterTextLink(
-              label: 'My package stats',
-              onTap: _dataController.fetchDeveloperPackageStats,
+            FastBuilder(
+              () => FooterTextLink(
+                label: 'My package stats',
+                onTap: _dataController.loadingDeveloperPackageStats.value
+                    ? null
+                    : _dataController.fetchDeveloperPackageStats,
+              ),
             ),
             FooterTextLink(
               label: 'Licenses',
@@ -81,7 +85,7 @@ class FooterIconLink extends StatelessWidget {
 
 class FooterTextLink extends StatelessWidget {
   final String label;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const FooterTextLink({
     Key? key,

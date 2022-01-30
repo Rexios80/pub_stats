@@ -9,12 +9,11 @@ class PubStatsApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      navigatorKey:
-          FastNav.init(FastOverlays.init(GlobalKey<NavigatorState>())),
+      navigatorKey: FastNav.init(FastOverlays.init()),
       title: 'pubstats.dev',
       themeMode: ThemeMode.dark,
       darkTheme: AppTheme.theme,
-      // Must use this instead of home for an inital route to work
+      // Must use this instead of home for an initial route to work
       onGenerateInitialRoutes: (initialRoute) => [
         MaterialPageRoute(
           builder: (context) => const Home(),

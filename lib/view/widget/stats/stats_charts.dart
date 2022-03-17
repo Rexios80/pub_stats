@@ -121,6 +121,7 @@ class LikeCountChart extends StatelessWidget {
             titlesData: BaseStatChart.defaultTitlesData,
             lineTouchData: BaseStatChart.createDefaultLineTouchData(context),
           ),
+          swapAnimationDuration: Duration.zero,
         );
       },
     );
@@ -147,6 +148,7 @@ class PopularityScoreChart extends StatelessWidget {
           titlesData: BaseStatChart.defaultTitlesData,
           lineTouchData: BaseStatChart.createDefaultLineTouchData(context),
         ),
+        swapAnimationDuration: Duration.zero,
       ),
     );
   }

@@ -14,7 +14,7 @@ import 'package:collection/collection.dart';
 
 class DataController {
   static final _database = DatabaseRepo();
-  static final _url = UrlRepo();
+  static final _url = GetIt.I<UrlRepo>();
   static final _pub = PubRepo();
 
   final _analytics = AnalyticsRepo();

@@ -6,11 +6,13 @@ import 'package:pub_stats/constant/app_image.dart';
 import 'package:pub_stats/constant/app_theme.dart';
 import 'package:pub_stats/constant/links.dart';
 import 'package:pub_stats/controller/data_controller.dart';
+import 'package:pub_stats/repo/url_repo.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:fast_ui/fast_ui.dart';
 
 class Footer extends StatelessWidget {
   final _dataController = GetIt.I<DataController>();
+  final _url = GetIt.I<UrlRepo>();
 
   Footer({Key? key}) : super(key: key);
 
@@ -44,7 +46,10 @@ class Footer extends StatelessWidget {
                 label: 'My package stats',
                 onTap: _dataController.loadingDeveloperPackageStats.value
                     ? null
-                    : _dataController.fetchDeveloperPackageStats,
+                    : () {
+                        if (_url.isDeveloperPackages()) return;
+                        _dataController.fetchDeveloperPackageStats();
+                      },
               ),
             ),
             FooterTextLink(

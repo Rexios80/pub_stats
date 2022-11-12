@@ -1,16 +1,21 @@
 import 'package:pub_api_client/pub_api_client.dart';
 
 class PubRepo {
+  static const _myPublishers = [
+    'rexios.dev',
+    'vrchat.community',
+    'iodesignteam.com',
+  ];
+
   final _pub = PubClient(pubUrl: 'https://proxy.pubstats.dev/pub');
 
   Future<List<String>> getDeveloperPackages() async {
-    final rexiosPublisherResponse =
-        await _pub.fetchPublisherPackages('rexios.dev');
-    final vrchatPublisherResponse =
-        await _pub.fetchPublisherPackages('vrchat.community');
+    final packageResults = <PackageResult>[];
+    for (final publisher in _myPublishers) {
+      final results = await _pub.fetchPublisherPackages(publisher);
+      packageResults.addAll(results);
+    }
 
-    return (rexiosPublisherResponse + vrchatPublisherResponse)
-        .map((e) => e.package)
-        .toList();
+    return packageResults.map((e) => e.package).toList();
   }
 }

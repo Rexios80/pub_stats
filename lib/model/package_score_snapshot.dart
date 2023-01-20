@@ -17,8 +17,8 @@ class PackageScoreSnapshot {
   }) {
     return PackageScoreSnapshot._(
       timestamp: DateTime.fromMillisecondsSinceEpoch(timestamp * 1000),
-      likeCount: score.l,
-      popularityScore: score.p,
+      likeCount: score.likeCount,
+      popularityScore: score.popularityScore,
     );
   }
 

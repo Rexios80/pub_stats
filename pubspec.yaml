@@ -18,15 +18,12 @@ dependencies:
   url_launcher: ^6.0.17
   fl_chart: ^0.41.0
   flutter_svg: ^1.0.0
-  pub_api_client:
-    git:
-      url: https://github.com/Rexios80/pub_api_client
-      ref: 3ca2b80a1fdc0f3f9859c02fa354e839f4fa4eb3
+  pub_api_client: ^2.2.0
 
   pub_stats_core:
     git:
       url: https://github.com/Rexios80/pub_stats_core
-      ref: dda3780afd52d6a8a2928af2c28a4d87bd18c9ab
+      ref: 87d77229abc8c5bba08a82ea0c3d6481376a585e
 
   # Firebase
   firebase_core: ^1.10.6
@@ -35,12 +32,13 @@ dependencies:
   firebase_auth: ^3.3.4
   firebase_database: ^9.0.4
   firebase_performance: ^0.8.0+3
+  collection: ^1.16.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  rexios_lints: ^1.0.0
+  rexios_lints: ^5.0.0
   flutter_native_splash: ^2.0.1+1
 
 flutter:

@@ -100,7 +100,7 @@ packages:
     source: hosted
     version: "4.1.0"
   collection:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: collection
       url: "https://pub.dartlang.org"
@@ -341,7 +341,7 @@ packages:
       name: flutter_lints
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "2.0.1"
   flutter_native_splash:
     dependency: "direct dev"
     description:
@@ -449,7 +449,7 @@ packages:
       name: lints
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1"
+    version: "2.0.1"
   logger:
     dependency: "direct main"
     description:
@@ -544,12 +544,10 @@ packages:
   pub_api_client:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "3ca2b80a1fdc0f3f9859c02fa354e839f4fa4eb3"
-      resolved-ref: "3ca2b80a1fdc0f3f9859c02fa354e839f4fa4eb3"
-      url: "https://github.com/Rexios80/pub_api_client"
-    source: git
-    version: "2.2.0"
+      name: pub_api_client
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.1"
   pub_semver:
     dependency: transitive
     description:
@@ -561,8 +559,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: dda3780afd52d6a8a2928af2c28a4d87bd18c9ab
-      resolved-ref: dda3780afd52d6a8a2928af2c28a4d87bd18c9ab
+      ref: "87d77229abc8c5bba08a82ea0c3d6481376a585e"
+      resolved-ref: "87d77229abc8c5bba08a82ea0c3d6481376a585e"
       url: "https://github.com/Rexios80/pub_stats_core"
     source: git
     version: "1.0.0"
@@ -586,7 +584,7 @@ packages:
       name: rexios_lints
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "5.0.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -747,5 +745,5 @@ packages:
     source: hosted
     version: "3.1.0"
 sdks:
-  dart: ">=2.17.0-0 <3.0.0"
+  dart: ">=2.17.0 <3.0.0"
   flutter: ">=2.5.0"

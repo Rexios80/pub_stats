@@ -4,7 +4,6 @@ import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:pub_stats/model/loaded_stats.dart';
 import 'package:pub_stats/model/package_count_snapshot.dart';
-import 'package:pub_stats/model/package_score_snapshot.dart';
 import 'package:pub_stats/repo/analytics_repo.dart';
 import 'package:pub_stats/repo/database_repo.dart';
 import 'package:pub_stats/repo/pub_repo.dart';
@@ -52,8 +51,7 @@ class DataController {
   }
 
   Future<LoadedStats> _loadStats(String package) async {
-    final List<PackageScoreSnapshot> stats =
-        await _database.getScoreSnapshots(package);
+    final stats = await _database.getScoreSnapshots(package);
     return LoadedStats(package: package, stats: stats);
   }
 

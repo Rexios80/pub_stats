@@ -12,7 +12,7 @@ dependencies:
   fast_ui: ^0.1.0
   get_it: ^7.2.0
   logger: ^1.1.0
-  intl: ^0.17.0
+  intl: ^0.18.0
   get_time_ago: ^1.1.1
   font_awesome_flutter: ^10.0.0-beta
   url_launcher: ^6.0.17
@@ -26,12 +26,12 @@ dependencies:
       ref: 87d77229abc8c5bba08a82ea0c3d6481376a585e
 
   # Firebase
-  firebase_core: ^1.10.6
-  firebase_analytics: ^9.0.4
-  firebase_app_check: ^0.0.6+3
-  firebase_auth: ^3.3.4
-  firebase_database: ^9.0.4
-  firebase_performance: ^0.8.0+3
+  firebase_core: ^2.4.1
+  firebase_analytics: ^10.1.0
+  firebase_app_check: ^0.1.1+8
+  firebase_auth: ^4.2.2
+  firebase_database: ^10.0.9
+  firebase_performance: ^0.9.0+10
   collection: ^1.16.0
 
 dev_dependencies:

@@ -98,6 +98,6 @@ class BaseStatChart extends StatelessWidget {
 
   /// If the spots only have one unique y value
   bool _singleY() {
-    return groupBy(spots, (FlSpot e) => e.y.toInt()).keys.length == 1;
+    return groupBy<FlSpot, int>(spots, (e) => e.y.toInt()).keys.length == 1;
   }
 }

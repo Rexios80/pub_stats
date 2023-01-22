@@ -7,8 +7,8 @@ import 'package:pub_stats/constant/app_theme.dart';
 import 'package:pub_stats/constant/links.dart';
 import 'package:pub_stats/controller/data_controller.dart';
 import 'package:pub_stats/repo/url_repo.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:fast_ui/fast_ui.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class Footer extends StatelessWidget {
   final _dataController = GetIt.I<DataController>();
@@ -39,7 +39,7 @@ class Footer extends StatelessWidget {
           children: [
             FooterTextLink(
               label: 'Built with fast_ui',
-              onTap: () => launch(Links.fastUi),
+              onTap: () => launchUrlString(Links.fastUi),
             ),
             FastBuilder(
               () => FooterTextLink(
@@ -82,7 +82,7 @@ class FooterIconLink extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       padding: EdgeInsets.zero,
-      onPressed: () => launch(url),
+      onPressed: () => launchUrlString(url),
       icon: FaIcon(icon),
     );
   }
@@ -101,6 +101,8 @@ class FooterTextLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      onTap: onTap,
+      borderRadius: AppTheme.pillRadius,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         child: Text(
@@ -108,8 +110,6 @@ class FooterTextLink extends StatelessWidget {
           style: context.textTheme.caption,
         ),
       ),
-      onTap: onTap,
-      borderRadius: AppTheme.pillRadius,
     );
   }
 }

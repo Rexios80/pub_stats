@@ -20,7 +20,9 @@ class PubStatsApp extends StatelessWidget {
         ),
       ],
       // This must be set but we don't actually need to do anything
-      onGenerateRoute: (settings) {},
+      onGenerateRoute: (settings) {
+        return null;
+      },
     );
   }
 }

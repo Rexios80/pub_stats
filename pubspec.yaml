@@ -50,6 +50,6 @@ flutter:
 # flutter pub run flutter_native_splash:create
 flutter_native_splash:
   color: "#000000"
-  image: assets/images/logo.png
+  image: resources/logo.png
   android: false
   ios: false

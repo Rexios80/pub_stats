@@ -120,9 +120,9 @@ class GlobalStatItem extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              Text(stat, style: context.textTheme.headline6),
+              Text(stat, style: context.textTheme.titleLarge),
               const SizedBox(height: 4),
-              Text(label, style: context.textTheme.caption),
+              Text(label, style: context.textTheme.bodySmall),
             ],
           ),
         ),

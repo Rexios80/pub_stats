@@ -107,7 +107,7 @@ class FooterTextLink extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         child: Text(
           label,
-          style: context.textTheme.caption,
+          style: context.textTheme.bodySmall,
         ),
       ),
     );

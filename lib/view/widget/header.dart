@@ -31,8 +31,8 @@ class Header extends StatelessWidget {
                 Text(
                   'pubstats.dev',
                   textAlign: TextAlign.center,
-                  style: context.textTheme.headline2!
-                      .copyWith(color: context.textTheme.bodyText1!.color),
+                  style: context.textTheme.displayMedium!
+                      .copyWith(color: context.textTheme.bodyLarge!.color),
                 ),
               ],
             ),

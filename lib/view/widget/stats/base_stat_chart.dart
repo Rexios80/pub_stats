@@ -9,9 +9,9 @@ import 'package:collection/collection.dart';
 class BaseStatChart extends StatelessWidget {
   static final defaultGridData = FlGridData(show: false);
   static final defaultTitlesData = FlTitlesData(
-    topTitles: SideTitles(showTitles: false),
-    bottomTitles: SideTitles(showTitles: false),
-    rightTitles: SideTitles(showTitles: false),
+    topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+    bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+    rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
   );
 
   final List<FlSpot> spots;
@@ -44,7 +44,7 @@ class BaseStatChart extends StatelessWidget {
                 const Spacer(),
                 Text(
                   spots.first.y.toInt().toString(),
-                  style: context.textTheme.headline6,
+                  style: context.textTheme.titleLarge,
                 ),
                 const Spacer(),
                 const Text('Not enough data to show chart'),
@@ -65,8 +65,8 @@ class BaseStatChart extends StatelessWidget {
     return FlBorderData(
       border: Border(
         top: BorderSide.none,
-        bottom: BorderSide(color: context.textTheme.bodyText1!.color!),
-        left: BorderSide(color: context.textTheme.bodyText1!.color!),
+        bottom: BorderSide(color: context.textTheme.bodyLarge!.color!),
+        left: BorderSide(color: context.textTheme.bodyLarge!.color!),
         right: BorderSide.none,
       ),
     );
@@ -81,7 +81,7 @@ class BaseStatChart extends StatelessWidget {
           final dateString = Formatting.shortDate(date);
           return LineTooltipItem(
             '$valueString\n$dateString',
-            context.textTheme.bodyText1!,
+            context.textTheme.bodyLarge!,
           );
         }).toList(),
       ),
@@ -92,7 +92,7 @@ class BaseStatChart extends StatelessWidget {
     return LineChartBarData(
       spots: spots,
       dotData: FlDotData(show: spots.length < 10),
-      colors: [AppColors.primarySwatch],
+      color: AppColors.primarySwatch,
     );
   }
 

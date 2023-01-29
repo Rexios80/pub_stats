@@ -29,13 +29,13 @@ class StatsCharts extends StatelessWidget {
               launchUrlString(Constants.pubPackageBaseUrl + stats.package),
           child: Padding(
             padding: const EdgeInsets.all(8),
-            child: Text(stats.package, style: context.textTheme.headline6),
+            child: Text(stats.package, style: context.textTheme.titleLarge),
           ),
         ),
         const SizedBox(height: 4),
         Text(
           'Last updated ${stats.stats.isNotEmpty ? Formatting.timeAgo(stats.stats.last.timestamp) : 'never'}',
-          style: context.textTheme.caption,
+          style: context.textTheme.bodySmall,
         ),
         const SizedBox(height: 32),
         if (AppTheme.isWide(context))
@@ -57,7 +57,7 @@ class StatsCharts extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'Hover/touch the charts for more information',
-            style: context.textTheme.caption,
+            style: context.textTheme.bodySmall,
           ),
         ],
       ],

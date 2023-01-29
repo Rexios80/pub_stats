@@ -12,6 +12,10 @@ class BaseStatChart extends StatelessWidget {
     topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
     bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
     rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+    leftTitles: AxisTitles(
+      sideTitles: SideTitles(showTitles: true, reservedSize: 50),
+      drawBehindEverything: true,
+    ),
   );
 
   final List<FlSpot> spots;

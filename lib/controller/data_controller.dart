@@ -19,7 +19,7 @@ class DataController {
   final _analytics = AnalyticsRepo();
   final _logger = GetIt.I<Logger>();
 
-  final List<String> nameCompletion;
+  final Map<String, Set<String>> _nameCompletion;
   final GlobalStats globalStats;
   final List<PackageCountSnapshot> packageCounts;
   final loading = false.rx;
@@ -29,19 +29,28 @@ class DataController {
   final developerPackageStats = <LoadedStats>[].rx;
 
   DataController._({
-    required this.nameCompletion,
+    required Map<String, Set<String>> nameCompletion,
     required this.globalStats,
     required this.packageCounts,
-  });
+  }) : _nameCompletion = nameCompletion;
 
   static Future<DataController> create() async {
-    final autocomplete = await _pub.getNameCompletion();
+    final nameCompletionList = await _pub.getNameCompletion();
+    final nameCompletion = <String, Set<String>>{};
+    for (final name in nameCompletionList) {
+      nameCompletion.update(
+        name[0],
+        (v) => v..add(name),
+        ifAbsent: () => {name},
+      );
+    }
+
     final globalStats = await _database.getGlobalStats();
     final packageCounts = await _database.getPackageCounts();
     final pathPackage = _url.getPackage();
 
     final instance = DataController._(
-      nameCompletion: autocomplete,
+      nameCompletion: nameCompletion,
       globalStats: globalStats,
       packageCounts: packageCounts,
     );
@@ -52,6 +61,15 @@ class DataController {
     }
 
     return instance;
+  }
+
+  Future<Iterable<String>> complete(String pattern) async {
+    // Names are indexed by first character for performance
+    return _nameCompletion[pattern[0]]
+            ?.where((e) => e.startsWith(pattern))
+            // Don't return all the results
+            .take(5) ??
+        [];
   }
 
   Future<LoadedStats> _loadStats(String package) async {

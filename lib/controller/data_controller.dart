@@ -63,7 +63,7 @@ class DataController {
     return instance;
   }
 
-  Future<Iterable<String>> complete(String pattern) async {
+  Iterable<String> complete(String pattern) {
     // Names are indexed by first character for performance
     return _nameCompletion[pattern[0]]
             ?.where((e) => e.startsWith(pattern))

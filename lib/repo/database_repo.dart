@@ -45,4 +45,13 @@ class DatabaseRepo {
       );
     }).toList();
   }
+
+  Future<Set<String>> getDeveloperPackages() async {
+    final event = await _database.child('developer').once();
+    final snap = event.snapshot as Map<String, dynamic>;
+    final data =
+        snap.map((k, v) => MapEntry(k, DeveloperPackageData.fromJson(v)));
+    data.removeWhere((k, v) => v.isUnlisted || v.isDiscontinued);
+    return data.keys.toSet();
+  }
 }

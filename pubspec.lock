@@ -521,7 +521,7 @@ packages:
     source: hosted
     version: "3.6.2"
   pub_api_client:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: pub_api_client
       sha256: "144245455193b30ab949697f8fb7a113b736abbd7f2f2871f91edcdbe9f5d95d"

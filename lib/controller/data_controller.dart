@@ -6,7 +6,6 @@ import 'package:pub_stats/model/loaded_stats.dart';
 import 'package:pub_stats/model/package_count_snapshot.dart';
 import 'package:pub_stats/repo/analytics_repo.dart';
 import 'package:pub_stats/repo/database_repo.dart';
-import 'package:pub_stats/repo/pub_repo.dart';
 import 'package:pub_stats/repo/url_repo.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 import 'package:collection/collection.dart';
@@ -14,7 +13,6 @@ import 'package:collection/collection.dart';
 class DataController {
   static final _database = DatabaseRepo();
   static final _url = GetIt.I<UrlRepo>();
-  static final _pub = PubRepo();
 
   final _analytics = AnalyticsRepo();
   final _logger = GetIt.I<Logger>();
@@ -103,7 +101,7 @@ class DataController {
 
     loadingDeveloperPackageStats.value = true;
     try {
-      final packages = await _pub.getDeveloperPackages();
+      final packages = await _database.getDeveloperPackages();
       final packageStatsFutures = packages.map(_loadStats);
       final packageStats = await Future.wait(packageStatsFutures);
 

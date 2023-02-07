@@ -17,13 +17,13 @@ dependencies:
   font_awesome_flutter: ^10.0.0-beta
   url_launcher: ^6.0.17
   fl_chart: ^0.60.0
-  flutter_svg: ^1.0.0
+  flutter_svg: ^2.0.0+1
   pub_api_client: ^2.2.0
 
   pub_stats_core:
     git:
       url: https://github.com/Rexios80/pub_stats_core
-      ref: 87d77229abc8c5bba08a82ea0c3d6481376a585e
+      ref: 7c772c42613a345dfaaef0779622bf9d9a2e9741
 
   # Firebase
   firebase_core: ^2.4.1
@@ -32,6 +32,7 @@ dependencies:
   firebase_auth: ^4.2.2
   firebase_database: ^10.0.9
   firebase_performance: ^0.9.0+10
+
   collection: ^1.16.0
 
 dev_dependencies:

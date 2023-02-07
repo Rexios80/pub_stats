@@ -1,5 +1,8 @@
 {
   "rules": {
+    "developer": {
+      ".read": "auth != null"
+    },
     "stats": {
       "$package": {
         ".read": "auth != null"

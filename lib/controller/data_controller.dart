@@ -6,6 +6,7 @@ import 'package:pub_stats/model/loaded_stats.dart';
 import 'package:pub_stats/model/package_count_snapshot.dart';
 import 'package:pub_stats/repo/analytics_repo.dart';
 import 'package:pub_stats/repo/database_repo.dart';
+import 'package:pub_stats/repo/pub_repo.dart';
 import 'package:pub_stats/repo/url_repo.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 import 'package:collection/collection.dart';
@@ -13,10 +14,12 @@ import 'package:collection/collection.dart';
 class DataController {
   static final _database = DatabaseRepo();
   static final _url = GetIt.I<UrlRepo>();
+  static final _pub = PubRepo();
 
   final _analytics = AnalyticsRepo();
   final _logger = GetIt.I<Logger>();
 
+  final List<String> nameCompletion;
   final GlobalStats globalStats;
   final List<PackageCountSnapshot> packageCounts;
   final loading = false.rx;
@@ -26,16 +29,19 @@ class DataController {
   final developerPackageStats = <LoadedStats>[].rx;
 
   DataController._({
+    required this.nameCompletion,
     required this.globalStats,
     required this.packageCounts,
   });
 
   static Future<DataController> create() async {
+    final autocomplete = await _pub.getNameCompletion();
     final globalStats = await _database.getGlobalStats();
     final packageCounts = await _database.getPackageCounts();
     final pathPackage = _url.getPackage();
 
     final instance = DataController._(
+      nameCompletion: autocomplete,
       globalStats: globalStats,
       packageCounts: packageCounts,
     );

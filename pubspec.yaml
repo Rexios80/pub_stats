@@ -18,6 +18,7 @@ dependencies:
   url_launcher: ^6.0.17
   fl_chart: ^0.60.0
   flutter_svg: ^2.0.0+1
+  pub_api_client: ^2.2.0
 
   pub_stats_core:
     git:

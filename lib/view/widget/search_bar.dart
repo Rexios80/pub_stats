@@ -94,6 +94,12 @@ class SearchBar extends SliverPersistentHeaderDelegate {
             onSuggestionSelected: _dataController.fetchStats,
           ),
         ),
+        const SizedBox(width: 16),
+        IconButton(
+          icon: const Icon(Icons.casino),
+          onPressed: _dataController.feelingLucky,
+          tooltip: 'Feeling lucky?',
+        ),
       ],
     );
   }

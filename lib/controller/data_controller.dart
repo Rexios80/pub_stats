@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fast_ui/fast_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -19,7 +21,10 @@ class DataController {
   final _analytics = AnalyticsRepo();
   final _logger = GetIt.I<Logger>();
 
-  final Map<String, Set<String>> _nameCompletion;
+  final List<String> _packages;
+  final Map<String, Set<String>> _completion;
+  final _random = Random();
+
   final GlobalStats globalStats;
   final List<PackageCountSnapshot> packageCounts;
   final loading = false.rx;
@@ -29,19 +34,21 @@ class DataController {
   final developerPackageStats = <LoadedStats>[].rx;
 
   DataController._({
-    required Map<String, Set<String>> nameCompletion,
+    required List<String> packages,
+    required Map<String, Set<String>> completion,
     required this.globalStats,
     required this.packageCounts,
-  }) : _nameCompletion = nameCompletion;
+  })  : _packages = packages,
+        _completion = completion;
 
   static Future<DataController> create() async {
-    final nameCompletionList = await _pub.getNameCompletion();
-    final nameCompletion = <String, Set<String>>{};
-    for (final name in nameCompletionList) {
-      nameCompletion.update(
-        name[0],
-        (v) => v..add(name),
-        ifAbsent: () => {name},
+    final packages = await _pub.getNameCompletion();
+    final completion = <String, Set<String>>{};
+    for (final package in packages) {
+      completion.update(
+        package[0],
+        (v) => v..add(package),
+        ifAbsent: () => {package},
       );
     }
 
@@ -50,7 +57,8 @@ class DataController {
     final pathPackage = _url.getPackage();
 
     final instance = DataController._(
-      nameCompletion: nameCompletion,
+      packages: packages,
+      completion: completion,
       globalStats: globalStats,
       packageCounts: packageCounts,
     );
@@ -65,11 +73,17 @@ class DataController {
 
   Iterable<String> complete(String pattern) {
     // Names are indexed by first character for performance
-    return _nameCompletion[pattern[0]]
+    return _completion[pattern[0]]
             ?.where((e) => e.startsWith(pattern))
             // Don't return all the results
             .take(5) ??
         [];
+  }
+
+  void feelingLucky() {
+    final index = _random.nextInt(_packages.length);
+    final package = _packages[index];
+    fetchStats(package);
   }
 
   Future<LoadedStats> _loadStats(String package) async {

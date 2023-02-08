@@ -72,8 +72,7 @@ class SearchBar extends SliverPersistentHeaderDelegate {
                 hintText: 'Enter a package name',
               ),
               inputFormatters: [
-                // Don't allow spaces
-                FilteringTextInputFormatter.deny(' '),
+                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9_\-]')),
               ],
               onSubmitted: _dataController.fetchStats,
             ),

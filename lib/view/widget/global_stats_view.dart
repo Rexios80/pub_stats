@@ -15,9 +15,9 @@ class GlobalStatsView extends StatelessWidget {
   final GlobalStats stats;
 
   GlobalStatsView({
-    Key? key,
+    super.key,
     required this.stats,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -103,11 +103,11 @@ class GlobalStatItem extends StatelessWidget {
   final VoidCallback? onTap;
 
   const GlobalStatItem({
-    Key? key,
+    super.key,
     required this.stat,
     required this.label,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +134,7 @@ class GlobalStatItem extends StatelessWidget {
 class PackageCountChart extends StatelessWidget {
   final List<FlSpot> spots;
 
-  const PackageCountChart({Key? key, required this.spots}) : super(key: key);
+  const PackageCountChart({super.key, required this.spots});
 
   @override
   Widget build(BuildContext context) {

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class StatOverview extends StatelessWidget {
   final List<FlSpot> spots;
 
-  const StatOverview({Key? key, required this.spots}) : super(key: key);
+  const StatOverview({super.key, required this.spots});
 
   @override
   Widget build(BuildContext context) {

@@ -5,8 +5,7 @@ import 'package:pub_stats/view/widget/stats/stats_charts.dart';
 class DeveloperPackageStats extends StatelessWidget {
   final List<LoadedStats> stats;
 
-  const DeveloperPackageStats({Key? key, required this.stats})
-      : super(key: key);
+  const DeveloperPackageStats({super.key, required this.stats});
 
   @override
   Widget build(BuildContext context) {

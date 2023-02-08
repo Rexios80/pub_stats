@@ -23,11 +23,11 @@ class BaseStatChart extends StatelessWidget {
   final Widget Function(bool singleY, LineChartBarData barData) builder;
 
   const BaseStatChart({
-    Key? key,
+    super.key,
     required this.spots,
     required this.label,
     required this.builder,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

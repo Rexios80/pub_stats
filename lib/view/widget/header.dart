@@ -9,7 +9,7 @@ import 'package:pub_stats/controller/data_controller.dart';
 class Header extends StatelessWidget {
   final _controller = GetIt.I<DataController>();
 
-  Header({Key? key}) : super(key: key);
+  Header({super.key});
 
   @override
   Widget build(BuildContext context) {

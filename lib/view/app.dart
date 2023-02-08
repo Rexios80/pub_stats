@@ -4,7 +4,7 @@ import 'package:pub_stats/constant/app_theme.dart';
 import 'package:pub_stats/view/screen/home.dart';
 
 class PubStatsApp extends StatelessWidget {
-  const PubStatsApp({Key? key}) : super(key: key);
+  const PubStatsApp({super.key});
 
   @override
   Widget build(BuildContext context) {

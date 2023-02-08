@@ -9,7 +9,7 @@ import 'package:pub_stats/view/widget/stats/stats_charts.dart';
 class StatsView extends StatelessWidget {
   final _controller = GetIt.I<DataController>();
 
-  StatsView({Key? key}) : super(key: key);
+  StatsView({super.key});
 
   @override
   Widget build(BuildContext context) {

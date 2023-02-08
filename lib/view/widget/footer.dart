@@ -14,7 +14,7 @@ class Footer extends StatelessWidget {
   final _dataController = GetIt.I<DataController>();
   final _url = GetIt.I<UrlRepo>();
 
-  Footer({Key? key}) : super(key: key);
+  Footer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -73,10 +73,10 @@ class FooterIconLink extends StatelessWidget {
   final IconData icon;
 
   const FooterIconLink({
-    Key? key,
+    super.key,
     required this.url,
     required this.icon,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -93,10 +93,10 @@ class FooterTextLink extends StatelessWidget {
   final VoidCallback? onTap;
 
   const FooterTextLink({
-    Key? key,
+    super.key,
     required this.label,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

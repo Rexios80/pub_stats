@@ -12,8 +12,7 @@ class StatsCharts extends StatelessWidget {
   final LoadedStats stats;
   final bool showHint;
 
-  const StatsCharts({Key? key, required this.stats, this.showHint = true})
-      : super(key: key);
+  const StatsCharts({super.key, required this.stats, this.showHint = true});
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +89,7 @@ class StatsCharts extends StatelessWidget {
 class LikeCountChart extends StatelessWidget {
   final List<FlSpot> spots;
 
-  const LikeCountChart({Key? key, required this.spots}) : super(key: key);
+  const LikeCountChart({super.key, required this.spots});
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +128,7 @@ class LikeCountChart extends StatelessWidget {
 class PopularityScoreChart extends StatelessWidget {
   final List<FlSpot> spots;
 
-  const PopularityScoreChart({Key? key, required this.spots}) : super(key: key);
+  const PopularityScoreChart({super.key, required this.spots});
 
   @override
   Widget build(BuildContext context) {

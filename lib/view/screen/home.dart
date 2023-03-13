@@ -14,7 +14,7 @@ class Home extends StatelessWidget {
         slivers: [
           SliverPadding(
             padding: const EdgeInsets.only(top: 100, bottom: 40),
-            sliver: SliverToBoxAdapter(child: Header()),
+            sliver: SliverToBoxAdapter(child: FittedBox(child: Header())),
           ),
           SliverPersistentHeader(
             pinned: true,

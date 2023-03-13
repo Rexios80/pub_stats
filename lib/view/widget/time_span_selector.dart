@@ -13,15 +13,14 @@ class TimeSpanSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return FastBuilder(
       () => SegmentedButton<TimeSpan>(
+        showSelectedIcon: false,
         segments: TimeSpan.values
             .map(
               (e) => ButtonSegment(
                 value: e,
-                label: SizedBox(
-                  width: 100,
-                  child: Center(
-                    child: Text('$e', textAlign: TextAlign.center),
-                  ),
+                label: Padding(
+                  padding: const EdgeInsets.all(2),
+                  child: Text('$e', textAlign: TextAlign.center),
                 ),
               ),
             )

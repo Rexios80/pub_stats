@@ -17,15 +17,12 @@ class AppTheme {
     ),
     segmentedButtonTheme: SegmentedButtonThemeData(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.resolveWith(
-          (state) {
-            if (state.contains(MaterialState.selected)) {
-              return AppColors.primarySwatch;
-            }
-
-            return null;
-          },
+        backgroundColor: FastMaterialStateProperty(
+          {MaterialState.selected: AppColors.primarySwatch},
         ),
+        foregroundColor:
+            FastMaterialStateProperty({MaterialState.selected: Colors.white}),
+        side: const MaterialStatePropertyAll(BorderSide(color: Colors.grey)),
       ),
     ),
   );

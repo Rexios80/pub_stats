@@ -101,7 +101,7 @@ class LikeCountChart extends StatelessWidget {
         final double? minY;
         final double? maxY;
         if (singleY) {
-          final y = spots.first.y;
+          final y = barData.spots.first.y;
           minY = y < 10 ? 0 : y - 10;
           maxY = y + 10;
         } else {

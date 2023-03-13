@@ -26,10 +26,14 @@ class BaseStatChart extends StatelessWidget {
   final String label;
   final Widget Function(bool singleY, LineChartBarData barData) builder;
 
-  Iterable<FlSpot> get filteredSpots => spots.where((e) {
-        final date = DateTime.fromMillisecondsSinceEpoch(e.x.toInt());
-        return controller.timeSpan.value.contains(date);
-      });
+  Iterable<FlSpot> get filteredSpots {
+    // Always access the timespa value to register
+    final timeSpan = controller.timeSpan.value;
+    return spots.where((e) {
+      final date = DateTime.fromMillisecondsSinceEpoch(e.x.toInt());
+      return timeSpan.contains(date);
+    });
+  }
 
   BaseStatChart({
     super.key,

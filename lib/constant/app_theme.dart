@@ -15,5 +15,18 @@ class AppTheme {
     cardTheme: CardTheme(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
     ),
+    segmentedButtonTheme: SegmentedButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.resolveWith(
+          (state) {
+            if (state.contains(MaterialState.selected)) {
+              return AppColors.primarySwatch;
+            }
+
+            return null;
+          },
+        ),
+      ),
+    ),
   );
 }

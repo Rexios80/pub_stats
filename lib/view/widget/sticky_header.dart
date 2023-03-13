@@ -8,7 +8,7 @@ import 'package:pub_stats/controller/data_controller.dart';
 import 'package:pub_stats/view/widget/time_span_selector.dart';
 
 class StickyHeader extends SliverPersistentHeaderDelegate {
-  static const _searchBarSize = 112.0;
+  static const _searchBarSize = 104.0;
 
   final _dataController = GetIt.I<DataController>();
   final _logger = GetIt.I<Logger>();

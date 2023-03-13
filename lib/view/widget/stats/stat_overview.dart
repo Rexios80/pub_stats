@@ -2,14 +2,14 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class StatOverview extends StatelessWidget {
-  final List<FlSpot> spots;
+  final Iterable<FlSpot> spots;
 
   const StatOverview({super.key, required this.spots});
 
   @override
   Widget build(BuildContext context) {
     final last = spots.last.y;
-    final secondToLast = spots[spots.length - 2].y;
+    final secondToLast = spots.elementAt(spots.length - 2).y;
     final lastChange = (last - secondToLast).round();
 
     final String lastChangeText;

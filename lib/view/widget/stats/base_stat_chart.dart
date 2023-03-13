@@ -1,6 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:pub_stats/constant/app_colors.dart';
+import 'package:pub_stats/controller/data_controller.dart';
 import 'package:pub_stats/format/formatting.dart';
 import 'package:pub_stats/view/widget/stats/stat_overview.dart';
 import 'package:fast_ui/fast_ui.dart';
@@ -18,11 +20,18 @@ class BaseStatChart extends StatelessWidget {
     ),
   );
 
-  final List<FlSpot> spots;
+  final controller = GetIt.I<DataController>();
+
+  final Iterable<FlSpot> spots;
   final String label;
   final Widget Function(bool singleY, LineChartBarData barData) builder;
 
-  const BaseStatChart({
+  Iterable<FlSpot> get filteredSpots => spots.where((e) {
+        final date = DateTime.fromMillisecondsSinceEpoch(e.x.toInt());
+        return controller.timeSpan.value.contains(date);
+      });
+
+  BaseStatChart({
     super.key,
     required this.spots,
     required this.label,
@@ -37,28 +46,31 @@ class BaseStatChart extends StatelessWidget {
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(32),
-          child: Column(
-            children: [
-              Text(label),
-              if (spots.isEmpty) ...[
-                const Spacer(),
-                const Text('No data'),
-                const Spacer(),
-              ] else if (spots.length < 2) ...[
-                const Spacer(),
-                Text(
-                  spots.first.y.toInt().toString(),
-                  style: context.textTheme.titleLarge,
-                ),
-                const Spacer(),
-                const Text('Not enough data to show chart'),
-              ] else ...[
-                const SizedBox(height: 12),
-                StatOverview(spots: spots),
-                const SizedBox(height: 24),
-                Expanded(child: builder(_singleY(), _createLineChartBarData())),
-              ]
-            ],
+          child: FastBuilder(
+            () => Column(
+              children: [
+                Text(label),
+                if (filteredSpots.isEmpty) ...[
+                  const Spacer(),
+                  const Text('No data'),
+                  const Spacer(),
+                ] else if (filteredSpots.length < 2) ...[
+                  const Spacer(),
+                  Text(
+                    filteredSpots.first.y.toInt().toString(),
+                    style: context.textTheme.titleLarge,
+                  ),
+                  const Spacer(),
+                  const Text('Not enough data to show chart'),
+                ] else ...[
+                  const SizedBox(height: 12),
+                  StatOverview(spots: filteredSpots),
+                  const SizedBox(height: 24),
+                  Expanded(
+                      child: builder(_singleY(), _createLineChartBarData())),
+                ]
+              ],
+            ),
           ),
         ),
       ),
@@ -94,14 +106,17 @@ class BaseStatChart extends StatelessWidget {
 
   LineChartBarData _createLineChartBarData() {
     return LineChartBarData(
-      spots: spots,
-      dotData: FlDotData(show: spots.length < 10),
+      spots: filteredSpots.toList(),
+      dotData: FlDotData(show: filteredSpots.length < 10),
       color: AppColors.primarySwatch,
     );
   }
 
   /// If the spots only have one unique y value
   bool _singleY() {
-    return groupBy<FlSpot, int>(spots, (e) => e.y.toInt()).keys.length == 1;
+    return groupBy<FlSpot, int>(filteredSpots, (e) => e.y.toInt())
+            .keys
+            .length ==
+        1;
   }
 }

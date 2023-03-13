@@ -5,14 +5,15 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:pub_stats/controller/data_controller.dart';
+import 'package:pub_stats/view/widget/time_span_selector.dart';
 
-class SearchBar extends SliverPersistentHeaderDelegate {
-  static const _searchBarSize = 56.0;
+class StickyHeader extends SliverPersistentHeaderDelegate {
+  static const _searchBarSize = 120.0;
 
   final _dataController = GetIt.I<DataController>();
   final _logger = GetIt.I<Logger>();
 
-  SearchBar({Key? key});
+  StickyHeader({Key? key});
 
   @override
   Widget build(
@@ -30,12 +31,18 @@ class SearchBar extends SliverPersistentHeaderDelegate {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           constraints: const BoxConstraints(maxWidth: 800),
-          child: Card(
-            clipBehavior: Clip.antiAlias,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: _buildSearchBar(),
-            ),
+          child: Column(
+            children: [
+              Card(
+                clipBehavior: Clip.antiAlias,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: _buildSearchBar(),
+                ),
+              ),
+              const SizedBox(height: 16),
+              TimeSpanSelector(),
+            ],
           ),
         ),
       ),

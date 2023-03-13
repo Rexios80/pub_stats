@@ -20,7 +20,7 @@ class TimeSpanSelector extends StatelessWidget {
                 value: e,
                 label: Padding(
                   padding: const EdgeInsets.all(2),
-                  child: Text('$e', textAlign: TextAlign.center),
+                  child: FittedBox(child: Text('$e')),
                 ),
               ),
             )

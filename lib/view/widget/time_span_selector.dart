@@ -22,9 +22,12 @@ class TimeSpanSelector extends StatelessWidget {
                   value: e,
                   label: Padding(
                     padding: const EdgeInsets.all(2),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text('$e'),
+                    child: SizedBox(
+                      height: 20,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text('$e'),
+                      ),
                     ),
                   ),
                 ),

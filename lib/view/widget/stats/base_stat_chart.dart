@@ -27,7 +27,7 @@ class BaseStatChart extends StatelessWidget {
   final Widget Function(bool singleY, LineChartBarData barData) builder;
 
   Iterable<FlSpot> get filteredSpots {
-    // Always access the timespa value to register
+    // Always access the timestamp value to register
     final timeSpan = controller.timeSpan.value;
     return spots.where((e) {
       final date = DateTime.fromMillisecondsSinceEpoch(e.x.toInt());

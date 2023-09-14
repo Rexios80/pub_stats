@@ -147,7 +147,7 @@ class DataController {
 
       // Remove duplicates (there shouldn't be any but there are for some reason)
       final distinctPackageStats = {
-        for (final stats in packageStats) stats.package: stats
+        for (final stats in packageStats) stats.package: stats,
       }.values.toList();
 
       distinctPackageStats.sort(_sortStats);

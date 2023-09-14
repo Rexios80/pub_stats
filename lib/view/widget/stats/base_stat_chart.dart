@@ -71,8 +71,8 @@ class BaseStatChart extends StatelessWidget {
                   StatOverview(spots: filteredSpots),
                   const SizedBox(height: 24),
                   Expanded(
-                      child: builder(_singleY(), _createLineChartBarData())),
-                ]
+                      child: builder(_singleY(), _createLineChartBarData()),),
+                ],
               ],
             ),
           ),

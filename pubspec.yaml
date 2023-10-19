@@ -3,7 +3,7 @@ publish_to: none
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.19.0 <3.0.0"
+  sdk: ^3.0.0
 
 dependencies:
   flutter:
@@ -11,12 +11,12 @@ dependencies:
 
   fast_ui: ^0.1.0
   get_it: ^7.2.0
-  logger: ^1.1.0
+  logger: ^2.0.2+1
   intl: ^0.18.0
   get_time_ago: ^1.1.1
   font_awesome_flutter: ^10.0.0-beta
   url_launcher: ^6.0.17
-  fl_chart: ^0.61.0
+  fl_chart: ^0.64.0
   flutter_svg: ^2.0.0+1
   pub_api_client: ^2.2.0
   flutter_typeahead: ^4.3.3
@@ -29,7 +29,7 @@ dependencies:
   # Firebase
   firebase_core: ^2.4.1
   firebase_analytics: ^10.1.0
-  firebase_app_check: ^0.1.1+8
+  firebase_app_check: ^0.2.1+1
   firebase_auth: ^4.2.2
   firebase_database: ^10.0.9
   firebase_performance: ^0.9.0+10
@@ -41,11 +41,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  rexios_lints: ^5.0.0
+  rexios_lints: ^6.0.1
   flutter_native_splash: ^2.0.1+1
-
-dependency_overrides:
-  intl: ^0.18.0
 
 flutter:
   uses-material-design: true

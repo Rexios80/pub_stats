@@ -52,7 +52,8 @@ class FirebaseService {
   static Future<void> _activateAppCheck() async {
     try {
       await FirebaseAppCheck.instance.activate(
-        webRecaptchaSiteKey: '6LeVDcodAAAAAFLXdyTIcFjcEGN-Gjl2nWrU08q5',
+        webProvider:
+            ReCaptchaV3Provider('6LeVDcodAAAAAFLXdyTIcFjcEGN-Gjl2nWrU08q5'),
       );
     } catch (e) {
       // This will throw after a hot reload

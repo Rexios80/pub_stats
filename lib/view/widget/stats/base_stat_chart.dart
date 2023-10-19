@@ -9,14 +9,14 @@ import 'package:fast_ui/fast_ui.dart';
 import 'package:collection/collection.dart';
 
 class BaseStatChart extends StatelessWidget {
-  static final defaultGridData = FlGridData(show: false);
-  static final defaultTitlesData = FlTitlesData(
+  static const defaultGridData = FlGridData(show: false);
+  static const defaultTitlesData = FlTitlesData(
     topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
     bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
     rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
     leftTitles: AxisTitles(
       sideTitles: SideTitles(showTitles: true, reservedSize: 50),
-      drawBehindEverything: true,
+      drawBelowEverything: true,
     ),
   );
 
@@ -71,7 +71,8 @@ class BaseStatChart extends StatelessWidget {
                   StatOverview(spots: filteredSpots),
                   const SizedBox(height: 24),
                   Expanded(
-                      child: builder(_singleY(), _createLineChartBarData()),),
+                    child: builder(_singleY(), _createLineChartBarData()),
+                  ),
                 ],
               ],
             ),

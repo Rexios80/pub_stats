@@ -15,15 +15,5 @@ class AppTheme {
     cardTheme: CardTheme(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
     ),
-    segmentedButtonTheme: SegmentedButtonThemeData(
-      style: ButtonStyle(
-        backgroundColor: FastMaterialStateProperty(
-          {MaterialState.selected: AppColors.primary},
-        ),
-        foregroundColor:
-            FastMaterialStateProperty({MaterialState.selected: Colors.white}),
-        side: const MaterialStatePropertyAll(BorderSide(color: Colors.grey)),
-      ),
-    ),
   );
 }

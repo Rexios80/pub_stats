@@ -13,6 +13,8 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
   final _dataController = GetIt.I<DataController>();
   final _logger = GetIt.I<Logger>();
 
+  final _textController = TextEditingController();
+
   StickyHeader({Key? key});
 
   @override
@@ -71,6 +73,7 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
         Expanded(
           child: TypeAheadField<String>(
             textFieldConfiguration: TextFieldConfiguration(
+              controller: _textController,
               autofocus: true,
               autocorrect: false,
               textCapitalization: TextCapitalization.none,
@@ -81,16 +84,21 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9_\-]')),
               ],
-              onSubmitted: _dataController.fetchStats,
+              onSubmitted: _submit,
             ),
-            suggestionsCallback: (pattern) {
-              if (pattern.isEmpty) {
-                return [];
-              }
-              return _dataController.complete(pattern);
-            },
-            itemBuilder: (context, suggestion) =>
-                ListTile(title: Text(suggestion)),
+            suggestionsCallback: _dataController.complete,
+            itemBuilder: (context, suggestion) => ListTile(
+              title: Text(suggestion),
+              trailing: _dataController.loadedStats.value.isEmpty
+                  ? null
+                  : TextButton(
+                      onPressed: () {
+                        _dataController.addToComparison(suggestion);
+                        _textController.clear();
+                      },
+                      child: const Text('Compare'),
+                    ),
+            ),
             noItemsFoundBuilder: (context) =>
                 const ListTile(title: Text('No packages found')),
             errorBuilder: (context, error) {
@@ -98,7 +106,7 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
               return const ListTile(title: Text('Error searching packages'));
             },
             debounceDuration: Duration.zero,
-            onSuggestionSelected: _dataController.fetchStats,
+            onSuggestionSelected: _submit,
           ),
         ),
         const SizedBox(width: 16),
@@ -109,6 +117,11 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
         ),
       ],
     );
+  }
+
+  void _submit(String value) {
+    _dataController.fetchStats(value);
+    _textController.clear();
   }
 
   @override

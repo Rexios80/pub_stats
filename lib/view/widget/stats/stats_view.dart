@@ -15,9 +15,12 @@ class StatsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return FastBuilder(
       () {
-        if (_controller.loadedStats.value.stats.isNotEmpty) {
+        if (_controller.loadedStats.value.isNotEmpty) {
           return SliverToBoxAdapter(
-            child: StatsCharts(stats: _controller.loadedStats.value),
+            child: StatsCharts(
+              stats: _controller.loadedStats.value,
+              comparisons: _controller.comparisonStats..register(),
+            ),
           );
         } else if (_controller.developerPackageStats.isNotEmpty) {
           return DeveloperPackageStats(

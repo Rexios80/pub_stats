@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pub_stats/model/loaded_stats.dart';
+import 'package:pub_stats/model/package_stats.dart';
 import 'package:pub_stats/view/widget/stats/stats_charts.dart';
 
 class DeveloperPackageStats extends StatelessWidget {
-  final List<LoadedStats> stats;
+  final List<PackageStats> stats;
 
   const DeveloperPackageStats({super.key, required this.stats});
 

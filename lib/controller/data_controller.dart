@@ -4,7 +4,7 @@ import 'package:fast_ui/fast_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
-import 'package:pub_stats/model/loaded_stats.dart';
+import 'package:pub_stats/model/package_stats.dart';
 import 'package:pub_stats/model/package_count_snapshot.dart';
 import 'package:pub_stats/model/time_span.dart';
 import 'package:pub_stats/repo/analytics_repo.dart';
@@ -29,11 +29,13 @@ class DataController {
   final GlobalStats globalStats;
   final List<PackageCountSnapshot> packageCounts;
   final loading = false.rx;
-  final loadedStats = LoadedStats.empty().rx;
+  final loadedStats = PackageStats.empty().rx;
   final timeSpan = TimeSpan.month.rx;
 
+  final comparisonStats = <PackageStats>[].rx;
+
   final loadingDeveloperPackageStats = false.rx;
-  final developerPackageStats = <LoadedStats>[].rx;
+  final developerPackageStats = <PackageStats>[].rx;
 
   DataController._({
     required List<String> packages,
@@ -74,6 +76,8 @@ class DataController {
   }
 
   Iterable<String> complete(String pattern) {
+    if (pattern.isEmpty) return [];
+
     // Names are indexed by first character for performance
     return _completion[pattern[0]]
             ?.where((e) => e.startsWith(pattern))
@@ -88,9 +92,35 @@ class DataController {
     fetchStats(package);
   }
 
-  Future<LoadedStats> _loadStats(String package) async {
+  Future<PackageStats> _fetchStats(String package) async {
     final stats = await _database.getScoreSnapshots(package);
-    return LoadedStats(package: package, stats: stats);
+    return PackageStats(package: package, stats: stats);
+  }
+
+  Future<PackageStats?> _fetchStatsForUi(String package) async {
+    loading.value = true;
+    final PackageStats stats;
+    try {
+      stats = await _fetchStats(package);
+    } catch (e) {
+      _logger.e(e);
+      FastOverlays.showSnackBar(
+        SnackBar(content: Text('Unable to get stats for $package')),
+      );
+      return null;
+    } finally {
+      loading.value = false;
+    }
+
+    if (stats.stats.isEmpty) {
+      // If there are no stats for the submitted package, don't update the view
+      FastOverlays.showSnackBar(
+        SnackBar(content: Text('No stats for $package')),
+      );
+      return null;
+    }
+
+    return stats;
   }
 
   Future<void> fetchStats(String package) async {
@@ -101,33 +131,30 @@ class DataController {
     }
 
     _analytics.logSearch(package);
-    _url.setPackage(package);
 
-    loading.value = true;
-    final LoadedStats stats;
-    try {
-      stats = await _loadStats(package);
-    } catch (e) {
-      _logger.e(e);
-      FastOverlays.showSnackBar(
-        SnackBar(content: Text('Unable to get stats for $package')),
-      );
-      loading.value = false;
-      return;
-    }
-
-    loading.value = false;
-
-    if (stats.stats.isEmpty) {
-      // If there are no stats for the submitted package, don't update the view
-      FastOverlays.showSnackBar(
-        SnackBar(content: Text('No stats for $package')),
-      );
-      return;
-    }
+    final stats = await _fetchStatsForUi(package);
+    if (stats == null) return;
 
     developerPackageStats.clear();
     loadedStats.value = stats;
+    _url.setPackage(package);
+  }
+
+  Future<void> addToComparison(String package) async {
+    if (comparisonStats.any((e) => e.package == package)) {
+      // Don't load the same package twice
+      _logger.d('Already loaded $package');
+      return;
+    }
+
+    final stats = await _fetchStatsForUi(package);
+    if (stats == null) return;
+
+    comparisonStats.add(stats);
+  }
+
+  void removeFromComparison(String package) {
+    comparisonStats.removeWhere((e) => e.package == package);
   }
 
   Future<void> fetchDeveloperPackageStats() async {
@@ -142,7 +169,7 @@ class DataController {
     loadingDeveloperPackageStats.value = true;
     try {
       final packages = await _database.getDeveloperPackages();
-      final packageStatsFutures = packages.map(_loadStats);
+      final packageStatsFutures = packages.map(_fetchStats);
       final packageStats = await Future.wait(packageStatsFutures);
 
       // Remove duplicates (there shouldn't be any but there are for some reason)
@@ -152,9 +179,9 @@ class DataController {
 
       distinctPackageStats.sort(_sortStats);
 
-      loadedStats.value = LoadedStats.empty();
-      developerPackageStats.clear();
-      developerPackageStats.addAll(distinctPackageStats);
+      loadedStats.value = PackageStats.empty();
+      comparisonStats.clear();
+      developerPackageStats.replaceAll(distinctPackageStats);
     } catch (e) {
       _logger.e(e);
       FastOverlays.showSnackBar(
@@ -165,7 +192,7 @@ class DataController {
     }
   }
 
-  int _sortStats(LoadedStats a, LoadedStats b) {
+  int _sortStats(PackageStats a, PackageStats b) {
     // Sort by popularity first
     final popularityComparison = (b.stats.lastOrNull?.popularityScore ?? -1)
         .compareTo(a.stats.lastOrNull?.popularityScore ?? -1);
@@ -187,8 +214,9 @@ class DataController {
   /// Reset to show global stats
   void reset() {
     loading.value = false;
-    loadedStats.value = LoadedStats.empty();
+    loadedStats.value = PackageStats.empty();
     developerPackageStats.clear();
+    comparisonStats.clear();
     _url.reset();
   }
 }

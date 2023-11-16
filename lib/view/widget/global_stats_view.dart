@@ -139,11 +139,11 @@ class PackageCountChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseStatChart(
-      spots: spots,
+      spots: [spots],
       label: 'Total Package Count',
       builder: (singleY, barData) => LineChart(
         LineChartData(
-          lineBarsData: [barData],
+          lineBarsData: barData,
           gridData: BaseStatChart.defaultGridData,
           borderData: BaseStatChart.createDefaultBorderData(context),
           titlesData: BaseStatChart.defaultTitlesData,

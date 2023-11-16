@@ -3,22 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:pub_stats/constant/app_theme.dart';
 import 'package:pub_stats/constant/constants.dart';
 import 'package:pub_stats/format/formatting.dart';
-import 'package:pub_stats/model/loaded_stats.dart';
+import 'package:pub_stats/model/package_score_snapshot.dart';
+import 'package:pub_stats/model/package_stats.dart';
 import 'package:fast_ui/fast_ui.dart';
 import 'package:pub_stats/view/widget/stats/base_stat_chart.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class StatsCharts extends StatelessWidget {
-  final LoadedStats stats;
+  final PackageStats stats;
+  final List<PackageStats> comparisons;
   final bool showHint;
 
-  const StatsCharts({super.key, required this.stats, this.showHint = true});
+  const StatsCharts({
+    super.key,
+    required this.stats,
+    this.comparisons = const [],
+    this.showHint = true,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final likeCountChart = LikeCountChart(spots: _createLikeCountSpots());
+    final likeCountChart =
+        LikeCountChart(spots: _createSpots((e) => e.likeCount));
     final popularityScoreChart =
-        PopularityScoreChart(spots: _createPopularityScoreSpots());
+        PopularityScoreChart(spots: _createSpots((e) => e.popularityScore));
 
     return Column(
       children: [
@@ -63,31 +71,26 @@ class StatsCharts extends StatelessWidget {
     );
   }
 
-  List<FlSpot> _createLikeCountSpots() {
-    return stats.stats
+  List<List<FlSpot>> _createSpots(
+    num Function(PackageScoreSnapshot stats) getValue,
+  ) {
+    return [stats, ...comparisons]
         .map(
-          (e) => FlSpot(
-            e.timestamp.millisecondsSinceEpoch.toDouble(),
-            e.likeCount.toDouble(),
-          ),
-        )
-        .toList();
-  }
-
-  List<FlSpot> _createPopularityScoreSpots() {
-    return stats.stats
-        .map(
-          (e) => FlSpot(
-            e.timestamp.millisecondsSinceEpoch.toDouble(),
-            e.popularityScore.toDouble(),
-          ),
+          (e) => e.stats
+              .map(
+                (e) => FlSpot(
+                  e.timestamp.millisecondsSinceEpoch.toDouble(),
+                  getValue(e).toDouble(),
+                ),
+              )
+              .toList(),
         )
         .toList();
   }
 }
 
 class LikeCountChart extends StatelessWidget {
-  final List<FlSpot> spots;
+  final List<List<FlSpot>> spots;
 
   const LikeCountChart({super.key, required this.spots});
 
@@ -101,7 +104,7 @@ class LikeCountChart extends StatelessWidget {
         final double? minY;
         final double? maxY;
         if (singleY) {
-          final y = barData.spots.first.y;
+          final y = barData.first.spots.first.y;
           minY = y < 10 ? 0 : y - 10;
           maxY = y + 10;
         } else {
@@ -112,7 +115,7 @@ class LikeCountChart extends StatelessWidget {
           LineChartData(
             minY: minY,
             maxY: maxY,
-            lineBarsData: [barData],
+            lineBarsData: barData,
             gridData: BaseStatChart.defaultGridData,
             borderData: BaseStatChart.createDefaultBorderData(context),
             titlesData: BaseStatChart.defaultTitlesData,
@@ -126,7 +129,7 @@ class LikeCountChart extends StatelessWidget {
 }
 
 class PopularityScoreChart extends StatelessWidget {
-  final List<FlSpot> spots;
+  final List<List<FlSpot>> spots;
 
   const PopularityScoreChart({super.key, required this.spots});
 
@@ -139,7 +142,7 @@ class PopularityScoreChart extends StatelessWidget {
         LineChartData(
           minY: 0,
           maxY: 100,
-          lineBarsData: [barData],
+          lineBarsData: barData,
           gridData: BaseStatChart.defaultGridData,
           borderData: BaseStatChart.createDefaultBorderData(context),
           titlesData: BaseStatChart.defaultTitlesData,

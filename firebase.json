@@ -43,10 +43,6 @@
       "port": 9000,
       "host": "127.0.0.1"
     },
-    "hosting": {
-      "port": 5143,
-      "host": "127.0.0.1"
-    },
     "ui": {
       "enabled": true
     }

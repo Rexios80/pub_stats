@@ -11,14 +11,14 @@ class AppTheme {
 
   static final theme = ThemeData(
     brightness: Brightness.dark,
-    primarySwatch: AppColors.primarySwatch,
+    colorSchemeSeed: AppColors.primary,
     cardTheme: CardTheme(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
     ),
     segmentedButtonTheme: SegmentedButtonThemeData(
       style: ButtonStyle(
         backgroundColor: FastMaterialStateProperty(
-          {MaterialState.selected: AppColors.primarySwatch},
+          {MaterialState.selected: AppColors.primary},
         ),
         foregroundColor:
             FastMaterialStateProperty({MaterialState.selected: Colors.white}),

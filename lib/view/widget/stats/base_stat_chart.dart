@@ -100,14 +100,26 @@ class BaseStatChart extends StatelessWidget {
   static LineTouchData createDefaultLineTouchData(BuildContext context) {
     return LineTouchData(
       touchTooltipData: LineTouchTooltipData(
-        getTooltipItems: (spots) => spots.map((e) {
-          final valueString = e.y.toInt().toString();
-          final date = DateTime.fromMillisecondsSinceEpoch(e.x.toInt());
+        tooltipBgColor: context.theme.cardColor,
+        getTooltipItems: (spots) => spots.mapIndexed((spotIndex, spot) {
+          final barIndex = spot.barIndex;
+          final valueString = spot.y.toInt().toString();
+          final valueStyle =
+              TextStyle(color: AppColors.chartLineColors[barIndex]);
+          final date = DateTime.fromMillisecondsSinceEpoch(spot.x.toInt());
           final dateString = Formatting.shortDate(date);
-          return LineTooltipItem(
-            '$valueString\n$dateString',
-            context.textTheme.bodyLarge!,
-          );
+
+          if (spotIndex == 0) {
+            return LineTooltipItem(
+              dateString,
+              const TextStyle(),
+              children: [
+                TextSpan(text: '\n$valueString', style: valueStyle),
+              ],
+            );
+          } else {
+            return LineTooltipItem(valueString, valueStyle);
+          }
         }).toList(),
       ),
     );

@@ -20,6 +20,7 @@ class StatsView extends StatelessWidget {
             child: StatsCharts(
               stats: _controller.loadedStats.value,
               comparisons: _controller.comparisonStats..register(),
+              onComparisonRemoved: _controller.removeFromComparison,
             ),
           );
         } else if (_controller.developerPackageStats.isNotEmpty) {

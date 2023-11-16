@@ -1,5 +1,7 @@
+import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:pub_stats/constant/app_colors.dart';
 import 'package:pub_stats/constant/app_theme.dart';
 import 'package:pub_stats/constant/constants.dart';
 import 'package:pub_stats/format/formatting.dart';
@@ -13,12 +15,14 @@ class StatsCharts extends StatelessWidget {
   final PackageStats stats;
   final List<PackageStats> comparisons;
   final bool showHint;
+  final void Function(String package)? onComparisonRemoved;
 
   const StatsCharts({
     super.key,
     required this.stats,
     this.comparisons = const [],
     this.showHint = true,
+    this.onComparisonRemoved,
   });
 
   @override
@@ -44,6 +48,23 @@ class StatsCharts extends StatelessWidget {
           'Last updated ${stats.stats.isNotEmpty ? Formatting.timeAgo(stats.stats.last.timestamp) : 'never'}',
           style: context.textTheme.bodySmall,
         ),
+        const SizedBox(height: 32),
+        if (comparisons.isNotEmpty) ...[
+          const Text('Comparing with'),
+          const SizedBox(height: 8),
+          Wrap(
+            children: comparisons
+                .mapIndexed(
+                  (index, e) => Chip(
+                    label: Text(e.package),
+                    onDeleted: () => onComparisonRemoved?.call(e.package),
+                    deleteIconColor:
+                        AppColors.chartLineColors.skip(1).elementAt(index),
+                  ),
+                )
+                .toList(),
+          ),
+        ],
         const SizedBox(height: 32),
         if (AppTheme.isWide(context))
           Row(

@@ -29,10 +29,8 @@ class DataController {
   final GlobalStats globalStats;
   final List<PackageCountSnapshot> packageCounts;
   final loading = false.rx;
-  final loadedStats = PackageStats.empty().rx;
+  final loadedStats = <PackageStats>[].rx;
   final timeSpan = TimeSpan.month.rx;
-
-  final comparisonStats = <PackageStats>[].rx;
 
   final loadingDeveloperPackageStats = false.rx;
   final developerPackageStats = <PackageStats>[].rx;
@@ -58,7 +56,6 @@ class DataController {
 
     final globalStats = await _database.getGlobalStats();
     final packageCounts = await _database.getPackageCounts();
-    final pathPackage = _url.getPackage();
 
     final instance = DataController._(
       packages: packages,
@@ -66,19 +63,25 @@ class DataController {
       globalStats: globalStats,
       packageCounts: packageCounts,
     );
-    await instance.fetchStats(pathPackage, writeUrl: false);
-
-    final pathData = _url.getData();
-    final comparisons = pathData['compare']?.split(',') ?? [];
-    for (final package in comparisons) {
-      await instance.addToComparison(package, writeUrl: false);
-    }
-
-    if (_url.isDeveloperPackages()) {
-      await instance.fetchDeveloperPackageStats();
-    }
 
     return instance;
+  }
+
+  Future<void> parseRoute(String route) async {
+    if (route == '/developer') {
+      await fetchDeveloperPackageStats();
+      return;
+    }
+
+    final match = RegExp(r'\/packages\/(.+)').firstMatch(route);
+    if (match == null) return;
+    final packages = match[1]!.split(',');
+
+    clearData();
+
+    for (final package in packages) {
+      await fetchStats(package, writeUrl: false, clear: false);
+    }
   }
 
   Iterable<String> complete(String pattern) {
@@ -129,8 +132,12 @@ class DataController {
     return stats;
   }
 
-  Future<void> fetchStats(String package, {bool writeUrl = true}) async {
-    if (package.isEmpty || loadedStats.value.package == package) {
+  Future<void> fetchStats(
+    String package, {
+    bool writeUrl = true,
+    bool clear = true,
+  }) async {
+    if (package.isEmpty || loadedStats.any((e) => e.package == package)) {
       // Don't load the same package twice
       _logger.d('Already loaded $package');
       return;
@@ -142,39 +149,17 @@ class DataController {
     if (stats == null) return;
 
     developerPackageStats.clear();
-    loadedStats.value = stats;
+
+    if (clear) loadedStats.clear();
+    loadedStats.add(stats);
 
     if (!writeUrl) return;
 
-    _url.setPackage(
-      package,
-      comparisons: comparisonStats.map((e) => e.package).toList(),
-    );
+    _url.setPackages(loadedStats.map((e) => e.package).toList());
   }
 
-  Future<void> addToComparison(String package, {bool writeUrl = true}) async {
-    if ([loadedStats.value, ...comparisonStats]
-        .any((e) => e.package == package)) {
-      // Don't load the same package twice
-      _logger.d('Already loaded $package');
-      return;
-    }
-
-    final stats = await _fetchStatsForUi(package);
-    if (stats == null) return;
-
-    comparisonStats.add(stats);
-
-    if (!writeUrl) return;
-
-    _url.setPackage(
-      loadedStats.value.package,
-      comparisons: comparisonStats.map((e) => e.package).toList(),
-    );
-  }
-
-  void removeFromComparison(String package) {
-    comparisonStats.removeWhere((e) => e.package == package);
+  void removeStats(String package) {
+    loadedStats.removeWhere((e) => e.package == package);
   }
 
   Future<void> fetchDeveloperPackageStats() async {
@@ -199,8 +184,7 @@ class DataController {
 
       distinctPackageStats.sort(_sortStats);
 
-      loadedStats.value = PackageStats.empty();
-      comparisonStats.clear();
+      loadedStats.clear();
       developerPackageStats.replaceAll(distinctPackageStats);
     } catch (e) {
       _logger.e(e);
@@ -231,12 +215,15 @@ class DataController {
     return a.package.compareTo(b.package);
   }
 
+  void clearData() {
+    loading.value = false;
+    loadedStats.clear();
+    developerPackageStats.clear();
+  }
+
   /// Reset to show global stats
   void reset() {
-    loading.value = false;
-    loadedStats.value = PackageStats.empty();
-    developerPackageStats.clear();
-    comparisonStats.clear();
+    clearData();
     _url.reset();
   }
 }

@@ -15,7 +15,7 @@ class DeveloperPackageStats extends StatelessWidget {
           // Add padding to every item except the last one
           padding:
               EdgeInsets.only(bottom: index == (stats.length - 1) ? 0 : 32),
-          child: StatsCharts(stats: stats[index], showHint: false),
+          child: StatsCharts(stats: [stats[index]], showHint: false),
         ),
         childCount: stats.length,
       ),

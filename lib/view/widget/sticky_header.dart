@@ -89,11 +89,11 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
             suggestionsCallback: _dataController.complete,
             itemBuilder: (context, suggestion) => ListTile(
               title: Text(suggestion),
-              trailing: _dataController.loadedStats.value.isEmpty
+              trailing: _dataController.loadedStats.isEmpty
                   ? null
                   : TextButton(
                       onPressed: () {
-                        _dataController.addToComparison(suggestion);
+                        _dataController.fetchStats(suggestion, clear: false);
                         _textController.clear();
                       },
                       child: const Text('Compare'),

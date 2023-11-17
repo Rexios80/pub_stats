@@ -8,9 +8,4 @@ class PackageStats {
     required this.package,
     required this.stats,
   });
-
-  PackageStats.empty() : this(package: '', stats: []);
-
-  bool get isEmpty => package.isEmpty;
-  bool get isNotEmpty => package.isNotEmpty;
 }

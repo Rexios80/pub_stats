@@ -5,8 +5,8 @@ import 'package:pub_stats/service/url_service/url_service.dart';
 
 class UrlServiceImpl extends UrlService {
   @override
-  void setPath(String title, String path) {
-    html.window.history.pushState(null, title, '#/$path');
+  void setPath(String path) {
+    html.window.history.pushState(null, 'pubstats.dev', '#$path');
   }
 
   @override

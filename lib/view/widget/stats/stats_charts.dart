@@ -12,15 +12,13 @@ import 'package:pub_stats/view/widget/stats/base_stat_chart.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class StatsCharts extends StatelessWidget {
-  final PackageStats stats;
-  final List<PackageStats> comparisons;
+  final List<PackageStats> stats;
   final bool showHint;
   final void Function(String package)? onComparisonRemoved;
 
   const StatsCharts({
     super.key,
     required this.stats,
-    this.comparisons = const [],
     this.showHint = true,
     this.onComparisonRemoved,
   });
@@ -36,25 +34,26 @@ class StatsCharts extends StatelessWidget {
       children: [
         InkWell(
           borderRadius: AppTheme.pillRadius,
-          onTap: () =>
-              launchUrlString(Constants.pubPackageBaseUrl + stats.package),
+          onTap: () => launchUrlString(
+              Constants.pubPackageBaseUrl + stats.first.package),
           child: Padding(
             padding: const EdgeInsets.all(8),
-            child: Text(stats.package, style: context.textTheme.titleLarge),
+            child:
+                Text(stats.first.package, style: context.textTheme.titleLarge),
           ),
         ),
         const SizedBox(height: 4),
         Text(
-          'Last updated ${stats.stats.isNotEmpty ? Formatting.timeAgo(stats.stats.last.timestamp) : 'never'}',
+          'Last updated ${stats.first.stats.isNotEmpty ? Formatting.timeAgo(stats.first.stats.last.timestamp) : 'never'}',
           style: context.textTheme.bodySmall,
         ),
         const SizedBox(height: 32),
-        if (comparisons.isNotEmpty) ...[
+        if (stats.isNotEmpty) ...[
           const Text('Comparing with'),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
-            children: comparisons
+            children: stats
                 .mapIndexed(
                   (index, e) => Chip(
                     label: Text(e.package),
@@ -96,7 +95,7 @@ class StatsCharts extends StatelessWidget {
   List<List<FlSpot>> _createSpots(
     num Function(PackageScoreSnapshot stats) getValue,
   ) {
-    return [stats, ...comparisons]
+    return stats
         .map(
           (e) => e.stats
               .map(

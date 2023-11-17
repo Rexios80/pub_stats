@@ -53,6 +53,7 @@ class StatsCharts extends StatelessWidget {
           const Text('Comparing with'),
           const SizedBox(height: 8),
           Wrap(
+            spacing: 8,
             children: comparisons
                 .mapIndexed(
                   (index, e) => Chip(

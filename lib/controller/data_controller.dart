@@ -153,7 +153,8 @@ class DataController {
   }
 
   Future<void> addToComparison(String package, {bool writeUrl = true}) async {
-    if (comparisonStats.any((e) => e.package == package)) {
+    if ([loadedStats.value, ...comparisonStats]
+        .any((e) => e.package == package)) {
       // Don't load the same package twice
       _logger.d('Already loaded $package');
       return;

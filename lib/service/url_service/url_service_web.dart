@@ -10,8 +10,9 @@ class UrlServiceImpl extends UrlService {
   }
 
   @override
-  String getPath() {
-    final path = html.window.location.hash;
-    return path.replaceFirst('#/', '');
+  Uri getUri() {
+    final uri = Uri.parse(html.window.location.toString());
+    // Convert fragmented url to a normal one so parsing is easier
+    return Uri.parse('${uri.scheme}://${uri.host}${uri.fragment}');
   }
 }

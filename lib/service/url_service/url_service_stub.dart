@@ -5,7 +5,7 @@ class UrlServiceImpl extends UrlService {
   void setPath(String title, String path) {}
 
   @override
-  String getPath() {
-    return '';
+  Uri getUri() {
+    return Uri();
   }
 }

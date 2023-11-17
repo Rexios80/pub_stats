@@ -4,12 +4,16 @@ import 'package:collection/collection.dart';
 class UrlRepo {
   final _url = UrlService.forPlatform();
 
-  void setPackage(String package) {
-    _url.setPath(package, 'packages/$package');
+  void setPackage(String package, {List<String> comparisons = const []}) {
+    var path = 'packages/$package';
+    if (comparisons.isNotEmpty) {
+      path += '?compare=${comparisons.join(',')}';
+    }
+    _url.setPath(package, path);
   }
 
   String getPackage() {
-    final split = _url.getPath().split('/');
+    final split = _url.getUri().path.split('/').skip(1);
     if (split.firstOrNull == 'packages') {
       return split.lastOrNull ?? '';
     } else {
@@ -17,12 +21,16 @@ class UrlRepo {
     }
   }
 
+  Map<String, String> getData() {
+    return _url.getUri().queryParameters;
+  }
+
   void setDeveloperPackages() {
     _url.setPath('Rexios\'s Packages', 'developer');
   }
 
   bool isDeveloperPackages() {
-    return _url.getPath() == 'developer';
+    return _url.getUri().path == '/developer';
   }
 
   void reset() {

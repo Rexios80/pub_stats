@@ -66,7 +66,13 @@ class DataController {
       globalStats: globalStats,
       packageCounts: packageCounts,
     );
-    await instance.fetchStats(pathPackage);
+    await instance.fetchStats(pathPackage, writeUrl: false);
+
+    final pathData = _url.getData();
+    final comparisons = pathData['compare']?.split(',') ?? [];
+    for (final package in comparisons) {
+      await instance.addToComparison(package, writeUrl: false);
+    }
 
     if (_url.isDeveloperPackages()) {
       await instance.fetchDeveloperPackageStats();
@@ -123,7 +129,7 @@ class DataController {
     return stats;
   }
 
-  Future<void> fetchStats(String package) async {
+  Future<void> fetchStats(String package, {bool writeUrl = true}) async {
     if (package.isEmpty || loadedStats.value.package == package) {
       // Don't load the same package twice
       _logger.d('Already loaded $package');
@@ -137,10 +143,16 @@ class DataController {
 
     developerPackageStats.clear();
     loadedStats.value = stats;
-    _url.setPackage(package);
+
+    if (!writeUrl) return;
+
+    _url.setPackage(
+      package,
+      comparisons: comparisonStats.map((e) => e.package).toList(),
+    );
   }
 
-  Future<void> addToComparison(String package) async {
+  Future<void> addToComparison(String package, {bool writeUrl = true}) async {
     if (comparisonStats.any((e) => e.package == package)) {
       // Don't load the same package twice
       _logger.d('Already loaded $package');
@@ -151,6 +163,13 @@ class DataController {
     if (stats == null) return;
 
     comparisonStats.add(stats);
+
+    if (!writeUrl) return;
+
+    _url.setPackage(
+      loadedStats.value.package,
+      comparisons: comparisonStats.map((e) => e.package).toList(),
+    );
   }
 
   void removeFromComparison(String package) {

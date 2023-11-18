@@ -14,13 +14,11 @@ class PubStatsApp extends StatelessWidget {
       themeMode: ThemeMode.dark,
       darkTheme: AppTheme.theme,
       // Must use this instead of home for an initial route to work
-      onGenerateInitialRoutes: (initialRoute) {
-        return [
-          MaterialPageRoute(
-            builder: (context) => const Home(),
-          ),
-        ];
-      },
+      onGenerateInitialRoutes: (initialRoute) => [
+        MaterialPageRoute(
+          builder: (context) => const Home(),
+        ),
+      ],
       // This must be set but we don't actually need to do anything
       onGenerateRoute: (settings) => null,
     );

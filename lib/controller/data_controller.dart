@@ -42,7 +42,7 @@ class DataController {
     required this.packageCounts,
   })  : _packages = packages,
         _completion = completion {
-    _url.uri.listen((uri) => parsePath(uri.path));
+    _url.uri.listen((uri) => _parsePath(uri.path));
   }
 
   static Future<DataController> create() async {
@@ -69,17 +69,17 @@ class DataController {
     return instance;
   }
 
-  Future<void> parsePath(String route) async {
-    if (route == '/developer') {
+  Future<void> _parsePath(String path) async {
+    if (path == '/developer') {
       await fetchDeveloperPackageStats();
       return;
     }
 
-    final match = RegExp(r'\/packages\/(.+)').firstMatch(route);
+    final match = RegExp(r'\/packages\/(.+)').firstMatch(path);
     if (match == null) return;
     final packages = match[1]!.split(',');
 
-    clearData();
+    _clearData();
 
     for (final package in packages) {
       await fetchStats(package, writeUrl: false, clear: false);
@@ -134,6 +134,10 @@ class DataController {
     return stats;
   }
 
+  void _setPathPackages() {
+    _url.setPackages(loadedStats.map((e) => e.package).toList());
+  }
+
   Future<void> fetchStats(
     String package, {
     bool writeUrl = true,
@@ -156,12 +160,12 @@ class DataController {
     loadedStats.add(stats);
 
     if (!writeUrl) return;
-
-    _url.setPackages(loadedStats.map((e) => e.package).toList());
+    _setPathPackages();
   }
 
   void removeStats(String package) {
     loadedStats.removeWhere((e) => e.package == package);
+    _setPathPackages();
   }
 
   Future<void> fetchDeveloperPackageStats() async {
@@ -217,7 +221,7 @@ class DataController {
     return a.package.compareTo(b.package);
   }
 
-  void clearData() {
+  void _clearData() {
     loading.value = false;
     loadedStats.clear();
     developerPackageStats.clear();
@@ -225,7 +229,7 @@ class DataController {
 
   /// Reset to show global stats
   void reset() {
-    clearData();
+    _clearData();
     _url.reset();
   }
 }

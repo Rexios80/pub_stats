@@ -78,14 +78,22 @@ class DataController {
       return;
     }
 
+    developerPackageStats.clear();
+
     final match = RegExp(r'\/packages\/(.+)').firstMatch(path);
     if (match == null) return;
-    final packages = match[1]!.split(',');
+    final pathPackages = match[1]!.split(',').toSet();
 
-    _clearData();
+    final currentPackages = loadedStats.map((e) => e.package).toSet();
+    final newPackages = pathPackages.difference(currentPackages);
+    final removedPackages = currentPackages.difference(pathPackages);
 
-    for (final package in packages) {
+    for (final package in newPackages) {
       await fetchStats(package, writeUrl: false, clear: false);
+    }
+
+    for (final package in removedPackages) {
+      removeStats(package, writeUrl: false);
     }
   }
 
@@ -174,8 +182,10 @@ class DataController {
     _setPathPackages();
   }
 
-  void removeStats(String package) {
+  void removeStats(String package, {bool writeUrl = true}) {
     loadedStats.removeWhere((e) => e.package == package);
+
+    if (!writeUrl) return;
     _setPathPackages();
   }
 
@@ -232,15 +242,12 @@ class DataController {
     return a.package.compareTo(b.package);
   }
 
-  void _clearData() {
+  /// Reset to show global stats
+  void reset() {
     loading.value = false;
     loadedStats.clear();
     developerPackageStats.clear();
-  }
 
-  /// Reset to show global stats
-  void reset() {
-    _clearData();
     _url.reset();
   }
 }

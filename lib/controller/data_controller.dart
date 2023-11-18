@@ -98,8 +98,6 @@ class DataController {
   }
 
   Iterable<String> complete(String pattern) {
-    if (pattern.isEmpty) return [];
-
     // Names are indexed by first character for performance
     return _completion[pattern[0]]
             ?.where((e) => e.startsWith(pattern))

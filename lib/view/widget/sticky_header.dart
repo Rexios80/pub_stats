@@ -86,9 +86,12 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
               ],
               onSubmitted: _submit,
             ),
-            suggestionsCallback: (value) => {
-              value,
-              ..._dataController.complete(value),
+            suggestionsCallback: (pattern) {
+              if (pattern.isEmpty) return [];
+              return {
+                pattern,
+                ..._dataController.complete(pattern),
+              };
             },
             itemBuilder: (context, suggestion) => ListTile(
               title: Text(suggestion),

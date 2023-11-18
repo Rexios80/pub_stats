@@ -4,6 +4,7 @@ import 'package:fast_ui/fast_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
+import 'package:pub_stats/constant/app_colors.dart';
 import 'package:pub_stats/model/package_stats.dart';
 import 'package:pub_stats/model/package_count_snapshot.dart';
 import 'package:pub_stats/model/time_span.dart';
@@ -146,6 +147,14 @@ class DataController {
     if (package.isEmpty || loadedStats.any((e) => e.package == package)) {
       // Don't load the same package twice
       _logger.d('Already loaded $package');
+      return;
+    }
+
+    if (loadedStats.length == AppColors.chartLineColors.length) {
+      // Can't compare more packages
+      FastOverlays.showSnackBar(
+        const SnackBar(content: Text('Cannot add more packages to compare')),
+      );
       return;
     }
 

@@ -26,7 +26,7 @@ dependencies:
   pub_stats_core:
     git:
       url: https://github.com/Rexios80/pub_stats_core
-      ref: 7c772c42613a345dfaaef0779622bf9d9a2e9741
+      ref: c750e998791190029bd8f3e98cd601c7a3aac1a6
 
   # Firebase
   firebase_core: ^2.4.1
@@ -45,6 +45,12 @@ dev_dependencies:
 
   rexios_lints: ^6.0.1
   flutter_native_splash: ^2.0.1+1
+
+dependency_overrides:
+  pub_api_client:
+    git:
+      url: https://github.com/Rexios80/pub_api_client
+      ref: 47b53a0d1e8380f6152ef5b4458b0acf511d5517
 
 flutter:
   uses-material-design: true

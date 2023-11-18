@@ -60,8 +60,7 @@ class StatsCharts extends StatelessWidget {
                   (index, e) => Chip(
                     label: Text(e.package),
                     onDeleted: () => onComparisonRemoved?.call(e.package),
-                    deleteIconColor:
-                        AppColors.chartLineColors.skip(1).elementAt(index),
+                    deleteIconColor: AppColors.chartLineColors.elementAt(index),
                   ),
                 )
                 .toList(),

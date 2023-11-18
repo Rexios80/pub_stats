@@ -32,25 +32,27 @@ class StatsCharts extends StatelessWidget {
 
     return Column(
       children: [
-        InkWell(
-          borderRadius: AppTheme.pillRadius,
-          onTap: () => launchUrlString(
-              Constants.pubPackageBaseUrl + stats.first.package),
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child:
-                Text(stats.first.package, style: context.textTheme.titleLarge),
+        if (stats.length == 1) ...[
+          InkWell(
+            borderRadius: AppTheme.pillRadius,
+            onTap: () => launchUrlString(
+                Constants.pubPackageBaseUrl + stats.first.package),
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                stats.first.package,
+                style: context.textTheme.titleLarge,
+              ),
+            ),
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          'Last updated ${stats.first.stats.isNotEmpty ? Formatting.timeAgo(stats.first.stats.last.timestamp) : 'never'}',
-          style: context.textTheme.bodySmall,
-        ),
-        const SizedBox(height: 32),
-        if (stats.isNotEmpty) ...[
-          const Text('Comparing with'),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
+          Text(
+            'Last updated ${stats.first.stats.isNotEmpty ? Formatting.timeAgo(stats.first.stats.last.timestamp) : 'never'}',
+            style: context.textTheme.bodySmall,
+          ),
+        ] else ...[
+          Text('Comparing', style: context.textTheme.titleLarge),
+          const SizedBox(height: 16),
           Wrap(
             spacing: 8,
             children: stats

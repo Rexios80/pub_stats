@@ -25,5 +25,8 @@ class UrlServiceImpl extends UrlService {
   }
 
   @override
-  Stream<Uri> get uri => _uriController.stream;
+  Stream<Uri> get uri async* {
+    yield _getUri();
+    yield* _uriController.stream;
+  }
 }

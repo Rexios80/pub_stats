@@ -5,7 +5,5 @@ class UrlServiceImpl extends UrlService {
   void setPath(String path) {}
 
   @override
-  Uri getUri() {
-    return Uri();
-  }
+  Stream<Uri> get uri => const Stream.empty();
 }

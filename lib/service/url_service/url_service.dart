@@ -3,7 +3,7 @@ import 'package:pub_stats/service/url_service/url_service_stub.dart'
 
 abstract class UrlService {
   void setPath(String path);
-  Uri getUri();
+  Stream<Uri> get uri;
 
   const UrlService();
 

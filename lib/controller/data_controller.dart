@@ -41,7 +41,9 @@ class DataController {
     required this.globalStats,
     required this.packageCounts,
   })  : _packages = packages,
-        _completion = completion;
+        _completion = completion {
+    _url.uri.listen((uri) => parsePath(uri.path));
+  }
 
   static Future<DataController> create() async {
     final packages = await _pub.getNameCompletion();
@@ -67,7 +69,7 @@ class DataController {
     return instance;
   }
 
-  Future<void> parseRoute(String route) async {
+  Future<void> parsePath(String route) async {
     if (route == '/developer') {
       await fetchDeveloperPackageStats();
       return;

@@ -8,9 +8,10 @@ class UrlServiceImpl extends UrlService {
   final _uriController = StreamController<Uri>.broadcast();
 
   UrlServiceImpl() {
-    html.window.addEventListener('hashchange', (event) {
-      _uriController.add(_getUri());
-    });
+    html.window.addEventListener(
+      'hashchange',
+      (event) => _uriController.add(uri),
+    );
   }
 
   @override
@@ -18,15 +19,12 @@ class UrlServiceImpl extends UrlService {
     html.window.history.pushState(null, 'pubstats.dev', '#$path');
   }
 
-  Uri _getUri() {
+  Uri get uri {
     final uri = Uri.parse(html.window.location.toString());
     // Convert fragmented url to a normal one so parsing is easier
     return Uri.parse('${uri.scheme}://${uri.host}${uri.fragment}');
   }
 
   @override
-  Stream<Uri> get uri async* {
-    yield _getUri();
-    yield* _uriController.stream;
-  }
+  Stream<Uri> get uriStream => _uriController.stream;
 }

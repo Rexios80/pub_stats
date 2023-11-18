@@ -11,7 +11,9 @@ class UrlRepo {
     _url.setPath('/developer');
   }
 
-  Stream<Uri> get uri => _url.uri;
+  Uri get uri => _url.uri;
+
+  Stream<Uri> get uriStream => _url.uriStream;
 
   void reset() {
     _url.setPath('');

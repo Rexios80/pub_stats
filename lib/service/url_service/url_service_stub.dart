@@ -5,5 +5,8 @@ class UrlServiceImpl extends UrlService {
   void setPath(String path) {}
 
   @override
-  Stream<Uri> get uri => const Stream.empty();
+  Uri get uri => Uri.parse('https://pubstats.dev');
+
+  @override
+  Stream<Uri> get uriStream => const Stream.empty();
 }

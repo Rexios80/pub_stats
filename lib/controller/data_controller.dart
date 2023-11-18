@@ -43,7 +43,7 @@ class DataController {
     required this.packageCounts,
   })  : _packages = packages,
         _completion = completion {
-    _url.uri.listen((uri) => _parsePath(uri.path));
+    _url.uriStream.listen((uri) => _parsePath(uri.path));
   }
 
   static Future<DataController> create() async {
@@ -66,6 +66,8 @@ class DataController {
       globalStats: globalStats,
       packageCounts: packageCounts,
     );
+
+    await instance._parsePath(_url.uri.path);
 
     return instance;
   }

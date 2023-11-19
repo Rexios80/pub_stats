@@ -24,7 +24,7 @@ dependencies:
   flutter_typeahead: ^4.3.3
 
   pub_stats_core:
-    path: ../pub_stats_core
+    path: ../../pub_stats_core
     # git:
     #   url: https://github.com/Rexios80/pub_stats_core
     #   ref: c750e998791190029bd8f3e98cd601c7a3aac1a6

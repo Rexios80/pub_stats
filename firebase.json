@@ -5,7 +5,7 @@
   "hosting": [
     {
       "site": "pub-stats-collector",
-      "public": "build/web",
+      "public": "pub_stats/build/web",
       "ignore": [
         "firebase.json",
         "**/.*",
@@ -20,7 +20,7 @@
     },
     {
       "site": "pub-stats-collector-beta",
-      "public": "build/web",
+      "public": "pub_stats/build/web",
       "ignore": [
         "firebase.json",
         "**/.*",

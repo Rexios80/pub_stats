@@ -11,7 +11,7 @@ abstract class AlertConfig {
   final Set<PackageDataField> ignore;
 
   /// The type of alert
-  final AlertType type;
+  final AlertConfigType type;
 
   AlertConfig({
     required this.slug,
@@ -20,18 +20,18 @@ abstract class AlertConfig {
   });
 
   factory AlertConfig.fromJson(Map<String, dynamic> json) =>
-      switch (AlertType.values.byName(json['type'])) {
-        AlertType.discord => DiscordConfig.fromJson(json),
+      switch (AlertConfigType.values.byName(json['type'])) {
+        AlertConfigType.discord => DiscordAlertConfig.fromJson(json),
       };
 
   Map<String, dynamic> toJson();
 
   String get extra => switch (type) {
-        AlertType.discord => (this as DiscordConfig).id,
+        AlertConfigType.discord => (this as DiscordAlertConfig).id,
       };
 }
 
-enum AlertType {
+enum AlertConfigType {
   discord;
 
   String get extraLabel => switch (this) {
@@ -42,21 +42,21 @@ enum AlertType {
 abstract class AlertServiceConfig {}
 
 @JsonSerializable()
-class DiscordConfig extends AlertConfig {
+class DiscordAlertConfig extends AlertConfig {
   final String id;
   final String token;
 
-  DiscordConfig({
+  DiscordAlertConfig({
     required super.slug,
     super.ignore,
     required this.id,
     required this.token,
-    super.type = AlertType.discord,
-  }) : assert(type == AlertType.discord);
+    super.type = AlertConfigType.discord,
+  }) : assert(type == AlertConfigType.discord);
 
-  factory DiscordConfig.fromJson(Map<String, dynamic> json) =>
-      _$DiscordConfigFromJson(json);
+  factory DiscordAlertConfig.fromJson(Map<String, dynamic> json) =>
+      _$DiscordAlertConfigFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$DiscordConfigToJson(this);
+  Map<String, dynamic> toJson() => _$DiscordAlertConfigToJson(this);
 }

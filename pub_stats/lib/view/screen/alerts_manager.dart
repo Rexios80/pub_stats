@@ -9,7 +9,7 @@ import 'package:recase/recase.dart';
 class AlertsManager extends StatelessWidget {
   static final _user = GetIt.I<UserController>();
 
-  final selectedType = AlertType.discord.rx;
+  final selectedType = AlertConfigType.discord.rx;
   final slugController = TextEditingController();
   final extraController = TextEditingController();
   final ignoredFields = <PackageDataField>{}.rx;
@@ -58,7 +58,7 @@ class AlertsManager extends StatelessWidget {
                           border: OutlineInputBorder(),
                         ),
                         value: selectedType.value,
-                        items: AlertType.values
+                        items: AlertConfigType.values
                             .map(
                               (e) => DropdownMenuItem(
                                 value: e,
@@ -181,7 +181,7 @@ class AlertsManager extends StatelessWidget {
   }
 
   void addConfig() async {
-    if (await _user.addConfig(
+    if (!await _user.addConfig(
       slug: slugController.text,
       ignore: ignoredFields,
       type: selectedType.value,

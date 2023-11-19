@@ -75,7 +75,7 @@ class UserController {
   /// Return true on success
   Future<bool> addConfig({
     required String slug,
-    required AlertType type,
+    required AlertConfigType type,
     required String extra,
     required Set<PackageDataField> ignore,
   }) async {
@@ -84,7 +84,7 @@ class UserController {
     }
 
     final AlertConfig config;
-    if (type == AlertType.discord) {
+    if (type == AlertConfigType.discord) {
       final match = RegExp(r'https:\/\/discord\.com\/api\/webhooks\/(.+)\/(.+)')
           .firstMatch(extra);
 
@@ -94,7 +94,7 @@ class UserController {
         );
         return false;
       }
-      config = DiscordConfig(
+      config = DiscordAlertConfig(
         slug: slug,
         ignore: ignore,
         id: match[1]!,

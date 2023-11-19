@@ -13,36 +13,27 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        InkWell(
-          borderRadius: AppTheme.pillRadius,
-          onTap: _controller.reset,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SvgPicture.asset(
-                  AppImage.logo,
-                  width: 75,
-                ),
-                const SizedBox(width: 20),
-                Text(
-                  'pubstats.dev',
-                  textAlign: TextAlign.center,
-                  style: context.textTheme.displayMedium!
-                      .copyWith(color: context.textTheme.bodyLarge!.color),
-                ),
-              ],
+    return InkWell(
+      borderRadius: AppTheme.pillRadius,
+      onTap: _controller.reset,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Row(
+          children: [
+            SvgPicture.asset(
+              AppImage.logo,
+              width: 75,
             ),
-          ),
+            const SizedBox(width: 20),
+            Text(
+              'pubstats.dev',
+              textAlign: TextAlign.center,
+              style: context.textTheme.displayMedium!
+                  .copyWith(color: context.textTheme.bodyLarge!.color),
+            ),
+          ],
         ),
-        const Text(
-          'Pub.dev stats tracked over time',
-          textAlign: TextAlign.center,
-        ),
-      ],
+      ),
     );
   }
 }

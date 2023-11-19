@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
+import 'package:pub_stats/controller/auth_controller.dart';
 import 'package:pub_stats/controller/data_controller.dart';
 import 'package:pub_stats/repo/url_repo.dart';
 import 'package:pub_stats/service/firebase_service.dart';
@@ -23,6 +24,7 @@ void main() async {
 
   // Register controllers
   GetIt.I.registerSingleton(await DataController.create());
+  GetIt.I.registerSingleton(AuthController());
 
   runApp(const PubStatsApp());
 }

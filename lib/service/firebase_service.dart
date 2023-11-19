@@ -44,7 +44,9 @@ class FirebaseService {
       }
     }
 
-    await auth.signInAnonymously();
+    if (auth.currentUser == null) {
+      await auth.signInAnonymously();
+    }
 
     return FirebaseService._();
   }

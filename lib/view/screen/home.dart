@@ -1,15 +1,14 @@
 import 'package:fast_ui/fast_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:pub_stats/controller/auth_controller.dart';
+import 'package:pub_stats/controller/user_controller.dart';
+import 'package:pub_stats/view/screen/alerts_manager.dart';
 import 'package:pub_stats/view/widget/footer.dart';
 import 'package:pub_stats/view/widget/header.dart';
 import 'package:pub_stats/view/widget/sticky_header.dart';
 import 'package:pub_stats/view/widget/stats/stats_view.dart';
 
 class Home extends StatelessWidget {
-  static final _auth = GetIt.I<AuthController>();
-
   const Home({super.key});
 
   @override
@@ -24,30 +23,9 @@ class Home extends StatelessWidget {
               titlePadding: EdgeInsets.zero,
               title: FittedBox(fit: BoxFit.scaleDown, child: Header()),
             ),
-            actions: [
-              FastBuilder(() {
-                if (_auth.user.value != null) {
-                  return PopupMenuButton(
-                    child: CircleAvatar(
-                      backgroundImage:
-                          NetworkImage(_auth.user.value!.photoURL ?? ''),
-                      child: const Icon(Icons.person, color: Colors.white),
-                    ),
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        onTap: _auth.signOut,
-                        child: const Text('Sign out'),
-                      ),
-                    ],
-                  );
-                } else {
-                  return ElevatedButton(
-                    onPressed: _auth.signInWithGoogle,
-                    child: const Text('Sign in'),
-                  );
-                }
-              }),
-              const SizedBox(width: 8),
+            actions: const [
+              AppBarActions(),
+              SizedBox(width: 8),
             ],
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 40)),
@@ -75,5 +53,45 @@ class Home extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class AppBarActions extends StatelessWidget {
+  static final _user = GetIt.I<UserController>();
+
+  const AppBarActions({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FastBuilder(() {
+      if (_user.user.value != null) {
+        return Row(
+          children: [
+            ElevatedButton(
+              onPressed: () => context.push(const AlertsManager()),
+              child: const Text('Manage Alerts'),
+            ),
+            const SizedBox(width: 8),
+            PopupMenuButton(
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(_user.user.value!.photoURL ?? ''),
+                child: const Icon(Icons.person, color: Colors.white),
+              ),
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  onTap: _user.signOut,
+                  child: const Text('Sign out'),
+                ),
+              ],
+            ),
+          ],
+        );
+      } else {
+        return ElevatedButton(
+          onPressed: _user.signInWithGoogle,
+          child: const Text('Sign in'),
+        );
+      }
+    });
   }
 }

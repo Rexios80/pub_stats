@@ -604,11 +604,9 @@ packages:
   pub_stats_core:
     dependency: "direct main"
     description:
-      path: "."
-      ref: c750e998791190029bd8f3e98cd601c7a3aac1a6
-      resolved-ref: c750e998791190029bd8f3e98cd601c7a3aac1a6
-      url: "https://github.com/Rexios80/pub_stats_core"
-    source: git
+      path: "../pub_stats_core"
+      relative: true
+    source: path
     version: "1.0.0"
   pubspec:
     dependency: transitive

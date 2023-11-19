@@ -74,7 +74,7 @@ class AppBarActions extends StatelessWidget {
             const SizedBox(width: 8),
             PopupMenuButton(
               child: CircleAvatar(
-                backgroundImage: NetworkImage(_user.user.value!.photoURL ?? ''),
+                foregroundImage: NetworkImage(_user.user.value!.photoURL ?? ''),
                 child: const Icon(Icons.person, color: Colors.white),
               ),
               itemBuilder: (context) => [

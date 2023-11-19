@@ -12,6 +12,7 @@ class AlertsManager extends StatelessWidget {
   final selectedType = AlertType.discord.rx;
   final slugController = TextEditingController();
   final extraController = TextEditingController();
+  final ignoredFields = <PackageDataField>{}.rx;
 
   final selectedConfigs = <AlertConfig>{}.rx;
 
@@ -86,7 +87,42 @@ class AlertsManager extends StatelessWidget {
                       ),
                     ),
                   ),
+                  const SizedBox(width: 16),
+                  PopupMenuButton(
+                    tooltip: 'Alert fields',
+                    itemBuilder: (context) => PackageDataField.values
+                        .map(
+                          (e) => PopupMenuItem(
+                            child: FastBuilder(
+                              () => CheckboxListTile(
+                                value: !ignoredFields.contains(e),
+                                onChanged: (value) {
+                                  if (value == true) {
+                                    ignoredFields.remove(e);
+                                  } else {
+                                    ignoredFields.add(e);
+                                  }
+                                },
+                                title: Text(e.name.titleCase),
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                    child: FastBuilder(() {
+                      final IconData icon;
+                      if (ignoredEverything) {
+                        icon = Icons.notifications_off_outlined;
+                      } else if (ignoredFields.isNotEmpty) {
+                        icon = Icons.notifications_outlined;
+                      } else {
+                        icon = Icons.notifications;
+                      }
+                      return Icon(icon);
+                    }),
+                  ),
                   IconButton(
+                    tooltip: 'Add alert',
                     icon: const Icon(Icons.add),
                     onPressed: addConfig,
                   ),
@@ -129,11 +165,16 @@ class AlertsManager extends StatelessWidget {
     );
   }
 
+  bool get ignoredEverything =>
+      PackageDataField.values.toSet().difference(ignoredFields).isEmpty;
+
   void addConfig() async {
     final slug = slugController.text;
     final extra = extraController.text;
 
-    if (slug.isEmpty || extra.isEmpty) return;
+    if (slug.isEmpty || extra.isEmpty || ignoredEverything) {
+      return;
+    }
 
     if (!await _user.validateSlug(slug)) {
       return;
@@ -142,6 +183,7 @@ class AlertsManager extends StatelessWidget {
     await _user.addConfig(
       DiscordConfig(
         slug: slug,
+        ignore: ignoredFields,
         type: selectedType.value,
         webhookUrl: extraController.text,
       ),

@@ -7,16 +7,16 @@ abstract class AlertConfig {
   /// `.system`, `package`, or `publisher:name`
   final String slug;
 
-  /// The type of alert
-  final AlertType type;
-
   /// Fields to ignore when sending the alert
   final Set<PackageDataField> ignore;
 
+  /// The type of alert
+  final AlertType type;
+
   AlertConfig({
     required this.slug,
-    required this.type,
     required this.ignore,
+    required this.type,
   });
 
   factory AlertConfig.fromJson(Map<String, dynamic> json) =>
@@ -47,9 +47,9 @@ class DiscordConfig extends AlertConfig {
 
   DiscordConfig({
     required super.slug,
+    required super.ignore,
     required this.webhookUrl,
     super.type = AlertType.discord,
-    super.ignore = const {},
   }) : assert(type == AlertType.discord);
 
   factory DiscordConfig.fromJson(Map<String, dynamic> json) =>

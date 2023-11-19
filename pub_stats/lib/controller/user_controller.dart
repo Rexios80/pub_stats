@@ -40,7 +40,8 @@ class UserController {
     configs.clear();
   }
 
-  Future<bool> validateSlug(String slug) async {
+  Future<bool> _validateSlug(String slug) async {
+    if (slug.isEmpty) return false;
     if (slug == '.system') return true;
 
     final parts = slug.split(':');
@@ -67,12 +68,44 @@ class UserController {
     return false;
   }
 
-  Future<void> addConfig(AlertConfig config) async {
+  /// Return true on success
+  Future<bool> addConfig({
+    required String slug,
+    required AlertType type,
+    required String extra,
+    required Set<PackageDataField> ignore,
+  }) async {
+    if (enabledFields(ignore).isEmpty || !await _validateSlug(slug)) {
+      return false;
+    }
+
+    final AlertConfig config;
+    if (type == AlertType.discord) {
+      final match = RegExp(r'https:\/\/discord\.com\/api\/webhooks\/(.+)\/(.+)')
+          .firstMatch(extra);
+
+      if (match == null) {
+        FastOverlays.showSnackBar(
+          const SnackBar(content: Text('Invalid Discord webhook URL')),
+        );
+        return false;
+      }
+      config = DiscordConfig(
+        slug: slug,
+        ignore: ignore,
+        id: match[1]!,
+        token: match[2]!,
+      );
+    } else {
+      return false;
+    }
+
     await _database.writeAlertConfigs(
       _auth.currentUser!.uid,
       [...configs, config],
     );
     configs.add(config);
+    return true;
   }
 
   Future<void> removeConfig(AlertConfig config) async {
@@ -83,3 +116,6 @@ class UserController {
     configs.remove(config);
   }
 }
+
+Set<PackageDataField> enabledFields(Set<PackageDataField> ignoredFields) =>
+    PackageDataField.values.toSet().difference(ignoredFields);

@@ -14,7 +14,8 @@ DiscordConfig _$DiscordConfigFromJson(Map<String, dynamic> json) =>
       ignore: (json['ignore'] as List<dynamic>)
           .map((e) => $enumDecode(_$PackageDataFieldEnumMap, e))
           .toSet(),
-      webhookUrl: json['webhookUrl'] as String,
+      id: json['id'] as String,
+      token: json['token'] as String,
       type: $enumDecodeNullable(_$AlertTypeEnumMap, json['type']) ??
           AlertType.discord,
     );
@@ -25,7 +26,8 @@ Map<String, dynamic> _$DiscordConfigToJson(DiscordConfig instance) =>
       'ignore':
           instance.ignore.map((e) => _$PackageDataFieldEnumMap[e]!).toList(),
       'type': _$AlertTypeEnumMap[instance.type]!,
-      'webhookUrl': instance.webhookUrl,
+      'id': instance.id,
+      'token': instance.token,
     };
 
 const _$PackageDataFieldEnumMap = {

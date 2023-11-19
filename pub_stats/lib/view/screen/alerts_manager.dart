@@ -148,7 +148,7 @@ class AlertsManager extends StatelessWidget {
                                 PopupMenuButton(
                                   tooltip: 'Alert fields',
                                   itemBuilder: (context) =>
-                                      _enabledFields(e.ignore)
+                                      enabledFields(e.ignore)
                                           .map(
                                             (e) => PopupMenuItem(
                                               child: Text(e.name.titleCase),
@@ -181,35 +181,17 @@ class AlertsManager extends StatelessWidget {
   }
 
   void addConfig() async {
-    final slug = slugController.text;
-    final extra = extraController.text;
-
-    if (slug.isEmpty ||
-        extra.isEmpty ||
-        _enabledFields(ignoredFields).isEmpty) {
-      return;
-    }
-
-    if (!await _user.validateSlug(slug)) {
-      return;
-    }
-
-    await _user.addConfig(
-      DiscordConfig(
-        slug: slug,
-        ignore: ignoredFields,
-        type: selectedType.value,
-        webhookUrl: extraController.text,
-      ),
-    );
+    if (await _user.addConfig(
+      slug: slugController.text,
+      ignore: ignoredFields,
+      type: selectedType.value,
+      extra: extraController.text,
+    )) return;
 
     slugController.clear();
     extraController.clear();
   }
 }
-
-Set<PackageDataField> _enabledFields(Set<PackageDataField> ignoredFields) =>
-    PackageDataField.values.toSet().difference(ignoredFields);
 
 class AlertFieldsButton extends StatelessWidget {
   final Set<PackageDataField> ignoredFields;
@@ -222,7 +204,7 @@ class AlertFieldsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final IconData icon;
-    if (_enabledFields(ignoredFields).isEmpty) {
+    if (enabledFields(ignoredFields).isEmpty) {
       icon = Icons.notifications_off_outlined;
     } else if (ignoredFields.isNotEmpty) {
       icon = Icons.notifications_outlined;

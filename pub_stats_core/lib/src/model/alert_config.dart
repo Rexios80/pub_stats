@@ -43,12 +43,14 @@ abstract class AlertServiceConfig {}
 
 @JsonSerializable()
 class DiscordConfig extends AlertConfig {
-  final String webhookUrl;
+  final String id;
+  final String token;
 
   DiscordConfig({
     required super.slug,
     required super.ignore,
-    required this.webhookUrl,
+    required this.id,
+    required this.token,
     super.type = AlertType.discord,
   }) : assert(type == AlertType.discord);
 
@@ -57,4 +59,6 @@ class DiscordConfig extends AlertConfig {
 
   @override
   Map<String, dynamic> toJson() => _$DiscordConfigToJson(this);
+
+  String get webhookUrl => '$id/$token';
 }

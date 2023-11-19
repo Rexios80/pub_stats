@@ -15,7 +15,7 @@ abstract class AlertConfig {
 
   AlertConfig({
     required this.slug,
-    required this.ignore,
+    this.ignore = const {},
     required this.type,
   });
 
@@ -27,7 +27,7 @@ abstract class AlertConfig {
   Map<String, dynamic> toJson();
 
   String get extra => switch (type) {
-        AlertType.discord => (this as DiscordConfig).webhookUrl,
+        AlertType.discord => (this as DiscordConfig).id,
       };
 }
 
@@ -48,7 +48,7 @@ class DiscordConfig extends AlertConfig {
 
   DiscordConfig({
     required super.slug,
-    required super.ignore,
+    super.ignore,
     required this.id,
     required this.token,
     super.type = AlertType.discord,
@@ -59,6 +59,4 @@ class DiscordConfig extends AlertConfig {
 
   @override
   Map<String, dynamic> toJson() => _$DiscordConfigToJson(this);
-
-  String get webhookUrl => '$id/$token';
 }

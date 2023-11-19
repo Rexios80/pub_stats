@@ -17,27 +17,31 @@ class UserController {
     _auth.userChanges().listen((user) {
       if (user == null || user.isAnonymous) {
         this.user.value = null;
+        _onSignedOut();
       } else {
         this.user.value = user;
+        _onSignedIn();
       }
     });
   }
 
   Future<void> signInWithGoogle() async {
     await _auth.signInWithPopup(GoogleAuthProvider());
-    await _fetchData();
   }
 
-  Future<void> _fetchData() async {
+  void _onSignedIn() async {
     final user = _auth.currentUser;
     if (user == null) return;
 
     configs.replaceAll(await _database.getAlertConfigs(user.uid));
   }
 
-  Future<void> signOut() async {
-    await _auth.signOut();
+  void _onSignedOut() {
     configs.clear();
+  }
+
+  Future<void> signOut() async {
+    await _auth.signInAnonymously();
   }
 
   Future<bool> _validateSlug(String slug) async {

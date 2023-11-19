@@ -11,9 +11,10 @@ part of 'alert_config.dart';
 DiscordConfig _$DiscordConfigFromJson(Map<String, dynamic> json) =>
     DiscordConfig(
       slug: json['slug'] as String,
-      ignore: (json['ignore'] as List<dynamic>)
-          .map((e) => $enumDecode(_$PackageDataFieldEnumMap, e))
-          .toSet(),
+      ignore: (json['ignore'] as List<dynamic>?)
+              ?.map((e) => $enumDecode(_$PackageDataFieldEnumMap, e))
+              .toSet() ??
+          const {},
       id: json['id'] as String,
       token: json['token'] as String,
       type: $enumDecodeNullable(_$AlertTypeEnumMap, json['type']) ??

@@ -45,15 +45,6 @@ class DatabaseRepo {
     }).toList();
   }
 
-  Future<Set<String>> getDeveloperPackages() async {
-    final event = await _database.child('developer').once();
-    final value = event.snapshot.value as Map<String, dynamic>;
-    final data =
-        value.map((k, v) => MapEntry(k, DeveloperPackageData.fromJson(v)));
-    data.removeWhere((k, v) => v.isUnlisted || v.isDiscontinued);
-    return data.keys.toSet();
-  }
-
   Future<List<AlertConfig>> getAlertConfigs(String uid) async {
     final event = await _database.child('alerts').child(uid).once();
     final value = event.snapshot.value as List?;

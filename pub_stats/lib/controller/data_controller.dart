@@ -198,7 +198,7 @@ class DataController {
 
     loadingDeveloperPackageStats.value = true;
     try {
-      final packages = await _database.getDeveloperPackages();
+      final packages = await _pub.getDeveloperPackages();
       final packageStatsFutures = packages.map(_fetchStats);
       final packageStats = await Future.wait(packageStatsFutures);
 

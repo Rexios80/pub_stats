@@ -54,16 +54,14 @@ class DatabaseRepo {
     return data.keys.toSet();
   }
 
-  Future<Map<String, List<AlertConfig>>> getAlertConfigs(String uid) async {
+  Future<List<AlertConfig>> getAlertConfigs(String uid) async {
     final event = await _database.child('alerts').child(uid).once();
-    final value = event.snapshot.value as Map<String, dynamic>?;
-    if (value == null) return {};
+    final value = event.snapshot.value as List?;
+    if (value == null) return [];
 
-    return value.map((k, v) {
-      final data = v as List;
-      final configs =
-          data.cast<Map<String, dynamic>>().map(AlertConfig.fromJson).toList();
-      return MapEntry(k, configs);
-    });
+    return value
+        .cast<Map<String, dynamic>>()
+        .map(AlertConfig.fromJson)
+        .toList();
   }
 }

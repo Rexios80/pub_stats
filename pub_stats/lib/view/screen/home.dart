@@ -68,7 +68,7 @@ class AppBarActions extends StatelessWidget {
         return Row(
           children: [
             ElevatedButton(
-              onPressed: () => context.push(const AlertsManager()),
+              onPressed: () => context.push(AlertsManager()),
               child: const Text('Manage Alerts'),
             ),
             const SizedBox(width: 8),

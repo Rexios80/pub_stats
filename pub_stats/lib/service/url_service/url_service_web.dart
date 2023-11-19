@@ -19,6 +19,7 @@ class UrlServiceImpl extends UrlService {
     html.window.history.pushState(null, 'pubstats.dev', '#$path');
   }
 
+  @override
   Uri get uri {
     final uri = Uri.parse(html.window.location.toString());
     // Convert fragmented url to a normal one so parsing is easier

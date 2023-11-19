@@ -36,7 +36,8 @@ class StatsCharts extends StatelessWidget {
           InkWell(
             borderRadius: AppTheme.pillRadius,
             onTap: () => launchUrlString(
-                Constants.pubPackageBaseUrl + stats.first.package),
+              Constants.pubPackageBaseUrl + stats.first.package,
+            ),
             child: Padding(
               padding: const EdgeInsets.all(8),
               child: Text(

@@ -68,8 +68,18 @@ class UserController {
   }
 
   Future<void> addConfig(AlertConfig config) async {
+    await _database.writeAlertConfigs(
+      _auth.currentUser!.uid,
+      [...configs, config],
+    );
     configs.add(config);
-    // TODO
-    // _database.addAlertConfig(_auth.currentUser!.uid, config);
+  }
+
+  Future<void> removeConfig(AlertConfig config) async {
+    await _database.writeAlertConfigs(
+      _auth.currentUser!.uid,
+      configs.where((e) => e != config).toList(),
+    );
+    configs.remove(config);
   }
 }

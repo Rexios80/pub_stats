@@ -14,8 +14,6 @@ class AlertsManager extends StatelessWidget {
   final extraController = TextEditingController();
   final ignoredFields = <PackageDataField>{}.rx;
 
-  final selectedConfigs = <AlertConfig>{}.rx;
-
   AlertsManager({super.key});
 
   @override
@@ -109,17 +107,11 @@ class AlertsManager extends StatelessWidget {
                           ),
                         )
                         .toList(),
-                    child: FastBuilder(() {
-                      final IconData icon;
-                      if (ignoredEverything) {
-                        icon = Icons.notifications_off_outlined;
-                      } else if (ignoredFields.isNotEmpty) {
-                        icon = Icons.notifications_outlined;
-                      } else {
-                        icon = Icons.notifications;
-                      }
-                      return Icon(icon);
-                    }),
+                    child: FastBuilder(
+                      () => AlertFieldsButton(
+                        ignoredFields: ignoredFields..register(),
+                      ),
+                    ),
                   ),
                   IconButton(
                     tooltip: 'Add alert',
@@ -130,32 +122,55 @@ class AlertsManager extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: FastBuilder(
-                () => DataTable(
-                  columns: const [
-                    DataColumn(label: Text('Slug')),
-                    DataColumn(label: Text('Type')),
-                    DataColumn(label: Text('Extra')),
-                  ],
-                  rows: _user.configs
-                      .map(
-                        (e) => DataRow(
-                          selected: selectedConfigs.contains(e),
-                          onSelectChanged: (value) {
-                            if (value == true) {
-                              selectedConfigs.add(e);
-                            } else {
-                              selectedConfigs.remove(e);
-                            }
-                          },
-                          cells: [
-                            DataCell(Text(e.slug)),
-                            DataCell(Text(e.type.name.titleCase)),
-                            DataCell(Text(e.extra)),
-                          ],
-                        ),
-                      )
-                      .toList(),
+              child: SingleChildScrollView(
+                child: FastBuilder(
+                  () => DataTable(
+                    columns: const [
+                      DataColumn(label: Text('Slug')),
+                      DataColumn(label: Text('Type')),
+                      DataColumn(label: Text('Extra')),
+                      DataColumn(label: Text('Fields')),
+                      DataColumn(label: Text('Actions')),
+                    ],
+                    rows: _user.configs
+                        .map(
+                          (e) => DataRow(
+                            cells: [
+                              DataCell(Text(e.slug)),
+                              DataCell(Text(e.type.name.titleCase)),
+                              DataCell(
+                                SizedBox(
+                                  width: 200,
+                                  child: Text(e.extra),
+                                ),
+                              ),
+                              DataCell(
+                                PopupMenuButton(
+                                  tooltip: 'Alert fields',
+                                  itemBuilder: (context) =>
+                                      _enabledFields(e.ignore)
+                                          .map(
+                                            (e) => PopupMenuItem(
+                                              child: Text(e.name.titleCase),
+                                            ),
+                                          )
+                                          .toList(),
+                                  child: AlertFieldsButton(
+                                    ignoredFields: e.ignore,
+                                  ),
+                                ),
+                              ),
+                              DataCell(
+                                IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: () => _user.removeConfig(e),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                        .toList(),
+                  ),
                 ),
               ),
             ),
@@ -165,14 +180,13 @@ class AlertsManager extends StatelessWidget {
     );
   }
 
-  bool get ignoredEverything =>
-      PackageDataField.values.toSet().difference(ignoredFields).isEmpty;
-
   void addConfig() async {
     final slug = slugController.text;
     final extra = extraController.text;
 
-    if (slug.isEmpty || extra.isEmpty || ignoredEverything) {
+    if (slug.isEmpty ||
+        extra.isEmpty ||
+        _enabledFields(ignoredFields).isEmpty) {
       return;
     }
 
@@ -191,5 +205,30 @@ class AlertsManager extends StatelessWidget {
 
     slugController.clear();
     extraController.clear();
+  }
+}
+
+Set<PackageDataField> _enabledFields(Set<PackageDataField> ignoredFields) =>
+    PackageDataField.values.toSet().difference(ignoredFields);
+
+class AlertFieldsButton extends StatelessWidget {
+  final Set<PackageDataField> ignoredFields;
+
+  const AlertFieldsButton({
+    super.key,
+    required this.ignoredFields,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final IconData icon;
+    if (_enabledFields(ignoredFields).isEmpty) {
+      icon = Icons.notifications_off_outlined;
+    } else if (ignoredFields.isNotEmpty) {
+      icon = Icons.notifications_outlined;
+    } else {
+      icon = Icons.notifications;
+    }
+    return Icon(icon);
   }
 }

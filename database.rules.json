@@ -13,6 +13,12 @@
     },
     "package_counts": {
       ".read": "auth != null"
+    },
+    "alerts": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && auth.uid == $uid"
+      }
     }
   }
 }

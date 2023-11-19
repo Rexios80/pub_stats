@@ -64,4 +64,11 @@ class DatabaseRepo {
         .map(AlertConfig.fromJson)
         .toList();
   }
+
+  Future<void> writeAlertConfigs(String uid, List<AlertConfig> configs) async {
+    await _database
+        .child('alerts')
+        .child(uid)
+        .set(configs.map((e) => e.toJson()).toList());
+  }
 }

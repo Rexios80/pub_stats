@@ -1,0 +1,18 @@
+# Files and directories created by pub.
+.dart_tool/
+.packages
+
+# Conventional directory for build output.
+build/
+
+# macOS
+.DS_Store
+
+# Generated Cloud Run server
+bin/server.dart
+
+# Pruned database file
+pruned.json
+
+# Secrets
+secret

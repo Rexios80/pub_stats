@@ -42,7 +42,7 @@ Future<Response> function(Request request, {bool debug = false}) async {
     );
 
     await controller.fetchScores().timeout(
-          Duration(minutes: debug ? 10 : 5),
+          Duration(minutes: 5),
           onTimeout: () => throw TimeoutException('Global timeout reached'),
         );
   } catch (e, stacktrace) {

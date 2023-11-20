@@ -105,6 +105,14 @@ class ScoreFetchController {
     final Map<PackageDataField, Diff> changes;
     if (previousData != null) {
       changes = {
+        PackageDataField.publisher: Diff(
+          previousData.publisher ?? '',
+          data.publisher ?? '',
+        ),
+        PackageDataField.version: Diff(
+          previousData.version,
+          data.version,
+        ),
         PackageDataField.likeCount: Diff(
           previousData.likeCount,
           data.likeCount,
@@ -112,6 +120,14 @@ class ScoreFetchController {
         PackageDataField.popularityScore: Diff(
           previousData.popularityScore,
           data.popularityScore,
+        ),
+        PackageDataField.isDiscontinued: Diff(
+          previousData.isDiscontinued,
+          data.isDiscontinued,
+        ),
+        PackageDataField.isUnlisted: Diff(
+          previousData.isUnlisted,
+          data.isUnlisted,
         ),
       }..removeWhere((key, value) => !value.isDifferent);
     } else {

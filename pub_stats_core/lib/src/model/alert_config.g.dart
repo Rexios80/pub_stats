@@ -32,9 +32,13 @@ Map<String, dynamic> _$DiscordAlertConfigToJson(DiscordAlertConfig instance) =>
     };
 
 const _$PackageDataFieldEnumMap = {
+  PackageDataField.publisher: 'publisher',
+  PackageDataField.version: 'version',
   PackageDataField.likeCount: 'likeCount',
   PackageDataField.popularityScore: 'popularityScore',
-  PackageDataField.pubPoints: 'pubPoints',
+  PackageDataField.isDiscontinued: 'isDiscontinued',
+  PackageDataField.isUnlisted: 'isUnlisted',
+  PackageDataField.dependents: 'dependents',
 };
 
 const _$AlertConfigTypeEnumMap = {

@@ -42,7 +42,14 @@ class PackageData {
 }
 
 enum PackageDataField {
+  publisher,
+  version,
   likeCount,
   popularityScore,
-  pubPoints;
+  isDiscontinued,
+  isUnlisted,
+  dependents,
+
+  // Extra fields not actually on the PackageData model
+  pubPoints,
 }

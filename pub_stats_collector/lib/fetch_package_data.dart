@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:functions_framework/functions_framework.dart';
 import 'package:pub_stats_collector/controller/score_fetch_controller.dart';
 import 'package:pub_stats_collector/credential/credentials.dart';
 import 'package:pub_stats_collector/repo/database_repo.dart';
@@ -10,9 +9,7 @@ import 'package:pub_stats_collector/service/firebase_service.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 import 'package:shelf/shelf.dart';
 
-/// The entry point of the cloud function
-@CloudFunction()
-Future<Response> function(Request request, {bool debug = false}) async {
+Future<Response> fetchPackageData(Request request, {bool debug = false}) async {
   final credentials = debug ? Credentials.debug : Credentials.prod;
 
   final firebase = await FirebaseService.create(credentials);

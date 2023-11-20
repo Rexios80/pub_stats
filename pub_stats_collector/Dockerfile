@@ -7,8 +7,7 @@ COPY pub_stats_core ../pub_stats_core
 COPY pub_stats_collector .
 RUN dart pub get
 
-RUN dart pub run build_runner build --delete-conflicting-outputs
-RUN dart compile exe bin/pub_stats_collector.dart -o bin/server
+RUN dart compile exe bin/server.dart -o bin/server
 
 # Build minimal serving image from AOT-compiled `/server` and required system
 # libraries and configuration files stored in `/runtime/` from the build stage.

@@ -8,9 +8,6 @@ build/
 # macOS
 .DS_Store
 
-# Generated Cloud Run server
-bin/server.dart
-
 # Pruned database file
 pruned.json
 

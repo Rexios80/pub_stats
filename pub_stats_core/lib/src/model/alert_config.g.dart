@@ -39,6 +39,7 @@ const _$PackageDataFieldEnumMap = {
   PackageDataField.isDiscontinued: 'isDiscontinued',
   PackageDataField.isUnlisted: 'isUnlisted',
   PackageDataField.dependents: 'dependents',
+  PackageDataField.pubPoints: 'pubPoints',
 };
 
 const _$AlertConfigTypeEnumMap = {

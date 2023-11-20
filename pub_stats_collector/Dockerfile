@@ -1,14 +1,12 @@
 FROM dart:stable AS build
 
 # Resolve app dependencies.
-WORKDIR /app
-COPY pubspec.* ./
+# The docker build command must be run from the root of the repo
+WORKDIR /app/pub_stats_collector
+COPY pub_stats_core ../pub_stats_core
+COPY pub_stats_collector .
 RUN dart pub get
 
-# Copy app source code and AOT compile it.
-COPY . .
-# Ensure packages are still up-to-date if anything has changed
-RUN dart pub get --offline
 RUN dart pub run build_runner build --delete-conflicting-outputs
 RUN dart compile exe bin/pub_stats_collector.dart -o bin/server
 
@@ -16,7 +14,7 @@ RUN dart compile exe bin/pub_stats_collector.dart -o bin/server
 # libraries and configuration files stored in `/runtime/` from the build stage.
 FROM scratch
 COPY --from=build /runtime/ /
-COPY --from=build /app/bin/server /app/bin/
+COPY --from=build /app/pub_stats_collector/bin/server /app/bin/
 
 # Start server.
 EXPOSE 8080

@@ -6,28 +6,27 @@ class DatabaseRepo {
 
   DatabaseRepo(this._database);
 
-  Future<MiniPackageScore?> readLatestPackageScore(String name) async {
-    final data = await _database
-        .ref()
-        .child('stats')
-        .child(name)
-        .orderByKey()
-        .limitToLast(1)
-        .once();
+  Future<Map<String, PackageData>> readPackageData() async {
+    final data = await _database.ref().child('data').once();
     final value = data.value as Map<String, dynamic>?;
-    if (value == null) return null;
-    return MiniPackageScore.fromJson(value.values.first);
+    if (value == null) return {};
+    return value
+        .map((key, value) => MapEntry(key, PackageData.fromJson(value)));
+  }
+
+  Future<void> writePackageData(String package, PackageData data) {
+    return _database.ref().child('data').child(package).set(data.toJson());
   }
 
   Future<void> writePackageScore({
-    required String name,
+    required String package,
     required DateTime lastUpdated,
     required MiniPackageScore score,
   }) {
     return _database
         .ref()
         .child('stats')
-        .child(name)
+        .child(package)
         // Store as seconds since epoch to save space
         .child(lastUpdated.secondsSinceEpoch.toString())
         .set(score.toJson());

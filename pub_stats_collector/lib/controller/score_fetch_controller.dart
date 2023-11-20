@@ -13,12 +13,14 @@ class ScoreFetchController {
   final DatabaseRepo _database;
   final DiscordRepo _discord;
   final Map<String, List<AlertConfig>> _alertConfigs;
+  final Map<String, PackageData> _data;
 
   ScoreFetchController(
     Credentials credentials,
     this._database,
     this._discord,
     this._alertConfigs,
+    this._data,
   ) : _pub = PubRepo(credentials);
 
   Future<void> fetchScores() async {
@@ -49,8 +51,6 @@ class ScoreFetchController {
     // Don't write unprocessed scores
     if (miniScore == null) return;
 
-    final previousScore = await _database.readLatestPackageScore(package);
-
     // Send alerts
     final publisher = await _pub.fetchPublisher(package);
     final configs = <AlertConfig>[
@@ -65,15 +65,24 @@ class ScoreFetchController {
           configs: configs,
           miniScore: miniScore,
           score: score,
-          previousScore: previousScore,
+          previousData: _data[package],
         ),
       ),
     );
 
-    return _database.writePackageScore(
-      name: package,
+    await _database.writePackageScore(
+      package: package,
       lastUpdated: score.lastUpdated,
       score: miniScore,
+    );
+
+    await _database.writePackageData(
+      package,
+      PackageData(
+        likeCount: miniScore.likeCount,
+        popularityScore: miniScore.popularityScore,
+        publisher: publisher,
+      ),
     );
   }
 
@@ -82,17 +91,17 @@ class ScoreFetchController {
     required List<AlertConfig> configs,
     required MiniPackageScore miniScore,
     required PackageScore score,
-    required MiniPackageScore? previousScore,
+    required PackageData? previousData,
   }) async {
     final Map<PackageDataField, Diff> changes;
-    if (previousScore != null) {
+    if (previousData != null) {
       changes = {
         PackageDataField.likeCount: Diff(
-          previousScore.likeCount,
+          previousData.likeCount,
           miniScore.likeCount,
         ),
         PackageDataField.popularityScore: Diff(
-          previousScore.popularityScore,
+          previousData.popularityScore,
           miniScore.popularityScore,
         ),
       }..removeWhere((key, value) => !value.isDifferent);

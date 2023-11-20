@@ -19,20 +19,28 @@ Future<Response> function(Request request, {bool debug = false}) async {
   final database = DatabaseRepo(firebase.database);
   final discord = DiscordRepo(credentials);
 
-  final rawConfigs = await database.readAlertConfigs();
-  final alertConfigs = <String, List<AlertConfig>>{};
-  for (final config in rawConfigs.values.expand((e) => e)) {
-    alertConfigs.update(
-      config.slug,
-      (value) => value..add(config),
-      ifAbsent: () => [config],
-    );
-  }
-
-  final controller =
-      ScoreFetchController(credentials, database, discord, alertConfigs);
+  var alertConfigs = <String, List<AlertConfig>>{};
 
   try {
+    final rawConfigs = await database.readAlertConfigs();
+    alertConfigs = <String, List<AlertConfig>>{};
+    for (final config in rawConfigs.values.expand((e) => e)) {
+      alertConfigs.update(
+        config.slug,
+        (value) => value..add(config),
+        ifAbsent: () => [config],
+      );
+    }
+
+    final data = await database.readPackageData();
+    final controller = ScoreFetchController(
+      credentials,
+      database,
+      discord,
+      alertConfigs,
+      data,
+    );
+
     await controller.fetchScores().timeout(
           Duration(minutes: debug ? 10 : 5),
           onTimeout: () => throw TimeoutException('Global timeout reached'),

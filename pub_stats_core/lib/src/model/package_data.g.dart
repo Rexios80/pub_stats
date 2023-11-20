@@ -9,14 +9,24 @@ part of 'package_data.dart';
 // **************************************************************************
 
 PackageData _$PackageDataFromJson(Map<String, dynamic> json) => PackageData(
-      likeCount: json['l'] as int,
-      popularityScore: json['p'] as int,
-      publisher: json['pu'] as String?,
+      publisher: json['p'] as String?,
+      version: json['v'] as String,
+      likeCount: json['lc'] as int,
+      popularityScore: json['ps'] as int,
+      isDiscontinued: json['id'] as bool,
+      isUnlisted: json['iu'] as bool,
+      dependents:
+          (json['d'] as List<dynamic>?)?.map((e) => e as String).toSet() ??
+              const {},
     );
 
 Map<String, dynamic> _$PackageDataToJson(PackageData instance) =>
     <String, dynamic>{
-      'l': instance.likeCount,
-      'p': instance.popularityScore,
-      'pu': instance.publisher,
+      'p': instance.publisher,
+      'v': instance.version,
+      'lc': instance.likeCount,
+      'ps': instance.popularityScore,
+      'id': instance.isDiscontinued,
+      'iu': instance.isUnlisted,
+      'd': instance.dependents.toList(),
     };

@@ -46,8 +46,10 @@ class ScoreFetchController {
     print('Discord handling completed');
   }
 
-  Future<void> _handleScore(String package, PackageScore score) async {
-    final miniScore = MiniPackageScore.fromPackageScore(score);
+  Future<void> _handleScore(PackageMetrics metrics) async {
+    final package = metrics.scorecard.packageName;
+
+    final miniScore = MiniPackageScore.fromPackageScore(metrics.score);
     // Don't write unprocessed scores
     if (miniScore == null) return;
 
@@ -58,39 +60,46 @@ class ScoreFetchController {
       if (publisher != null) ..._alertConfigs['publisher:$publisher'] ?? [],
     ];
 
-    await Future.wait(
-      configs.map(
-        (e) => processAlert(
-          package: package,
-          configs: configs,
-          miniScore: miniScore,
-          score: score,
-          previousData: _data[package],
-        ),
-      ),
+    final options = await _pub.fetchPackageOptions(package);
+
+    final data = PackageData(
+      publisher: publisher,
+      version: metrics.scorecard.packageVersion,
+      likeCount: miniScore.likeCount,
+      popularityScore: miniScore.popularityScore,
+      isDiscontinued: options.isDiscontinued,
+      isUnlisted: options.isUnlisted,
     );
+
+    // Don't alert for discontinued packages
+    if (!data.isDiscontinued) {
+      await Future.wait(
+        configs.map(
+          (e) => processAlert(
+            package: package,
+            configs: configs,
+            score: metrics.score,
+            data: data,
+            previousData: _data[package],
+          ),
+        ),
+      );
+    }
 
     await _database.writePackageScore(
       package: package,
-      lastUpdated: score.lastUpdated,
+      lastUpdated: metrics.score.lastUpdated,
       score: miniScore,
     );
 
-    await _database.writePackageData(
-      package,
-      PackageData(
-        likeCount: miniScore.likeCount,
-        popularityScore: miniScore.popularityScore,
-        publisher: publisher,
-      ),
-    );
+    await _database.writePackageData(package, data);
   }
 
   Future<void> processAlert({
     required String package,
     required List<AlertConfig> configs,
-    required MiniPackageScore miniScore,
     required PackageScore score,
+    required PackageData data,
     required PackageData? previousData,
   }) async {
     final Map<PackageDataField, Diff> changes;
@@ -98,11 +107,11 @@ class ScoreFetchController {
       changes = {
         PackageDataField.likeCount: Diff(
           previousData.likeCount,
-          miniScore.likeCount,
+          data.likeCount,
         ),
         PackageDataField.popularityScore: Diff(
           previousData.popularityScore,
-          miniScore.popularityScore,
+          data.popularityScore,
         ),
       }..removeWhere((key, value) => !value.isDifferent);
     } else {

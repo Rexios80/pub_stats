@@ -10,8 +10,8 @@ part of 'mini_package_score.dart';
 
 MiniPackageScore _$MiniPackageScoreFromJson(Map<String, dynamic> json) =>
     MiniPackageScore(
-      json['l'] as int,
-      json['p'] as int,
+      likeCount: json['l'] as int,
+      popularityScore: json['p'] as int,
     );
 
 Map<String, dynamic> _$MiniPackageScoreToJson(MiniPackageScore instance) =>

@@ -14,7 +14,7 @@ class PubRepo {
       : _client = PubClient(client: UserAgentClient(credentials.userAgent));
 
   Future<GlobalStats> fetchAllScores(
-    Future<void> Function(PackageMetrics score) handleScore,
+    Future<void> Function(PackageMetrics metrics, PackageData data) handleScore,
   ) async {
     final packages = await _client.packageNames();
     print('Fetched ${packages.length} package names');
@@ -30,6 +30,12 @@ class PubRepo {
         return;
       }
 
+      final popularityScore = metrics.score.popularityScore;
+      if (popularityScore == null) {
+        print('No popularity score for $package');
+        return;
+      }
+
       final packageScore = (name: package, score: metrics.score);
 
       if (metrics.score.likeCount > (mostLikedPackage?.score.likeCount ?? 0)) {
@@ -42,7 +48,19 @@ class PubRepo {
         mostPopularPackage = packageScore;
       }
 
-      await handleScore(metrics).timeout(
+      final publisherData = await _client.packagePublisher(package);
+      final packageOptions = await _client.packageOptions(package);
+
+      final data = PackageData(
+        publisher: publisherData.publisherId,
+        version: metrics.scorecard.packageVersion,
+        likeCount: metrics.score.likeCount,
+        popularityScore: (popularityScore * 100).round(),
+        isDiscontinued: packageOptions.isDiscontinued,
+        isUnlisted: packageOptions.isUnlisted,
+      );
+
+      await handleScore(metrics, data).timeout(
         Duration(seconds: 30),
         onTimeout: () =>
             throw TimeoutException('Timeout handling score for $package'),
@@ -75,14 +93,5 @@ class PubRepo {
       mostPopularPackage: mostPopularPackage?.name ?? '',
       lastUpdated: DateTime.now().toUtc(),
     );
-  }
-
-  Future<String?> fetchPublisher(String package) async {
-    final data = await _client.packagePublisher(package);
-    return data.publisherId;
-  }
-
-  Future<PackageOptions> fetchPackageOptions(String package) {
-    return _client.packageOptions(package);
   }
 }

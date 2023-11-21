@@ -15,15 +15,10 @@ class MiniPackageScore extends Equatable {
   @JsonKey(name: 'p')
   final int popularityScore;
 
-  MiniPackageScore(this.likeCount, this.popularityScore);
-
-  static MiniPackageScore? fromPackageScore(PackageScore score) {
-    final popularityScore = score.popularityScore;
-    if (popularityScore == null) return null;
-    final popularityPercent = (popularityScore * 100).round();
-
-    return MiniPackageScore(score.likeCount, popularityPercent);
-  }
+  MiniPackageScore({
+    required this.likeCount,
+    required this.popularityScore,
+  });
 
   factory MiniPackageScore.fromJson(Map<String, dynamic> json) =>
       _$MiniPackageScoreFromJson(json);

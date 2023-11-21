@@ -46,30 +46,19 @@ class ScoreFetchController {
     print('Discord handling completed');
   }
 
-  Future<void> _handleScore(PackageMetrics metrics) async {
+  Future<void> _handleScore(PackageMetrics metrics, PackageData data) async {
     final package = metrics.scorecard.packageName;
-
-    final miniScore = MiniPackageScore.fromPackageScore(metrics.score);
-    // Don't write unprocessed scores
-    if (miniScore == null) return;
+    final miniScore = MiniPackageScore(
+      likeCount: data.likeCount,
+      popularityScore: data.popularityScore,
+    );
 
     // Send alerts
-    final publisher = await _pub.fetchPublisher(package);
+    final publisher = data.publisher;
     final configs = <AlertConfig>[
       ..._alertConfigs[package] ?? [],
       if (publisher != null) ..._alertConfigs['publisher:$publisher'] ?? [],
     ];
-
-    final options = await _pub.fetchPackageOptions(package);
-
-    final data = PackageData(
-      publisher: publisher,
-      version: metrics.scorecard.packageVersion,
-      likeCount: miniScore.likeCount,
-      popularityScore: miniScore.popularityScore,
-      isDiscontinued: options.isDiscontinued,
-      isUnlisted: options.isUnlisted,
-    );
 
     // Don't alert for discontinued packages
     if (!data.isDiscontinued) {

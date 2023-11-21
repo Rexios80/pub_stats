@@ -5,8 +5,6 @@ import 'package:pub_api_client/pub_api_client.dart' hide Credentials;
 import 'package:pub_stats_collector/credential/credentials.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 
-typedef PubPackageScore = ({String name, PackageScore score});
-
 class PubRepo {
   final PubClient _client;
 
@@ -19,8 +17,11 @@ class PubRepo {
     final packages = await _client.packageNames();
     print('Fetched ${packages.length} package names');
 
-    PubPackageScore? mostLikedPackage;
-    PubPackageScore? mostPopularPackage;
+    var mostLikedPackage = ('', 0);
+    var mostPopularPackage = ('', 0.0);
+    var mostDependedPackage = ('', 0);
+
+    var lowestPopularityWithDependents = ('', 100.0);
 
     var completed = 0;
     Future<void> fetchPackageData(String package) async {
@@ -31,33 +32,49 @@ class PubRepo {
       }
 
       final popularityScore = metrics.score.popularityScore;
-      if (popularityScore == null) {
+      final int popularityPercent;
+      if (popularityScore != null) {
+        popularityPercent = (popularityScore * 100).round();
+      } else {
         print('No popularity score for $package');
         return;
       }
 
-      final packageScore = (name: package, score: metrics.score);
-
-      if (metrics.score.likeCount > (mostLikedPackage?.score.likeCount ?? 0)) {
+      final likeCount = metrics.score.likeCount;
+      if (likeCount > mostLikedPackage.$2) {
         print('Most liked package: $package');
-        mostLikedPackage = packageScore;
+        mostLikedPackage = (package, likeCount);
       }
-      if ((metrics.score.popularityScore ?? 0) >
-          (mostPopularPackage?.score.popularityScore ?? 0)) {
+      if (popularityScore > mostPopularPackage.$2) {
         print('Most popular package: $package');
-        mostPopularPackage = packageScore;
+        mostPopularPackage = (package, popularityScore);
       }
 
       final publisherData = await _client.packagePublisher(package);
       final packageOptions = await _client.packageOptions(package);
 
+      final dependentsData =
+          await _client.fetchAllPackages(PackageTag.dependency(package));
+      final dependents = dependentsData.map((e) => e.package).toSet();
+
+      if (dependents.length > mostDependedPackage.$2) {
+        print('Most depended package: $package');
+        mostDependedPackage = (package, dependents.length);
+      }
+
+      if (dependents.isNotEmpty &&
+          popularityPercent < lowestPopularityWithDependents.$2) {
+        lowestPopularityWithDependents = (package, popularityScore);
+      }
+
       final data = PackageData(
         publisher: publisherData.publisherId,
         version: metrics.scorecard.packageVersion,
         likeCount: metrics.score.likeCount,
-        popularityScore: (popularityScore * 100).round(),
+        popularityScore: popularityPercent,
         isDiscontinued: packageOptions.isDiscontinued,
         isUnlisted: packageOptions.isUnlisted,
+        dependents: dependents,
       );
 
       await handleScore(metrics, data).timeout(
@@ -89,8 +106,9 @@ class PubRepo {
 
     return GlobalStats(
       packageCount: packages.length,
-      mostLikedPackage: mostLikedPackage?.name ?? '',
-      mostPopularPackage: mostPopularPackage?.name ?? '',
+      mostLikedPackage: mostLikedPackage.$1,
+      mostPopularPackage: mostPopularPackage.$1,
+      mostDependedPackage: mostDependedPackage.$1,
       lastUpdated: DateTime.now().toUtc(),
     );
   }

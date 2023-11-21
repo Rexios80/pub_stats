@@ -41,7 +41,10 @@ class DiffList extends StatelessWidget {
                   children: diff.entries
                       .map(
                         (e) => ListTile(
-                          leading: Text(e.key.name.titleCase),
+                          leading: SizedBox(
+                            width: 100,
+                            child: Text(e.key.name.titleCase),
+                          ),
                           title: Text(e.value.text),
                           trailing: Text(Formatting.shortDate(date)),
                         ),
@@ -56,7 +59,10 @@ class DiffList extends StatelessWidget {
           child: FastBuilder(() {
             final firstSnapshot = _controller.loadedStats.first.stats.first;
             return ListTile(
-              leading: const Text('Meta'),
+              leading: const SizedBox(
+                width: 100,
+                child: Text('Meta'),
+              ),
               title: const Text('First scanned'),
               trailing: Text(Formatting.shortDate(firstSnapshot.timestamp)),
             );

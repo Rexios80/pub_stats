@@ -33,8 +33,8 @@ class Home extends StatelessWidget {
             pinned: true,
             delegate: StickyHeader(),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.only(top: 40, left: 16, right: 16),
+          const SliverPadding(
+            padding: EdgeInsets.only(top: 40, left: 16, right: 16),
             sliver: StatsView(),
           ),
           SliverFillRemaining(

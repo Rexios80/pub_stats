@@ -22,10 +22,10 @@ class DiffList extends StatelessWidget {
           style: context.textTheme.titleLarge,
           textAlign: TextAlign.center,
         ),
+        // TODO: Check if this is actually lazy loading
         FirebaseDatabaseListView(
           query: _controller.diffQuery(_controller.loadedStats.first.package),
           shrinkWrap: true,
-          reverse: true,
           itemBuilder: (context, snap) {
             final date = DateTime.fromMillisecondsSinceEpoch(
               int.parse(snap.key as String) * 1000,

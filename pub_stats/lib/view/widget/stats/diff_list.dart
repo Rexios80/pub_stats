@@ -54,12 +54,17 @@ class DiffList extends StatelessWidget {
             },
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.all(8),
+        Padding(
+          padding: const EdgeInsets.all(8),
           child: Card(
-            child: ListTile(
-              title: Text('Package created'),
-            ),
+            child: FastBuilder(() {
+              final firstSnapshot = _controller.loadedStats.first.stats.first;
+              return ListTile(
+                leading: const Text('Meta'),
+                title: const Text('First scanned'),
+                trailing: Text(Formatting.shortDate(firstSnapshot.timestamp)),
+              );
+            }),
           ),
         ),
       ],

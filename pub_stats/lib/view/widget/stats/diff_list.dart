@@ -23,34 +23,44 @@ class DiffList extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
         // TODO: Check if this is actually lazy loading
-        FirebaseDatabaseListView(
-          query: _controller.diffQuery(_controller.loadedStats.first.package),
-          shrinkWrap: true,
-          itemBuilder: (context, snap) {
-            final date = DateTime.fromMillisecondsSinceEpoch(
-              int.parse(snap.key as String) * 1000,
-            );
-            final diff = PackageDataDiffExtension.fromJson(
-              snap.value as Map<String, dynamic>,
-            );
+        FastBuilder(
+          () => FirebaseDatabaseListView(
+            query: _controller.diffQuery(_controller.loadedStats.first.package),
+            shrinkWrap: true,
+            itemBuilder: (context, snap) {
+              final date = DateTime.fromMillisecondsSinceEpoch(
+                int.parse(snap.key as String) * 1000,
+              );
+              final diff = PackageDataDiffExtension.fromJson(
+                snap.value as Map<String, dynamic>,
+              );
 
-            return Padding(
-              padding: const EdgeInsets.all(8),
-              child: Card(
-                child: Column(
-                  children: diff.entries
-                      .map(
-                        (e) => ListTile(
-                          leading: Text(e.key.name.titleCase),
-                          title: Text(e.value.text),
-                          trailing: Text(Formatting.shortDate(date)),
-                        ),
-                      )
-                      .toList(),
+              return Padding(
+                padding: const EdgeInsets.all(8),
+                child: Card(
+                  child: Column(
+                    children: diff.entries
+                        .map(
+                          (e) => ListTile(
+                            leading: Text(e.key.name.titleCase),
+                            title: Text(e.value.text),
+                            trailing: Text(Formatting.shortDate(date)),
+                          ),
+                        )
+                        .toList(),
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.all(8),
+          child: Card(
+            child: ListTile(
+              title: Text('Package created'),
+            ),
+          ),
         ),
       ],
     );

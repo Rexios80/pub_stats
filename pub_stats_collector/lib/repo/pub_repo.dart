@@ -15,8 +15,7 @@ class PubRepo {
   Future<GlobalStats> fetchAllData(
     Future<void> Function(PackageMetrics metrics, PackageData data) handleData,
   ) async {
-    // final packages = await _client.packageNames();
-    final packages = {'rexios_lints'};
+    final packages = await _client.packageNames();
     print('Fetched ${packages.length} package names');
 
     var mostLikedPackage = ('', 0);

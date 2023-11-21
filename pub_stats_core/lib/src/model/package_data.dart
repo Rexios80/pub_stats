@@ -29,6 +29,7 @@ enum PackageDataField {
   popularityScore,
   isDiscontinued,
   isUnlisted,
+  isFlutterFavorite,
   dependents,
 
   // Extra fields not actually on the PackageData model

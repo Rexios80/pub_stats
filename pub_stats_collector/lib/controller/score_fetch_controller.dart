@@ -94,30 +94,22 @@ class ScoreFetchController {
     final Map<PackageDataField, Diff> changes;
     if (previousData != null) {
       changes = {
-        PackageDataField.publisher: Diff(
-          previousData.publisher ?? '',
-          data.publisher ?? '',
-        ),
-        PackageDataField.version: Diff(
-          previousData.version,
-          data.version,
-        ),
-        PackageDataField.likeCount: Diff(
-          previousData.likeCount,
-          data.likeCount,
-        ),
-        PackageDataField.popularityScore: Diff(
-          previousData.popularityScore,
-          data.popularityScore,
-        ),
-        PackageDataField.isDiscontinued: Diff(
-          previousData.isDiscontinued,
-          data.isDiscontinued,
-        ),
-        PackageDataField.isUnlisted: Diff(
-          previousData.isUnlisted,
-          data.isUnlisted,
-        ),
+        PackageDataField.publisher:
+            StringDiff(previousData.publisher ?? '', data.publisher ?? ''),
+        PackageDataField.version:
+            StringDiff(previousData.version, data.version),
+        PackageDataField.likeCount:
+            StringDiff(previousData.likeCount, data.likeCount),
+        PackageDataField.popularityScore:
+            StringDiff(previousData.popularityScore, data.popularityScore),
+        PackageDataField.isDiscontinued:
+            StringDiff(previousData.isDiscontinued, data.isDiscontinued),
+        PackageDataField.isUnlisted:
+            StringDiff(previousData.isUnlisted, data.isUnlisted),
+        PackageDataField.isFlutterFavorite:
+            StringDiff(previousData.isFlutterFavorite, data.isFlutterFavorite),
+        PackageDataField.dependents:
+            SetDiff(previousData.dependents, data.dependents),
       }..removeWhere((key, value) => !value.isDifferent);
     } else {
       changes = {};

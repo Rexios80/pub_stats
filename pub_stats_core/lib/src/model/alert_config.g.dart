@@ -38,6 +38,7 @@ const _$PackageDataFieldEnumMap = {
   PackageDataField.popularityScore: 'popularityScore',
   PackageDataField.isDiscontinued: 'isDiscontinued',
   PackageDataField.isUnlisted: 'isUnlisted',
+  PackageDataField.isFlutterFavorite: 'isFlutterFavorite',
   PackageDataField.dependents: 'dependents',
   PackageDataField.pubPoints: 'pubPoints',
 };

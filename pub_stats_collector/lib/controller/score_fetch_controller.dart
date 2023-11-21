@@ -43,7 +43,7 @@ class ScoreFetchController {
           ),
       };
     }
-    print('Discord handling completed');
+    print('System alerts sent');
   }
 
   Future<void> _handleData(PackageMetrics metrics, PackageData data) async {

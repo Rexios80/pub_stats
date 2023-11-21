@@ -9,7 +9,6 @@ import 'package:pub_stats_core/pub_stats_core.dart';
 import 'package:fast_ui/fast_ui.dart';
 
 class GlobalStatsView extends StatelessWidget {
-  static const _constraints = BoxConstraints(maxWidth: 250);
   final _dataController = GetIt.I<DataController>();
 
   final GlobalStats stats;
@@ -23,6 +22,14 @@ class GlobalStatsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final statItems = [
       GlobalStatItem(
+        stat: Formatting.number(stats.packageCount),
+        label: 'Packages scanned',
+      ),
+      GlobalStatItem(
+        stat: Formatting.timeAgo(stats.lastUpdated),
+        label: 'Last updated',
+      ),
+      GlobalStatItem(
         stat: stats.mostPopularPackage,
         label: 'Most popular package',
         onTap: () => _dataController.fetchStats(stats.mostPopularPackage),
@@ -33,52 +40,27 @@ class GlobalStatsView extends StatelessWidget {
         onTap: () => _dataController.fetchStats(stats.mostLikedPackage),
       ),
       GlobalStatItem(
-        stat: Formatting.number(stats.packageCount),
-        label: 'Packages scanned',
-      ),
-      GlobalStatItem(
-        stat: Formatting.timeAgo(stats.lastUpdated),
-        label: 'Last updated',
+        stat: stats.mostDependedPackage,
+        label: 'Most depended package',
+        onTap: () => _dataController.fetchStats(stats.mostDependedPackage),
       ),
     ];
     return Column(
       children: [
-        if (AppTheme.isWide(context))
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                constraints: _constraints,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    statItems[0],
-                    statItems[2],
-                  ],
-                ),
-              ),
-              Container(
-                constraints: _constraints,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    statItems[1],
-                    statItems[3],
-                  ],
-                ),
-              ),
-            ],
-          )
-        else
-          Center(
-            child: Container(
-              constraints: _constraints,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: statItems,
-              ),
-            ),
+        Container(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            children: statItems
+                .map(
+                  (e) => SizedBox(
+                    width: 250,
+                    child: e,
+                  ),
+                )
+                .toList(),
           ),
+        ),
         const SizedBox(height: 16),
         PackageCountChart(spots: _createPackageCountSpots()),
       ],

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_tools_task_queue/flutter_tools_task_queue.dart';
 import 'package:pub_api_client/pub_api_client.dart' hide Credentials;
 import 'package:pub_stats_collector/credential/credentials.dart';
+import 'package:pub_stats_collector/model/package_data_wrapper.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 
 class PubRepo {
@@ -19,8 +20,11 @@ class PubRepo {
 
     var mostLikedPackage = ('', 0);
     var mostPopularPackage = ('', 0.0);
+    var mostDependedPackage = ('', 0);
 
-    var completed = 0;
+    final wrappers = <PackageDataWrapper>[];
+    final dependentMap = <String, Set<String>>{};
+    var fetched = 0;
     Future<void> fetchPackageData(String package) async {
       final metrics = await _client.packageMetrics(package);
       if (metrics == null) {
@@ -34,6 +38,12 @@ class PubRepo {
         popularityPercent = (popularityScore * 100).round();
       } else {
         print('No popularity score for $package');
+        return;
+      }
+
+      final dependencies = metrics.scorecard.panaReport.allDependencies;
+      if (dependencies == null) {
+        print('No dependency report for $package');
         return;
       }
 
@@ -54,25 +64,32 @@ class PubRepo {
       final isFlutterFavorite =
           metrics.score.tags.contains(PackageTag.isFlutterFavorite);
 
-      final data = PackageData(
-        publisher: publisher,
-        version: metrics.scorecard.packageVersion,
-        likeCount: metrics.score.likeCount,
-        popularityScore: popularityPercent,
-        isDiscontinued: packageOptions.isDiscontinued,
-        isFlutterFavorite: isFlutterFavorite,
-        isUnlisted: packageOptions.isUnlisted,
+      for (final dependency in dependencies) {
+        dependentMap.update(
+          dependency,
+          (value) => value..add(package),
+          ifAbsent: () => {package},
+        );
+      }
+
+      wrappers.add(
+        PackageDataWrapper(
+          metrics,
+          PackageData(
+            publisher: publisher,
+            version: metrics.scorecard.packageVersion,
+            likeCount: metrics.score.likeCount,
+            popularityScore: popularityPercent,
+            isDiscontinued: packageOptions.isDiscontinued,
+            isFlutterFavorite: isFlutterFavorite,
+            isUnlisted: packageOptions.isUnlisted,
+          ),
+        ),
       );
 
-      await handleScore(metrics, data).timeout(
-        Duration(seconds: 30),
-        onTimeout: () =>
-            throw TimeoutException('Timeout handling score for $package'),
-      );
-
-      completed++;
-      if (completed % 100 == 0) {
-        print('Processed $completed/${packages.length} packages');
+      fetched++;
+      if (fetched % 100 == 0) {
+        print('Fetched $fetched/${packages.length} packages');
       }
     }
 
@@ -89,14 +106,38 @@ class PubRepo {
       );
     }
     await queue.tasksComplete;
-    print('Processed all scores');
+    print('Fetched all scores');
+
+    var handled = 0;
+    for (final wrapper in wrappers) {
+      final metrics = wrapper.metrics;
+      final package = metrics.scorecard.packageName;
+
+      final dependents = dependentMap[package] ?? {};
+      final data = wrapper.data.copyWith(dependents: dependents);
+
+      if (dependents.length > mostDependedPackage.$2) {
+        print('Most depended package: $package');
+        mostDependedPackage = (package, dependents.length);
+      }
+
+      await handleScore(metrics, data).timeout(
+        Duration(seconds: 30),
+        onTimeout: () =>
+            throw TimeoutException('Timeout handling score for $package'),
+      );
+
+      handled++;
+      if (handled % 100 == 0) {
+        print('Handled $handled/${packages.length} packages');
+      }
+    }
 
     return GlobalStats(
       packageCount: packages.length,
       mostLikedPackage: mostLikedPackage.$1,
       mostPopularPackage: mostPopularPackage.$1,
-      // TODO
-      mostDependedPackage: ' mostDependedPackage',
+      mostDependedPackage: mostDependedPackage.$1,
       lastUpdated: DateTime.now().toUtc(),
     );
   }

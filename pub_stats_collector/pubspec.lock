@@ -341,11 +341,9 @@ packages:
   pub_api_client:
     dependency: "direct main"
     description:
-      path: "."
-      ref: d4d649c9bb0b0a8ac544b4871fe52bd242fb88b7
-      resolved-ref: d4d649c9bb0b0a8ac544b4871fe52bd242fb88b7
-      url: "https://github.com/Rexios80/pub_api_client"
-    source: git
+      path: "../../pub_api_client"
+      relative: true
+    source: path
     version: "2.6.0"
   pub_semver:
     dependency: transitive

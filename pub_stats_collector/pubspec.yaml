@@ -24,6 +24,7 @@ dev_dependencies:
 
 dependency_overrides:
   pub_api_client:
-    git:
-      url: https://github.com/Rexios80/pub_api_client
-      ref: d4d649c9bb0b0a8ac544b4871fe52bd242fb88b7
+    path: ../../pub_api_client
+    # git:
+    #   url: https://github.com/Rexios80/pub_api_client
+    #   ref: 931fa8de006fb35a06813ee71feba939a576e25a

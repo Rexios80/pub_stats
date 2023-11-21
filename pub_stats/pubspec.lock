@@ -604,8 +604,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: d4d649c9bb0b0a8ac544b4871fe52bd242fb88b7
-      resolved-ref: d4d649c9bb0b0a8ac544b4871fe52bd242fb88b7
+      ref: "931fa8de006fb35a06813ee71feba939a576e25a"
+      resolved-ref: "931fa8de006fb35a06813ee71feba939a576e25a"
       url: "https://github.com/Rexios80/pub_api_client"
     source: git
     version: "2.6.0"

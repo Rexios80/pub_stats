@@ -84,8 +84,6 @@ class ScoreFetchController {
 
     await _database.writePackageData(package, data);
 
-
-
     // Don't track likes or popularity in diffs
     final filteredDiff = Map.fromEntries(
       diff.entries.where(

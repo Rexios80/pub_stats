@@ -22,6 +22,7 @@ class DiffList extends StatelessWidget {
           style: context.textTheme.titleLarge,
           textAlign: TextAlign.center,
         ),
+        const SizedBox(height: 16),
         // TODO: Check if this is actually lazy loading
         FastBuilder(
           () => FirebaseDatabaseListView(
@@ -35,37 +36,31 @@ class DiffList extends StatelessWidget {
                 snap.value as Map<String, dynamic>,
               );
 
-              return Padding(
-                padding: const EdgeInsets.all(8),
-                child: Card(
-                  child: Column(
-                    children: diff.entries
-                        .map(
-                          (e) => ListTile(
-                            leading: Text(e.key.name.titleCase),
-                            title: Text(e.value.text),
-                            trailing: Text(Formatting.shortDate(date)),
-                          ),
-                        )
-                        .toList(),
-                  ),
+              return Card(
+                child: Column(
+                  children: diff.entries
+                      .map(
+                        (e) => ListTile(
+                          leading: Text(e.key.name.titleCase),
+                          title: Text(e.value.text),
+                          trailing: Text(Formatting.shortDate(date)),
+                        ),
+                      )
+                      .toList(),
                 ),
               );
             },
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: Card(
-            child: FastBuilder(() {
-              final firstSnapshot = _controller.loadedStats.first.stats.first;
-              return ListTile(
-                leading: const Text('Meta'),
-                title: const Text('First scanned'),
-                trailing: Text(Formatting.shortDate(firstSnapshot.timestamp)),
-              );
-            }),
-          ),
+        Card(
+          child: FastBuilder(() {
+            final firstSnapshot = _controller.loadedStats.first.stats.first;
+            return ListTile(
+              leading: const Text('Meta'),
+              title: const Text('First scanned'),
+              trailing: Text(Formatting.shortDate(firstSnapshot.timestamp)),
+            );
+          }),
         ),
       ],
     );

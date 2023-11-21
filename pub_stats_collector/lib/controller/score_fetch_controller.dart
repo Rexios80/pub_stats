@@ -110,7 +110,7 @@ class ScoreFetchController {
             StringDiff(previousData.isFlutterFavorite, data.isFlutterFavorite),
         PackageDataField.dependents:
             SetDiff(previousData.dependents, data.dependents),
-      }..removeWhere((key, value) => !value.isDifferent);
+      }..removeWhere((key, value) => !value.different);
     } else {
       changes = {};
     }

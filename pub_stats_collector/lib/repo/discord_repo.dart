@@ -43,7 +43,7 @@ class DiscordRepo {
             ...changes.entries.map(
               (e) => EmbedField(
                 name: e.key.name.titleCase,
-                value: '${e.value.before} -> ${e.value.after}',
+                value: e.value.text,
               ),
             ),
             if (warnings.isNotEmpty)

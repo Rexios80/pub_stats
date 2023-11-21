@@ -6,7 +6,7 @@ abstract class Diff<T> {
 
   Diff(this.before, this.after);
 
-  bool get isDifferent;
+  bool get different;
   String get text;
 }
 
@@ -14,7 +14,7 @@ class StringDiff extends Diff<Object> {
   StringDiff(super.before, super.after);
 
   @override
-  bool get isDifferent => before != after;
+  bool get different => before != after;
 
   @override
   String get text => '$before -> $after';
@@ -24,7 +24,7 @@ class SetDiff extends Diff<Set<String>> {
   SetDiff(super.before, super.after);
 
   @override
-  bool get isDifferent => !const SetEquality().equals(before, after);
+  bool get different => !const SetEquality().equals(before, after);
 
   @override
   String get text {

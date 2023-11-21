@@ -96,7 +96,7 @@ class PubRepo {
       mostLikedPackage: mostLikedPackage.$1,
       mostPopularPackage: mostPopularPackage.$1,
       // TODO
-      mostDependedPackage:' mostDependedPackage',
+      mostDependedPackage: ' mostDependedPackage',
       lastUpdated: DateTime.now().toUtc(),
     );
   }

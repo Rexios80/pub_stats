@@ -12,8 +12,8 @@ class PubRepo {
   PubRepo(Credentials credentials)
       : _client = PubClient(client: UserAgentClient(credentials.userAgent));
 
-  Future<GlobalStats> fetchAllScores(
-    Future<void> Function(PackageMetrics metrics, PackageData data) handleScore,
+  Future<GlobalStats> fetchAllData(
+    Future<void> Function(PackageMetrics metrics, PackageData data) handleData,
   ) async {
     final packages = await _client.packageNames();
     print('Fetched ${packages.length} package names');
@@ -100,16 +100,16 @@ class PubRepo {
           try {
             await fetchPackageData(package);
           } catch (e) {
-            print('Error processing package $package: $e');
+            print('Error fetching data for $package: $e');
           }
         }),
       );
     }
     await queue.tasksComplete;
-    print('Fetched all scores');
+    print('Fetched all data');
 
     var handled = 0;
-    for (final wrapper in wrappers) {
+    Future<void> handleWrapper(PackageDataWrapper wrapper) async {
       final metrics = wrapper.metrics;
       final package = metrics.scorecard.packageName;
 
@@ -121,10 +121,10 @@ class PubRepo {
         mostDependedPackage = (package, dependents.length);
       }
 
-      await handleScore(metrics, data).timeout(
+      await handleData(metrics, data).timeout(
         Duration(seconds: 30),
         onTimeout: () =>
-            throw TimeoutException('Timeout handling score for $package'),
+            throw TimeoutException('Timeout handling wrapper for $package'),
       );
 
       handled++;
@@ -132,6 +132,21 @@ class PubRepo {
         print('Handled $handled/${packages.length} packages');
       }
     }
+
+    for (final wrapper in wrappers) {
+      unawaited(
+        queue.add(() async {
+          final package = wrapper.metrics.scorecard.packageName;
+          try {
+            await handleWrapper(wrapper);
+          } catch (e) {
+            print('Error handling wrapper $package: $e');
+          }
+        }),
+      );
+    }
+    await queue.tasksComplete;
+    print('Handled all wrappers');
 
     return GlobalStats(
       packageCount: packages.length,

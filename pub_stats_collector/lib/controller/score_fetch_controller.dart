@@ -25,7 +25,7 @@ class ScoreFetchController {
 
   Future<void> fetchScores() async {
     final startTime = DateTime.now();
-    final globalStats = await _pub.fetchAllScores(_handleScore);
+    final globalStats = await _pub.fetchAllData(_handleData);
 
     await _database.writeGlobalStats(globalStats);
     print('Global stats:');
@@ -46,7 +46,7 @@ class ScoreFetchController {
     print('Discord handling completed');
   }
 
-  Future<void> _handleScore(PackageMetrics metrics, PackageData data) async {
+  Future<void> _handleData(PackageMetrics metrics, PackageData data) async {
     final package = metrics.scorecard.packageName;
     final miniScore = MiniPackageScore(
       likeCount: data.likeCount,

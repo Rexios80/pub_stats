@@ -197,7 +197,7 @@ class __$$PackageDataImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$PackageDataImpl implements _PackageData {
+class _$PackageDataImpl extends _PackageData {
   const _$PackageDataImpl(
       {@JsonKey(name: 'p') this.publisher,
       @JsonKey(name: 'v') required this.version,
@@ -207,7 +207,8 @@ class _$PackageDataImpl implements _PackageData {
       @JsonKey(name: 'iu') required this.isUnlisted,
       @JsonKey(name: 'iff') required this.isFlutterFavorite,
       @JsonKey(name: 'd') final Set<String> dependents = const {}})
-      : _dependents = dependents;
+      : _dependents = dependents,
+        super._();
 
   factory _$PackageDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$PackageDataImplFromJson(json);
@@ -296,7 +297,7 @@ class _$PackageDataImpl implements _PackageData {
   }
 }
 
-abstract class _PackageData implements PackageData {
+abstract class _PackageData extends PackageData {
   const factory _PackageData(
       {@JsonKey(name: 'p') final String? publisher,
       @JsonKey(name: 'v') required final String version,
@@ -306,6 +307,7 @@ abstract class _PackageData implements PackageData {
       @JsonKey(name: 'iu') required final bool isUnlisted,
       @JsonKey(name: 'iff') required final bool isFlutterFavorite,
       @JsonKey(name: 'd') final Set<String> dependents}) = _$PackageDataImpl;
+  const _PackageData._() : super._();
 
   factory _PackageData.fromJson(Map<String, dynamic> json) =
       _$PackageDataImpl.fromJson;

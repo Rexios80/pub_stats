@@ -1,6 +1,5 @@
 import 'package:discord_interactions/discord_interactions.dart';
 import 'package:pub_stats_collector/credential/credentials.dart';
-import 'package:pub_stats_collector/model/diff.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 import 'package:recase/recase.dart';
 

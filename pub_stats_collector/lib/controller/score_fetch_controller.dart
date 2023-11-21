@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:pub_api_client/pub_api_client.dart' hide Credentials;
 import 'package:pub_stats_collector/credential/credentials.dart';
-import 'package:pub_stats_collector/model/diff.dart';
 import 'package:pub_stats_collector/repo/database_repo.dart';
 import 'package:pub_stats_collector/repo/discord_repo.dart';
 import 'package:pub_stats_collector/repo/pub_repo.dart';
@@ -60,6 +59,9 @@ class ScoreFetchController {
       if (publisher != null) ..._alertConfigs['publisher:$publisher'] ?? [],
     ];
 
+    final previousData = _data[package];
+    final diff = data.diffFrom(previousData);
+
     // Don't alert for discontinued packages
     if (!data.isDiscontinued) {
       await Future.wait(
@@ -68,8 +70,7 @@ class ScoreFetchController {
             package: package,
             configs: configs,
             score: metrics.score,
-            data: data,
-            previousData: _data[package],
+            diff: diff,
           ),
         ),
       );
@@ -82,39 +83,18 @@ class ScoreFetchController {
     );
 
     await _database.writePackageData(package, data);
+
+    if (diff.isNotEmpty) {
+      await _database.writePackageDiff(package, diff);
+    }
   }
 
   Future<void> processAlert({
     required String package,
     required List<AlertConfig> configs,
     required PackageScore score,
-    required PackageData data,
-    required PackageData? previousData,
+    required PackageDataDiff diff,
   }) async {
-    final Map<PackageDataField, Diff> changes;
-    if (previousData != null) {
-      changes = {
-        PackageDataField.publisher:
-            StringDiff(previousData.publisher ?? '', data.publisher ?? ''),
-        PackageDataField.version:
-            StringDiff(previousData.version, data.version),
-        PackageDataField.likeCount:
-            StringDiff(previousData.likeCount, data.likeCount),
-        PackageDataField.popularityScore:
-            StringDiff(previousData.popularityScore, data.popularityScore),
-        PackageDataField.isDiscontinued:
-            StringDiff(previousData.isDiscontinued, data.isDiscontinued),
-        PackageDataField.isUnlisted:
-            StringDiff(previousData.isUnlisted, data.isUnlisted),
-        PackageDataField.isFlutterFavorite:
-            StringDiff(previousData.isFlutterFavorite, data.isFlutterFavorite),
-        PackageDataField.dependents:
-            SetDiff(previousData.dependents, data.dependents),
-      }..removeWhere((key, value) => !value.different);
-    } else {
-      changes = {};
-    }
-
     final warnings = <PackageDataField, String>{};
     final grantedPoints = score.grantedPoints;
     final maxPoints = score.maxPoints;
@@ -125,11 +105,11 @@ class ScoreFetchController {
           'Only $grantedPoints/$maxPoints pub points';
     }
 
-    if (changes.isEmpty && warnings.isEmpty) return;
+    if (diff.isEmpty && warnings.isEmpty) return;
 
     for (final config in configs) {
       final filteredChanges = Map.fromEntries(
-        changes.entries.where((e) => !config.ignore.contains(e.key)),
+        diff.entries.where((e) => !config.ignore.contains(e.key)),
       );
       final filteredWarnings = Map.fromEntries(
         warnings.entries.where((e) => !config.ignore.contains(e.key)),

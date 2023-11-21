@@ -32,6 +32,15 @@ class DatabaseRepo {
         .set(score.toJson());
   }
 
+  Future<void> writePackageDiff(String package, PackageDataDiff diff) {
+    return _database
+        .ref()
+        .child('diffs')
+        .child(package)
+        .child(DateTime.now().secondsSinceEpoch.toString())
+        .set(diff.toJson());
+  }
+
   Future<void> writeGlobalStats(GlobalStats stats) async {
     await _database.ref().child('global_stats').set(stats.toJson());
 

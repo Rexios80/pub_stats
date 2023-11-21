@@ -1,12 +1,15 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:pub_stats_core/src/model/diff.dart';
 
 part 'package_data.freezed.dart';
 part 'package_data.g.dart';
 
 @freezed
 class PackageData with _$PackageData {
+  const PackageData._();
+
   const factory PackageData({
     @JsonKey(name: 'p') String? publisher,
     @JsonKey(name: 'v') required String version,
@@ -20,6 +23,24 @@ class PackageData with _$PackageData {
 
   factory PackageData.fromJson(Map<String, dynamic> json) =>
       _$PackageDataFromJson(json);
+
+  PackageDataDiff diffFrom(PackageData? before) {
+    if (before == null) return {};
+    return {
+      PackageDataField.publisher:
+          StringDiff(before.publisher ?? '', publisher ?? ''),
+      PackageDataField.version: StringDiff(before.version, version),
+      PackageDataField.likeCount: StringDiff(before.likeCount, likeCount),
+      PackageDataField.popularityScore:
+          StringDiff(before.popularityScore, popularityScore),
+      PackageDataField.isDiscontinued:
+          StringDiff(before.isDiscontinued, isDiscontinued),
+      PackageDataField.isUnlisted: StringDiff(before.isUnlisted, isUnlisted),
+      PackageDataField.isFlutterFavorite:
+          StringDiff(before.isFlutterFavorite, isFlutterFavorite),
+      PackageDataField.dependents: SetDiff(before.dependents, dependents),
+    }..removeWhere((key, value) => !value.different);
+  }
 }
 
 enum PackageDataField {
@@ -33,5 +54,36 @@ enum PackageDataField {
   dependents,
 
   // Extra fields not actually on the PackageData model
-  pubPoints,
+  pubPoints;
+
+  Diff diffFromJson(Map<String, dynamic> json) {
+    switch (this) {
+      case PackageDataField.publisher:
+      case PackageDataField.version:
+      case PackageDataField.likeCount:
+      case PackageDataField.popularityScore:
+      case PackageDataField.isDiscontinued:
+      case PackageDataField.isUnlisted:
+      case PackageDataField.isFlutterFavorite:
+        return StringDiff.fromJson(json);
+      case PackageDataField.dependents:
+        return SetDiff.fromJson(json);
+      case PackageDataField.pubPoints:
+        throw UnimplementedError();
+    }
+  }
+}
+
+typedef PackageDataDiff = Map<PackageDataField, Diff>;
+
+extension PackageDataDiffExtension on PackageDataDiff {
+  static Map<PackageDataField, Diff> fromJson(Map<String, dynamic> json) =>
+      json.map(
+        (k, v) {
+          final field = PackageDataField.values.byName(k);
+          return MapEntry(field, field.diffFromJson(v));
+        },
+      );
+
+  Map<String, dynamic> toJson() => map((k, v) => MapEntry(k.name, v.toJson()));
 }

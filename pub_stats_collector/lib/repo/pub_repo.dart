@@ -19,9 +19,6 @@ class PubRepo {
 
     var mostLikedPackage = ('', 0);
     var mostPopularPackage = ('', 0.0);
-    var mostDependedPackage = ('', 0);
-
-    var lowestPopularityWithDependents = ('', 100.0);
 
     var completed = 0;
     Future<void> fetchPackageData(String package) async {
@@ -51,30 +48,20 @@ class PubRepo {
       }
 
       final publisherData = await _client.packagePublisher(package);
+      final publisher = publisherData.publisherId;
       final packageOptions = await _client.packageOptions(package);
 
-      final dependentsData =
-          await _client.fetchAllPackages(PackageTag.dependency(package));
-      final dependents = dependentsData.map((e) => e.package).toSet();
-
-      if (dependents.length > mostDependedPackage.$2) {
-        print('Most depended package: $package');
-        mostDependedPackage = (package, dependents.length);
-      }
-
-      if (dependents.isNotEmpty &&
-          popularityPercent < lowestPopularityWithDependents.$2) {
-        lowestPopularityWithDependents = (package, popularityScore);
-      }
+      final isFlutterFavorite =
+          metrics.score.tags.contains(PackageTag.isFlutterFavorite);
 
       final data = PackageData(
-        publisher: publisherData.publisherId,
+        publisher: publisher,
         version: metrics.scorecard.packageVersion,
         likeCount: metrics.score.likeCount,
         popularityScore: popularityPercent,
         isDiscontinued: packageOptions.isDiscontinued,
+        isFlutterFavorite: isFlutterFavorite,
         isUnlisted: packageOptions.isUnlisted,
-        dependents: dependents,
       );
 
       await handleScore(metrics, data).timeout(
@@ -108,7 +95,8 @@ class PubRepo {
       packageCount: packages.length,
       mostLikedPackage: mostLikedPackage.$1,
       mostPopularPackage: mostPopularPackage.$1,
-      mostDependedPackage: mostDependedPackage.$1,
+      // TODO
+      mostDependedPackage:' mostDependedPackage',
       lastUpdated: DateTime.now().toUtc(),
     );
   }

@@ -8,19 +8,21 @@ part of 'package_data.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PackageData _$PackageDataFromJson(Map<String, dynamic> json) => PackageData(
+_$PackageDataImpl _$$PackageDataImplFromJson(Map<String, dynamic> json) =>
+    _$PackageDataImpl(
       publisher: json['p'] as String?,
       version: json['v'] as String,
       likeCount: json['lc'] as int,
       popularityScore: json['ps'] as int,
       isDiscontinued: json['id'] as bool,
       isUnlisted: json['iu'] as bool,
+      isFlutterFavorite: json['iff'] as bool,
       dependents:
           (json['d'] as List<dynamic>?)?.map((e) => e as String).toSet() ??
               const {},
     );
 
-Map<String, dynamic> _$PackageDataToJson(PackageData instance) =>
+Map<String, dynamic> _$$PackageDataImplToJson(_$PackageDataImpl instance) =>
     <String, dynamic>{
       'p': instance.publisher,
       'v': instance.version,
@@ -28,5 +30,6 @@ Map<String, dynamic> _$PackageDataToJson(PackageData instance) =>
       'ps': instance.popularityScore,
       'id': instance.isDiscontinued,
       'iu': instance.isUnlisted,
+      'iff': instance.isFlutterFavorite,
       'd': instance.dependents.toList(),
     };

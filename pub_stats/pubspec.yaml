@@ -48,7 +48,7 @@ dependency_overrides:
   pub_api_client:
     git:
       url: https://github.com/Rexios80/pub_api_client
-      ref: fb58e8627775d849539c003a3ccf2c950091d665
+      ref: d4d649c9bb0b0a8ac544b4871fe52bd242fb88b7
 
 flutter:
   uses-material-design: true

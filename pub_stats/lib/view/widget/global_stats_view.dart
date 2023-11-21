@@ -22,14 +22,6 @@ class GlobalStatsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final statItems = [
       GlobalStatItem(
-        stat: Formatting.number(stats.packageCount),
-        label: 'Packages scanned',
-      ),
-      GlobalStatItem(
-        stat: Formatting.timeAgo(stats.lastUpdated),
-        label: 'Last updated',
-      ),
-      GlobalStatItem(
         stat: stats.mostPopularPackage,
         label: 'Most popular package',
         onTap: () => _dataController.fetchStats(stats.mostPopularPackage),
@@ -43,6 +35,14 @@ class GlobalStatsView extends StatelessWidget {
         stat: stats.mostDependedPackage,
         label: 'Most depended package',
         onTap: () => _dataController.fetchStats(stats.mostDependedPackage),
+      ),
+      GlobalStatItem(
+        stat: Formatting.number(stats.packageCount),
+        label: 'Packages scanned',
+      ),
+      GlobalStatItem(
+        stat: Formatting.timeAgo(stats.lastUpdated),
+        label: 'Last updated',
       ),
     ];
     return Column(

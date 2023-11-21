@@ -62,4 +62,8 @@ class DatabaseRepo {
         .child(uid)
         .set(configs.map((e) => e.toJson()).toList());
   }
+
+  Query diffQuery(String package) {
+    return _database.child('diffs').child(package).orderByKey();
+  }
 }

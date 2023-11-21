@@ -84,8 +84,20 @@ class ScoreFetchController {
 
     await _database.writePackageData(package, data);
 
-    if (diff.isNotEmpty) {
-      await _database.writePackageDiff(package, diff);
+
+
+    // Don't track likes or popularity in diffs
+    final filteredDiff = Map.fromEntries(
+      diff.entries.where(
+        (e) => !{
+          PackageDataField.likeCount,
+          PackageDataField.popularityScore,
+        }.contains(e.key),
+      ),
+    );
+
+    if (filteredDiff.isNotEmpty) {
+      await _database.writePackageDiff(package, filteredDiff);
     }
   }
 

@@ -18,7 +18,7 @@ class DiffList extends StatelessWidget {
     return MultiSliver(
       children: [
         Text(
-          'Feed',
+          'History',
           style: context.textTheme.titleLarge,
           textAlign: TextAlign.center,
         ),

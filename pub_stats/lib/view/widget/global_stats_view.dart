@@ -47,7 +47,7 @@ class GlobalStatsView extends StatelessWidget {
     ];
     return Column(
       children: [
-        Container(
+        ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 800),
           child: Wrap(
             alignment: WrapAlignment.center,

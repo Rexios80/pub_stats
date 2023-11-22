@@ -68,7 +68,3 @@ class DatabaseRepo {
     );
   }
 }
-
-extension on DateTime {
-  int get secondsSinceEpoch => (millisecondsSinceEpoch / 1000).round();
-}

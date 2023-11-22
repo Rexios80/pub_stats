@@ -16,7 +16,7 @@ class PackageScoreSnapshot {
     required MiniPackageScore score,
   }) {
     return PackageScoreSnapshot._(
-      timestamp: DateTime.fromMillisecondsSinceEpoch(timestamp * 1000),
+      timestamp: DateTimeExtension.fromSecondsSinceEpoch(timestamp),
       likeCount: score.likeCount,
       popularityScore: score.popularityScore,
     );

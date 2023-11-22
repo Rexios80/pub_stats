@@ -35,8 +35,8 @@ class DiffList extends StatelessWidget {
                   }
 
                   final doc = snap.docs[index];
-                  final date = DateTime.fromMillisecondsSinceEpoch(
-                    int.parse(doc.key as String) * 1000,
+                  final date = DateTimeExtension.fromSecondsSinceEpoch(
+                    int.parse(doc.key as String),
                   );
                   final diff = PackageDataDiffExtension.fromJson(
                     doc.value as Map<String, dynamic>,

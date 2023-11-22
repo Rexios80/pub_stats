@@ -21,6 +21,8 @@ class DataController {
   static final _url = GetIt.I<UrlRepo>();
   static final _pub = PubRepo();
 
+  static const _defaultTimeSpan = TimeSpan.month;
+
   final _analytics = AnalyticsRepo();
   final _logger = GetIt.I<Logger>();
 
@@ -29,10 +31,10 @@ class DataController {
   final _random = Random();
 
   final GlobalStats globalStats;
-  final List<PackageCountSnapshot> packageCounts;
+  final RxList<PackageCountSnapshot> packageCounts;
   final loading = false.rx;
   final loadedStats = <PackageStats>[].rx;
-  final timeSpan = TimeSpan.month.rx;
+  final timeSpan = _defaultTimeSpan.rx;
 
   final loadingDeveloperPackageStats = false.rx;
   final developerPackageStats = <PackageStats>[].rx;
@@ -41,10 +43,12 @@ class DataController {
     required List<String> packages,
     required Map<String, Set<String>> completion,
     required this.globalStats,
-    required this.packageCounts,
+    required List<PackageCountSnapshot> packageCounts,
   })  : _packages = packages,
-        _completion = completion {
+        _completion = completion,
+        packageCounts = packageCounts.rx {
     _url.uriStream.listen((uri) => _parsePath(uri.path));
+    timeSpan.stream.listen((_) => _handleTimeSpanChange());
   }
 
   static Future<DataController> create() async {
@@ -59,7 +63,7 @@ class DataController {
     }
 
     final globalStats = await _database.getGlobalStats();
-    final packageCounts = await _database.getPackageCounts();
+    final packageCounts = await _database.getPackageCounts(_defaultTimeSpan);
 
     final instance = DataController._(
       packages: packages,
@@ -114,7 +118,7 @@ class DataController {
   }
 
   Future<PackageStats> _fetchStats(String package) async {
-    final stats = await _database.getScoreSnapshots(package);
+    final stats = await _database.getScoreSnapshots(package, timeSpan.value);
     return PackageStats(package: package, stats: stats);
   }
 
@@ -251,7 +255,19 @@ class DataController {
   }
 
   Query diffQuery(String package) {
-    final query = _database.diffQuery(package);
-    return query;
+    return _database.diffQuery(package);
+  }
+
+  Future<void> _handleTimeSpanChange() async {
+    final packageCounts = await _database.getPackageCounts(timeSpan.value);
+    this.packageCounts.replaceAll(packageCounts);
+
+    final newStats = <PackageStats>[];
+    for (final stats in loadedStats) {
+      final newStatsForPackage = await _fetchStats(stats.package);
+      newStats.add(newStatsForPackage);
+    }
+
+    loadedStats.replaceAll(newStats);
   }
 }

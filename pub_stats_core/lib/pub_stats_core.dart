@@ -9,3 +9,6 @@ export 'src/model/package_data.dart';
 
 // service
 export 'src/service/user_agent_client.dart';
+
+// util
+export 'src/util/date_time_utils.dart';

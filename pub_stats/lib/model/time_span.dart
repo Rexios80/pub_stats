@@ -19,4 +19,15 @@ enum TimeSpan {
 
   @override
   String toString() => name.titleCase;
+
+  DateTime get start {
+    final days = this.days;
+    if (days == null) {
+      return DateTime.fromMillisecondsSinceEpoch(0);
+    }
+
+    final now = DateTime.now();
+    return DateTime(now.year, now.month, now.day)
+        .subtract(Duration(days: days));
+  }
 }

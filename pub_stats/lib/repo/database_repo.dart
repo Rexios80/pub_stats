@@ -1,13 +1,22 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:pub_stats/model/package_count_snapshot.dart';
 import 'package:pub_stats/model/package_score_snapshot.dart';
+import 'package:pub_stats/model/time_span.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 
 class DatabaseRepo {
   final _database = FirebaseDatabase.instance.ref();
 
-  Future<List<PackageScoreSnapshot>> getScoreSnapshots(String package) async {
-    final event = await _database.child('stats').child(package).once();
+  Future<List<PackageScoreSnapshot>> getScoreSnapshots(
+    String package,
+    TimeSpan span,
+  ) async {
+    final event = await _database
+        .child('stats')
+        .child(package)
+        .orderByKey()
+        .startAt(span.start.secondsSinceEpoch.toString())
+        .once();
     final snap = event.snapshot;
     if (!snap.exists) {
       return [];
@@ -30,8 +39,12 @@ class DatabaseRepo {
     return GlobalStats.fromJson(snap.value as Map<String, dynamic>);
   }
 
-  Future<List<PackageCountSnapshot>> getPackageCounts() async {
-    final event = await _database.child('package_counts').once();
+  Future<List<PackageCountSnapshot>> getPackageCounts(TimeSpan span) async {
+    final event = await _database
+        .child('package_counts')
+        .orderByKey()
+        .startAt(span.start.secondsSinceEpoch.toString())
+        .once();
     final snap = event.snapshot;
     final data = snap.value as Map<String, dynamic>;
 
@@ -39,7 +52,7 @@ class DatabaseRepo {
       final timestamp = int.parse(e.key);
       final count = e.value as int;
       return PackageCountSnapshot(
-        timestamp: DateTime.fromMillisecondsSinceEpoch(timestamp * 1000),
+        timestamp: DateTimeExtension.fromSecondsSinceEpoch(timestamp),
         count: count,
       );
     }).toList();

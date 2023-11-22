@@ -62,7 +62,7 @@ class GlobalStatsView extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        PackageCountChart(spots: _createPackageCountSpots()),
+        FastBuilder(() => PackageCountChart(spots: _createPackageCountSpots())),
       ],
     );
   }

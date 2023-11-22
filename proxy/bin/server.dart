@@ -13,7 +13,7 @@ final pubHandler = Pipeline()
       ),
     )
     .addHandler(
-      proxyHandler('https://pub.dartlang.org', proxyName: 'proxy.pubstats.dev'),
+      proxyHandler('https://pub.dev', proxyName: 'proxy.pubstats.dev'),
     );
 
 void main(List<String> arguments) async {

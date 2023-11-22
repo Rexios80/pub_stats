@@ -68,21 +68,12 @@ class StatsCharts extends StatelessWidget {
           ),
         ],
         const SizedBox(height: 32),
-        if (AppTheme.isWide(context))
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              likeCountChart,
-              popularityScoreChart,
-            ],
-          )
-        else
-          Column(
-            children: [
-              likeCountChart,
-              popularityScoreChart,
-            ],
-          ),
+        Wrap(
+          children: [
+            likeCountChart,
+            popularityScoreChart,
+          ],
+        ),
         if (showHint) ...[
           const SizedBox(height: 16),
           Text(

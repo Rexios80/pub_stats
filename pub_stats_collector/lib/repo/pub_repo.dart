@@ -153,7 +153,7 @@ class PubRepo {
       mostLikedPackage: mostLikedPackage.$1,
       mostPopularPackage: mostPopularPackage.$1,
       mostDependedPackage: mostDependedPackage.$1,
-      lastUpdated: DateTime.now().toUtc(),
+      lastUpdated: DateTime.timestamp(),
     );
   }
 }

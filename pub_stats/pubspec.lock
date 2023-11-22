@@ -316,10 +316,11 @@ packages:
   firebase_ui_database:
     dependency: "direct main"
     description:
-      name: firebase_ui_database
-      sha256: "8f7834bbd6de9527f6461950f14998bbe49a3244999fe2effb8e1897ae6fe014"
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/firebase_ui_database"
+      ref: edf9dca4cb7b2d9ef09f627e90d8e31d6802a91b
+      resolved-ref: edf9dca4cb7b2d9ef09f627e90d8e31d6802a91b
+      url: "https://github.com/Rexios80/FirebaseUI-Flutter"
+    source: git
     version: "1.3.12"
   firebase_ui_localizations:
     dependency: transitive

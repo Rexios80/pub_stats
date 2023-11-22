@@ -23,36 +23,45 @@ class DiffList extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 16),
-        // TODO: Check if this is actually lazy loading
         FastBuilder(
-          () => FirebaseDatabaseListView(
+          () => FirebaseDatabaseQueryBuilder(
             query: _controller.diffQuery(_controller.loadedStats.first.package),
-            shrinkWrap: true,
-            itemBuilder: (context, snap) {
-              final date = DateTime.fromMillisecondsSinceEpoch(
-                int.parse(snap.key as String) * 1000,
-              );
-              final diff = PackageDataDiffExtension.fromJson(
-                snap.value as Map<String, dynamic>,
-              );
+            reverseQuery: true,
+            builder: (context, snap, child) => SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  if (index == snap.docs.length - 1) {
+                    snap.fetchMore();
+                  }
 
-              return Card(
-                child: Column(
-                  children: diff.entries
-                      .map(
-                        (e) => ListTile(
-                          leading: SizedBox(
-                            width: 100,
-                            child: Text(e.key.name.titleCase),
-                          ),
-                          title: Text(e.value.text),
-                          trailing: Text(Formatting.shortDate(date)),
-                        ),
-                      )
-                      .toList(),
-                ),
-              );
-            },
+                  final doc = snap.docs[index];
+                  final date = DateTime.fromMillisecondsSinceEpoch(
+                    int.parse(doc.key as String) * 1000,
+                  );
+                  final diff = PackageDataDiffExtension.fromJson(
+                    doc.value as Map<String, dynamic>,
+                  );
+
+                  return Card(
+                    child: Column(
+                      children: diff.entries
+                          .map(
+                            (e) => ListTile(
+                              leading: SizedBox(
+                                width: 100,
+                                child: Text(e.key.name.titleCase),
+                              ),
+                              title: Text(e.value.text),
+                              trailing: Text(Formatting.shortDate(date)),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  );
+                },
+                childCount: snap.docs.length,
+              ),
+            ),
           ),
         ),
         Card(

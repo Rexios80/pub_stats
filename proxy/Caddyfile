@@ -1,0 +1,22 @@
+{
+	auto_https off
+}
+
+http://proxy.pubstats.dev:{$PORT}
+
+handle_path /pub/* {
+	rewrite /pub /
+
+	reverse_proxy https://pub.dev {
+		header_up Host {upstream_hostport}
+	}
+
+	@originPubstats {
+		header Origin https://pubstats.dev
+	}
+	@originBetaPubstats {
+		header Origin https://beta.pubstats.dev
+	}
+	header @originPubstats Access-Control-Allow-Origin https://pubstats.dev
+	header @originBetaPubstats Access-Control-Allow-Origin https://beta.pubstats.dev
+}

@@ -24,7 +24,7 @@ class DataController {
   static const _defaultTimeSpan = TimeSpan.month;
 
   final _analytics = AnalyticsRepo();
-  final _logger = GetIt.I<Logger>();
+  static final _logger = GetIt.I<Logger>();
 
   final List<String> _packages;
   final Map<String, Set<String>> _completion;
@@ -52,7 +52,13 @@ class DataController {
   }
 
   static Future<DataController> create() async {
-    final packages = await _pub.getNameCompletion();
+    List<String> packages;
+    try {
+      packages = await _pub.getNameCompletion();
+    } catch (e) {
+      _logger.e(e);
+      packages = [];
+    }
     final completion = <String, Set<String>>{};
     for (final package in packages) {
       completion.update(

@@ -30,7 +30,7 @@ class DiffList extends StatelessWidget {
             builder: (context, snap, child) => SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  if (index == snap.docs.length - 1) {
+                  if (index == snap.docs.length - 4) {
                     snap.fetchMore();
                   }
 

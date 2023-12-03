@@ -41,12 +41,6 @@ class PubRepo {
         return;
       }
 
-      final dependencies = metrics.scorecard.panaReport.allDependencies;
-      if (dependencies == null) {
-        print('No dependency report for $package');
-        return;
-      }
-
       final likeCount = metrics.score.likeCount;
       if (likeCount > mostLikedPackage.$2) {
         print('Most liked package: $package');
@@ -64,6 +58,8 @@ class PubRepo {
       final isFlutterFavorite =
           metrics.score.tags.contains(PackageTag.isFlutterFavorite);
 
+      final info = await _client.packageInfo(package);
+      final dependencies = info.latestPubspec.allDependencies.keys;
       for (final dependency in dependencies) {
         dependentMap.update(
           dependency,

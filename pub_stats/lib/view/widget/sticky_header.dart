@@ -69,8 +69,9 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
           const SizedBox(width: 16),
           Expanded(
             child: TypeAheadField<String>(
-              textFieldConfiguration: TextFieldConfiguration(
-                controller: _textController,
+              builder: (context, controller, node) => TextField(
+                controller: controller,
+                focusNode: node,
                 autofocus: true,
                 autocorrect: false,
                 textCapitalization: TextCapitalization.none,
@@ -85,10 +86,10 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
               ),
               suggestionsCallback: (pattern) {
                 if (pattern.isEmpty) return [];
-                return {
+                return [
                   pattern,
                   ..._dataController.complete(pattern),
-                };
+                ];
               },
               itemBuilder: (context, suggestion) => ListTile(
                 title: Text(suggestion),
@@ -102,14 +103,14 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
                         child: const Text('Compare'),
                       ),
               ),
-              noItemsFoundBuilder: (context) =>
+              emptyBuilder: (context) =>
                   const ListTile(title: Text('No packages found')),
               errorBuilder: (context, error) {
                 _logger.e(error);
                 return const ListTile(title: Text('Error searching packages'));
               },
               debounceDuration: Duration.zero,
-              onSuggestionSelected: _submit,
+              onSelected: _submit,
             ),
           ),
           const SizedBox(width: 16),

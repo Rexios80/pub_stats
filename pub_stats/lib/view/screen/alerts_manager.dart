@@ -39,9 +39,11 @@ class AlertsManager extends StatelessWidget {
                       ],
                       itemBuilder: (context, suggestion) =>
                           ListTile(title: Text(suggestion)),
-                      onSuggestionSelected: (suggestion) {},
-                      textFieldConfiguration: TextFieldConfiguration(
-                        controller: slugController,
+                      onSelected: (suggestion) {},
+                      controller: slugController,
+                      builder: (context, controller, node) => TextField(
+                        controller: controller,
+                        focusNode: node,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           hintText: 'Alert slug',

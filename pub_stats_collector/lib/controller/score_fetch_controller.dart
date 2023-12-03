@@ -45,8 +45,11 @@ class ScoreFetchController {
     print('System alerts sent');
   }
 
-  Future<void> _handleData(PackageMetrics metrics, PackageData data) async {
-    final package = metrics.scorecard.packageName;
+  Future<void> _handleData(
+    String package,
+    PackageScore score,
+    PackageData data,
+  ) async {
     final miniScore = MiniPackageScore(
       likeCount: data.likeCount,
       popularityScore: data.popularityScore,
@@ -69,7 +72,7 @@ class ScoreFetchController {
           (e) => processAlert(
             package: package,
             configs: configs,
-            score: metrics.score,
+            score: score,
             diff: diff,
           ),
         ),
@@ -78,7 +81,7 @@ class ScoreFetchController {
 
     await _database.writePackageScore(
       package: package,
-      lastUpdated: metrics.score.lastUpdated,
+      lastUpdated: score.lastUpdated,
       score: miniScore,
     );
 

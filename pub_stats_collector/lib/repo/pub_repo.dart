@@ -13,7 +13,11 @@ class PubRepo {
       : _client = PubClient(client: UserAgentClient(credentials.userAgent));
 
   Future<GlobalStats> fetchAllData(
-    Future<void> Function(PackageMetrics metrics, PackageData data) handleData,
+    Future<void> Function(
+      String package,
+      PackageScore score,
+      PackageData data,
+    ) handleData,
   ) async {
     final packages = await _client.packageNames();
     print('Fetched ${packages.length} package names');
@@ -26,13 +30,9 @@ class PubRepo {
     final dependentMap = <String, Set<String>>{};
     var fetched = 0;
     Future<void> fetchPackageData(String package) async {
-      final metrics = await _client.packageMetrics(package);
-      if (metrics == null) {
-        print('No metrics for $package');
-        return;
-      }
+      final score = await _client.packageScore(package);
 
-      final popularityScore = metrics.score.popularityScore;
+      final popularityScore = score.popularityScore;
       final int popularityPercent;
       if (popularityScore != null) {
         popularityPercent = (popularityScore * 100).round();
@@ -41,7 +41,7 @@ class PubRepo {
         return;
       }
 
-      final likeCount = metrics.score.likeCount;
+      final likeCount = score.likeCount;
       if (likeCount > mostLikedPackage.$2) {
         print('Most liked package: $package');
         mostLikedPackage = (package, likeCount);
@@ -56,7 +56,7 @@ class PubRepo {
       final packageOptions = await _client.packageOptions(package);
 
       final isFlutterFavorite =
-          metrics.score.tags.contains(PackageTag.isFlutterFavorite);
+          score.tags.contains(PackageTag.isFlutterFavorite);
 
       final info = await _client.packageInfo(package);
       final dependencies = info.latestPubspec.allDependencies.keys;
@@ -70,11 +70,12 @@ class PubRepo {
 
       wrappers.add(
         PackageDataWrapper(
-          metrics,
+          package,
+          score,
           PackageData(
             publisher: publisher,
-            version: metrics.scorecard.packageVersion,
-            likeCount: metrics.score.likeCount,
+            version: info.version,
+            likeCount: likeCount,
             popularityScore: popularityPercent,
             isDiscontinued: packageOptions.isDiscontinued,
             isFlutterFavorite: isFlutterFavorite,
@@ -106,8 +107,8 @@ class PubRepo {
 
     var handled = 0;
     Future<void> handleWrapper(PackageDataWrapper wrapper) async {
-      final metrics = wrapper.metrics;
-      final package = metrics.scorecard.packageName;
+      final score = wrapper.score;
+      final package = wrapper.package;
 
       final dependents = dependentMap[package] ?? {};
       final data = wrapper.data.copyWith(dependents: dependents);
@@ -117,7 +118,7 @@ class PubRepo {
         mostDependedPackage = (package, dependents.length);
       }
 
-      await handleData(metrics, data).timeout(
+      await handleData(package, score, data).timeout(
         Duration(seconds: 30),
         onTimeout: () =>
             throw TimeoutException('Timeout handling wrapper for $package'),
@@ -132,7 +133,7 @@ class PubRepo {
     for (final wrapper in wrappers) {
       unawaited(
         queue.add(() async {
-          final package = wrapper.metrics.scorecard.packageName;
+          final package = wrapper.package;
           try {
             await handleWrapper(wrapper);
           } catch (e) {

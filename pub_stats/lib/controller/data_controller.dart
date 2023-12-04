@@ -26,8 +26,8 @@ class DataController {
   final _analytics = AnalyticsRepo();
   static final _logger = GetIt.I<Logger>();
 
-  final List<String> _packages;
-  final Map<String, Set<String>> _completion;
+  final _packages = <String>[];
+  final _completion = <String, Set<String>>{};
   final _random = Random();
 
   final GlobalStats globalStats;
@@ -40,24 +40,37 @@ class DataController {
   final developerPackageStats = <PackageStats>[].rx;
 
   DataController._({
-    required List<String> packages,
-    required Map<String, Set<String>> completion,
     required this.globalStats,
     required List<PackageCountSnapshot> packageCounts,
-  })  : _packages = packages,
-        _completion = completion,
-        packageCounts = packageCounts.rx {
+  }) : packageCounts = packageCounts.rx {
     _url.uriStream.listen((uri) => _parsePath(uri.path));
     timeSpan.stream.listen((_) => _handleTimeSpanChange());
   }
 
   static Future<DataController> create() async {
-    List<String> packages;
+    final globalStats = await _database.getGlobalStats();
+    final packageCounts = await _database.getPackageCounts(_defaultTimeSpan);
+
+    final instance = DataController._(
+      globalStats: globalStats,
+      packageCounts: packageCounts,
+    );
+
+    // Don't wait for this since it might take a while
+    instance._getCompletion();
+
+    await instance._parsePath(_url.uri.path);
+
+    return instance;
+  }
+
+  void _getCompletion() async {
+    final List<String> packages;
     try {
       packages = await _pub.getNameCompletion();
     } catch (e) {
       _logger.e(e);
-      packages = [];
+      return;
     }
     final completion = <String, Set<String>>{};
     for (final package in packages) {
@@ -67,20 +80,8 @@ class DataController {
         ifAbsent: () => {package},
       );
     }
-
-    final globalStats = await _database.getGlobalStats();
-    final packageCounts = await _database.getPackageCounts(_defaultTimeSpan);
-
-    final instance = DataController._(
-      packages: packages,
-      completion: completion,
-      globalStats: globalStats,
-      packageCounts: packageCounts,
-    );
-
-    await instance._parsePath(_url.uri.path);
-
-    return instance;
+    _packages.addAll(packages);
+    _completion.addAll(completion);
   }
 
   Future<void> _parsePath(String path) async {

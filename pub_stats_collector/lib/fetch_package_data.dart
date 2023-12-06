@@ -39,7 +39,7 @@ Future<Response> fetchPackageData(Request request, {bool debug = false}) async {
     );
 
     await controller.fetchScores().timeout(
-          Duration(minutes: 5),
+          Duration(minutes: 10),
           onTimeout: () => throw TimeoutException('Global timeout reached'),
         );
   } catch (e, stacktrace) {

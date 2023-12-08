@@ -50,9 +50,15 @@ class PackageListButton extends StatelessWidget {
               ),
             )
             .toList(),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Text('${packages.length} $qualifier'),
+        child: SizedBox(
+          width: 120,
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Text(
+              '${packages.length} $qualifier',
+              textAlign: TextAlign.center,
+            ),
+          ),
         ),
       ),
     );

@@ -3,6 +3,7 @@ import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pub_stats/controller/data_controller.dart';
+import 'package:pub_stats/extension/diff_extension.dart';
 import 'package:pub_stats/format/formatting.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 import 'package:recase/recase.dart';
@@ -51,7 +52,7 @@ class DiffList extends StatelessWidget {
                                 width: 100,
                                 child: Text(e.key.name.titleCase),
                               ),
-                              title: Text(e.value.text),
+                              title: e.value.widget,
                               trailing: Text(Formatting.shortDate(date)),
                             ),
                           )

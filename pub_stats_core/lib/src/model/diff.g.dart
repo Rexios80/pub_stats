@@ -20,8 +20,13 @@ Map<String, dynamic> _$StringDiffToJson(StringDiff instance) =>
     };
 
 SetDiff _$SetDiffFromJson(Map<String, dynamic> json) => SetDiff._(
-      added: (json['added'] as List<dynamic>?)?.toSet() ?? const {},
-      removed: (json['removed'] as List<dynamic>?)?.toSet() ?? const {},
+      added:
+          (json['added'] as List<dynamic>?)?.map((e) => e as Object).toSet() ??
+              const {},
+      removed: (json['removed'] as List<dynamic>?)
+              ?.map((e) => e as Object)
+              .toSet() ??
+          const {},
     );
 
 Map<String, dynamic> _$SetDiffToJson(SetDiff instance) => <String, dynamic>{

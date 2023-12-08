@@ -2,7 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'diff.g.dart';
 
-abstract class Diff {
+sealed class Diff {
   bool get different;
   String get text;
 
@@ -31,15 +31,15 @@ class StringDiff extends Diff {
 
 @JsonSerializable(constructor: '_')
 class SetDiff extends Diff {
-  final Set added;
-  final Set removed;
+  final Set<Object> added;
+  final Set<Object> removed;
 
   SetDiff._({
     this.added = const {},
     this.removed = const {},
   });
 
-  SetDiff(Set before, Set after)
+  SetDiff(Set<Object> before, Set<Object> after)
       : added = after.difference(before),
         removed = before.difference(after);
 

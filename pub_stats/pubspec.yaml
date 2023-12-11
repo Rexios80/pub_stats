@@ -39,7 +39,7 @@ dependencies:
   firebase_ui_database:
     git:
       url: https://github.com/Rexios80/FirebaseUI-Flutter
-      ref: edf9dca4cb7b2d9ef09f627e90d8e31d6802a91b
+      ref: 1525a3cf9649f881f722dcac70f212941a30d906
       path: packages/firebase_ui_database
   sliver_tools: ^0.2.12
 

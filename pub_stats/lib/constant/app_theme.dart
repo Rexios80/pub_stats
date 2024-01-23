@@ -12,5 +12,6 @@ class AppTheme {
     cardTheme: CardTheme(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
     ),
+    appBarTheme: const AppBarTheme(centerTitle: true),
   );
 }

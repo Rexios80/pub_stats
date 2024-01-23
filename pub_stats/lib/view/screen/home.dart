@@ -20,6 +20,7 @@ class Home extends StatelessWidget {
             pinned: true,
             expandedHeight: 200,
             flexibleSpace: FlexibleSpaceBar(
+              centerTitle: true,
               titlePadding: EdgeInsets.zero,
               title: FittedBox(fit: BoxFit.scaleDown, child: Header()),
             ),

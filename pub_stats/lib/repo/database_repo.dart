@@ -46,6 +46,9 @@ class DatabaseRepo {
         .startAt(span.start.secondsSinceEpoch.toString())
         .once();
     final snap = event.snapshot;
+    if (!snap.exists) {
+      return [];
+    }
     final data = snap.value as Map<String, dynamic>;
 
     return data.entries.map((e) {

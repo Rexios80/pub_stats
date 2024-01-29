@@ -67,14 +67,14 @@ class DiffList extends StatelessWidget {
         ),
         Card(
           child: FastBuilder(() {
-            final firstSnapshot = _controller.loadedStats.first.stats.first;
+            final firstScan = _controller.loadedStats.first.firstScan;
             return ListTile(
               leading: const SizedBox(
                 width: 100,
                 child: Text('Meta'),
               ),
-              title: const Text('First scanned'),
-              trailing: Text(Formatting.shortDate(firstSnapshot.timestamp)),
+              title: const Text('First scan'),
+              trailing: Text(Formatting.shortDate(firstScan)),
             );
           }),
         ),

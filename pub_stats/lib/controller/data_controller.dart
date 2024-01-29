@@ -126,7 +126,8 @@ class DataController {
 
   Future<PackageStats> _fetchStats(String package) async {
     final stats = await _database.getScoreSnapshots(package, timeSpan.value);
-    return PackageStats(package: package, stats: stats);
+    final firstScan = await _database.getFirstScan(package);
+    return PackageStats(package: package, stats: stats, firstScan: firstScan);
   }
 
   Future<PackageStats?> _fetchStatsForUi(String package) async {

@@ -33,6 +33,24 @@ class DatabaseRepo {
     }).toList();
   }
 
+  Future<DateTime> getFirstScan(String package) async {
+    final event = await _database
+        .child('stats')
+        .child(package)
+        .orderByKey()
+        .limitToFirst(1)
+        .once();
+
+    final snap = event.snapshot;
+    if (!snap.exists) {
+      throw Exception('No first scan found for $package');
+    }
+
+    final data = snap.value as Map<String, dynamic>;
+    final timestamp = int.parse(data.keys.first);
+    return DateTimeExtension.fromSecondsSinceEpoch(timestamp);
+  }
+
   Future<GlobalStats> getGlobalStats() async {
     final event = await _database.child('global_stats').once();
     final snap = event.snapshot;

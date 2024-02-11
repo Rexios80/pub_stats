@@ -18,7 +18,7 @@ dependencies:
   get_time_ago: ^1.1.1
   font_awesome_flutter: ^10.0.0-beta
   url_launcher: ^6.0.17
-  fl_chart: ^0.65.0
+  fl_chart: ^0.66.2
   flutter_svg: ^2.0.0+1
   pub_api_client: ^2.2.0
   flutter_typeahead: ^5.0.1
@@ -36,11 +36,7 @@ dependencies:
 
   collection: ^1.16.0
   recase: ^4.1.0
-  firebase_ui_database:
-    git:
-      url: https://github.com/Rexios80/FirebaseUI-Flutter
-      ref: 1525a3cf9649f881f722dcac70f212941a30d906
-      path: packages/firebase_ui_database
+  firebase_ui_database: ^1.4.2
   sliver_tools: ^0.2.12
 
 dev_dependencies:

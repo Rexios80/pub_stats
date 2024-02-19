@@ -96,6 +96,10 @@ class DiscordRepo {
               value: stats.mostLikedPackage,
             ),
             EmbedField(
+              name: 'Most Depended Package',
+              value: stats.mostDependedPackage,
+            ),
+            EmbedField(
               name: 'Most Popular Package',
               value: stats.mostPopularPackage,
             ),

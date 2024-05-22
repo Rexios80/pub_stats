@@ -5,6 +5,7 @@ import 'package:logger/logger.dart';
 import 'package:pub_stats/firebase_options.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_performance/firebase_performance.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -22,6 +23,7 @@ class FirebaseService {
 
     // Initialize services
     final analytics = FirebaseAnalytics.instance;
+    final performance = FirebasePerformance.instance;
 
     final database = FirebaseDatabase.instance;
     final auth = FirebaseAuth.instance;
@@ -33,6 +35,9 @@ class FirebaseService {
       try {
         // Log the app open event on startup
         await analytics.logAppOpen();
+        final enabled = await performance.isPerformanceCollectionEnabled();
+        _logger
+            .d('Performance collection is ${enabled ? 'enabled' : 'disabled'}');
       } catch (e) {
         // These might throw if ad blocking is enabled
         _logger.e(e);

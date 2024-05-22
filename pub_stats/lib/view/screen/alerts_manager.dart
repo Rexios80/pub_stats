@@ -1,6 +1,5 @@
 import 'package:fast_ui/fast_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pub_stats/controller/user_controller.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
@@ -10,7 +9,7 @@ class AlertsManager extends StatelessWidget {
   static final _user = GetIt.I<UserController>();
 
   final selectedType = AlertConfigType.discord.rx;
-  final slugController = TextEditingController();
+  final slugController = SearchController();
   final extraController = TextEditingController();
   final ignoredFields = <PackageDataField>{}.rx;
 
@@ -31,24 +30,15 @@ class AlertsManager extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: TypeAheadField(
-                      suggestionsCallback: (pattern) => [
-                        '".system" for system alerts',
-                        '"packageName" for single package alerts',
-                        '"publisher:publisherName" for publisher package alerts',
+                    child: SearchAnchor.bar(
+                      suggestionsBuilder: (context, controller) => [
+                        Text('".system" for system alerts'),
+                        Text('"packageName" for single package alerts'),
+                        Text(
+                            '"publisher:publisherName" for publisher package alerts'),
                       ],
-                      itemBuilder: (context, suggestion) =>
-                          ListTile(title: Text(suggestion)),
-                      onSelected: (suggestion) {},
-                      controller: slugController,
-                      builder: (context, controller, node) => TextField(
-                        controller: controller,
-                        focusNode: node,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'Alert slug',
-                        ),
-                      ),
+                      searchController: slugController,
+                      barHintText: 'Alert slug',
                     ),
                   ),
                   const SizedBox(width: 16),

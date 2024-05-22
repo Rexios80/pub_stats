@@ -61,10 +61,6 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
       searchController: _searchController,
       barHintText: 'Enter a package name',
       onSubmitted: _submit,
-      viewBuilder: (suggestions) => ListView(
-        children: suggestions.toList(),
-        shrinkWrap: true,
-      ),
       suggestionsBuilder: (context, controller) {
         final text = controller.text;
         if (text.isEmpty) return [];
@@ -82,10 +78,6 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
             )
         ];
       },
-      // viewBuilder: (suggestions) => ListView(
-      //   children: suggestions.toList(),
-      //   shrinkWrap: true,
-      // ),
       barTrailing: [
         IconButton(
           icon: const Icon(Icons.casino),

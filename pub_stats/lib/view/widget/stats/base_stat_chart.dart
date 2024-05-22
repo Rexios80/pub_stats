@@ -102,7 +102,7 @@ class BaseStatChart extends StatelessWidget {
   static LineTouchData createDefaultLineTouchData(BuildContext context) {
     return LineTouchData(
       touchTooltipData: LineTouchTooltipData(
-        tooltipBgColor: context.theme.cardColor,
+        getTooltipColor: (_) => context.theme.cardColor,
         getTooltipItems: (spots) => spots.mapIndexed((spotIndex, spot) {
           final barIndex = spot.barIndex;
           final valueString = spot.y.toInt().toString();

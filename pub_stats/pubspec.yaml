@@ -14,11 +14,11 @@ dependencies:
   fast_ui: ^0.1.0
   get_it: ^7.2.0
   logger: ^2.0.2+1
-  intl: ^0.18.0
+  intl: ^0.19.0
   get_time_ago: ^1.1.1
   font_awesome_flutter: ^10.0.0-beta
   url_launcher: ^6.0.17
-  fl_chart: ^0.66.2
+  fl_chart: ^0.68.0
   flutter_svg: ^2.0.0+1
   pub_api_client: ^2.2.0
   flutter_typeahead: ^5.0.1
@@ -61,6 +61,6 @@ flutter:
 # flutter pub run flutter_native_splash:create
 flutter_native_splash:
   color: "#000000"
-  image: resources/logo.png
+  image: ../resources/logo.png
   android: false
   ios: false

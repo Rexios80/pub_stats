@@ -31,11 +31,12 @@ class AlertsManager extends StatelessWidget {
                 children: [
                   Expanded(
                     child: SearchAnchor.bar(
-                      suggestionsBuilder: (context, controller) => [
+                      suggestionsBuilder: (context, controller) => const [
                         Text('".system" for system alerts'),
                         Text('"packageName" for single package alerts'),
                         Text(
-                            '"publisher:publisherName" for publisher package alerts'),
+                          '"publisher:publisherName" for publisher package alerts',
+                        ),
                       ],
                       searchController: slugController,
                       barHintText: 'Alert slug',

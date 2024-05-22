@@ -72,7 +72,7 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
                       child: const Text('Compare'),
                     ),
               onTap: () => _submit(suggestion),
-            )
+            ),
         ];
       },
       barTrailing: [

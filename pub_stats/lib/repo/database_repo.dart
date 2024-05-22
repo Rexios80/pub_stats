@@ -21,7 +21,7 @@ class DatabaseRepo {
     if (!snap.exists) {
       return [];
     }
-    final data = snap.value as Map<String, dynamic>;
+    final data = (snap.value as Map).cast<String, dynamic>();
 
     return data.entries.map((e) {
       final timestamp = int.parse(e.key);
@@ -46,7 +46,7 @@ class DatabaseRepo {
       throw Exception('No first scan found for $package');
     }
 
-    final data = snap.value as Map<String, dynamic>;
+    final data = (snap.value as Map).cast<String, dynamic>();
     final timestamp = int.parse(data.keys.first);
     return DateTimeExtension.fromSecondsSinceEpoch(timestamp);
   }
@@ -54,7 +54,7 @@ class DatabaseRepo {
   Future<GlobalStats> getGlobalStats() async {
     final event = await _database.child('global_stats').once();
     final snap = event.snapshot;
-    return GlobalStats.fromJson(snap.value as Map<String, dynamic>);
+    return GlobalStats.fromJson((snap.value as Map).cast<String, dynamic>());
   }
 
   Future<List<PackageCountSnapshot>> getPackageCounts(TimeSpan span) async {
@@ -67,7 +67,7 @@ class DatabaseRepo {
     if (!snap.exists) {
       return [];
     }
-    final data = snap.value as Map<String, dynamic>;
+    final data = (snap.value as Map).cast<String, dynamic>();
 
     return data.entries.map((e) {
       final timestamp = int.parse(e.key);

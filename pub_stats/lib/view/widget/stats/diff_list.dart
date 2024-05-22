@@ -40,7 +40,7 @@ class DiffList extends StatelessWidget {
                     int.parse(doc.key as String),
                   );
                   final diff = PackageDataDiffExtension.fromJson(
-                    doc.value as Map<String, dynamic>,
+                    (doc.value as Map).cast<String, dynamic>(),
                   );
 
                   return Card(

@@ -25,7 +25,8 @@ class DatabaseRepo {
 
     return data.entries.map((e) {
       final timestamp = int.parse(e.key);
-      final score = MiniPackageScore.fromJson(e.value);
+      final score =
+          MiniPackageScore.fromJson((e.value as Map).cast<String, dynamic>());
       return PackageScoreSnapshot.fromMiniPackageScore(
         timestamp: timestamp,
         score: score,
@@ -71,10 +72,10 @@ class DatabaseRepo {
 
     return data.entries.map((e) {
       final timestamp = int.parse(e.key);
-      final count = e.value as int;
+      final count = e.value as num;
       return PackageCountSnapshot(
         timestamp: DateTimeExtension.fromSecondsSinceEpoch(timestamp),
-        count: count,
+        count: count.toInt(),
       );
     }).toList();
   }

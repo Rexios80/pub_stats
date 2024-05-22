@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:fast_ui/fast_ui.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:pub_stats/constant/app_colors.dart';
@@ -135,10 +136,20 @@ class DataController {
     final PackageStats stats;
     try {
       stats = await _fetchStats(package);
-    } catch (e) {
+    } catch (e, stacktrace) {
       _logger.e(e);
       FastOverlays.showSnackBar(
-        SnackBar(content: Text('Unable to get stats for $package')),
+        SnackBar(
+          content: Text('Unable to get stats for $package'),
+          action: SnackBarAction(
+            label: 'COPY ERROR',
+            onPressed: () => Clipboard.setData(
+              ClipboardData(
+                text: 'Unable to get stats for $package\n$e\n$stacktrace',
+              ),
+            ),
+          ),
+        ),
       );
       return null;
     } finally {
@@ -148,7 +159,9 @@ class DataController {
     if (stats.stats.isEmpty) {
       // If there are no stats for the submitted package, don't update the view
       FastOverlays.showSnackBar(
-        SnackBar(content: Text('No stats for $package')),
+        SnackBar(
+          content: Text('No stats for $package in the selected time span'),
+        ),
       );
       return null;
     }

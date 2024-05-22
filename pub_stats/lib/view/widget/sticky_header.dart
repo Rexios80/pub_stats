@@ -1,7 +1,6 @@
 import 'package:fast_ui/fast_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:logger/logger.dart';
 import 'package:pub_stats/controller/data_controller.dart';
 import 'package:pub_stats/view/widget/time_span_selector.dart';
 
@@ -9,8 +8,6 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
   static const _searchBarSize = 104.0;
 
   final _dataController = GetIt.I<DataController>();
-  final _logger = GetIt.I<Logger>();
-
   final _searchController = SearchController();
 
   StickyHeader({Key? key});

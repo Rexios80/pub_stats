@@ -12,8 +12,8 @@ _$PackageDataImpl _$$PackageDataImplFromJson(Map<String, dynamic> json) =>
     _$PackageDataImpl(
       publisher: json['p'] as String?,
       version: json['v'] as String,
-      likeCount: json['lc'] as int,
-      popularityScore: json['ps'] as int,
+      likeCount: (json['lc'] as num).toInt(),
+      popularityScore: (json['ps'] as num).toInt(),
       isDiscontinued: json['id'] as bool,
       isUnlisted: json['iu'] as bool,
       isFlutterFavorite: json['iff'] as bool,

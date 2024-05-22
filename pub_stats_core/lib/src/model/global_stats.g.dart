@@ -9,7 +9,7 @@ part of 'global_stats.dart';
 // **************************************************************************
 
 GlobalStats _$GlobalStatsFromJson(Map<String, dynamic> json) => GlobalStats(
-      packageCount: json['packageCount'] as int,
+      packageCount: (json['packageCount'] as num).toInt(),
       mostLikedPackage: json['mostLikedPackage'] as String,
       mostPopularPackage: json['mostPopularPackage'] as String,
       mostDependedPackage: json['mostDependedPackage'] as String,

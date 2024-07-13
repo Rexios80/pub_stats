@@ -19,8 +19,6 @@ class FirebaseService {
       options: DefaultFirebaseOptions.currentPlatform,
     );
 
-    await _activateAppCheck();
-
     // Initialize services
     final analytics = FirebaseAnalytics.instance;
     final performance = FirebasePerformance.instance;
@@ -32,6 +30,7 @@ class FirebaseService {
       database.useDatabaseEmulator('localhost', 9000);
       await auth.useAuthEmulator('localhost', 9099);
     } else {
+      await _activateAppCheck();
       try {
         // Log the app open event on startup
         await analytics.logAppOpen();

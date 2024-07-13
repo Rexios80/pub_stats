@@ -42,6 +42,8 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
 
   Widget _buildSearchBar() {
     return SearchAnchor.bar(
+      viewShrinkWrap: true,
+      viewPadding: const EdgeInsets.only(bottom: 32),
       barLeading: FastBuilder(() {
         if (_dataController.loading.value) {
           return const Center(
@@ -84,69 +86,6 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
       ],
     );
   }
-
-  // Widget _buildSearchBar() {
-  //   return Card(
-  //     clipBehavior: Clip.antiAlias,
-  //     child: Row(
-  //       children: [
-  //         Expanded(
-  //           child: TypeAheadField<String>(
-  //             controller: _searchController,
-  //             builder: (context, controller, node) => TextField(
-  //               controller: controller,
-  //               focusNode: node,
-  //               autofocus: true,
-  //               autocorrect: false,
-  //               textCapitalization: TextCapitalization.none,
-  //               decoration: const InputDecoration(
-  //                 border: InputBorder.none,
-  //                 hintText: 'Enter a package name',
-  //               ),
-  //               inputFormatters: [
-  //                 FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9_\-]')),
-  //               ],
-  //               onSubmitted: _submit,
-  //             ),
-  //             suggestionsCallback: (pattern) {
-  //               if (pattern.isEmpty) return [];
-  //               return {
-  //                 pattern,
-  //                 ..._dataController.complete(pattern),
-  //               }.toList();
-  //             },
-  // itemBuilder: (context, suggestion) => ListTile(
-  //   title: Text(suggestion),
-  //   trailing: _dataController.loadedStats.isEmpty
-  //       ? null
-  //       : TextButton(
-  //           onPressed: () {
-  //             _dataController.fetchStats(suggestion, clear: false);
-  //             _searchController.clear();
-  //           },
-  //           child: const Text('Compare'),
-  //         ),
-  // ),
-  //             emptyBuilder: (context) => const SizedBox.shrink(),
-  //             errorBuilder: (context, error) {
-  //               _logger.e(error);
-  //               return const ListTile(title: Text('Error searching packages'));
-  //             },
-  //             debounceDuration: Duration.zero,
-  //             onSelected: _submit,
-  //           ),
-  //         ),
-  //         const SizedBox(width: 16),
-  //         IconButton(
-  //           icon: const Icon(Icons.casino),
-  //           onPressed: _dataController.feelingLucky,
-  //           tooltip: 'Feeling lucky?',
-  //         ),
-  //         const SizedBox(width: 8),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   void _submit(String value, {bool clear = true}) {
     _dataController.fetchStats(value, clear: clear);

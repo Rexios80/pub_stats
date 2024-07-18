@@ -10,7 +10,9 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
   final _dataController = GetIt.I<DataController>();
   final _searchController = SearchController();
 
-  StickyHeader({Key? key});
+  StickyHeader({Key? key}) {
+    Future.delayed(Duration.zero, _searchController.openView);
+  }
 
   @override
   Widget build(
@@ -41,22 +43,33 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
   }
 
   Widget _buildSearchBar() {
+    final leading = FastBuilder(() {
+      if (_dataController.loading.value) {
+        return const Center(
+          child: SizedBox(
+            width: 24,
+            height: 24,
+            child: CircularProgressIndicator(),
+          ),
+        );
+      } else {
+        return const Icon(Icons.search);
+      }
+    });
+    final trailing = [
+      IconButton(
+        icon: const Icon(Icons.casino),
+        onPressed: _dataController.feelingLucky,
+        tooltip: 'Feeling lucky?',
+      ),
+    ];
     return SearchAnchor.bar(
       viewShrinkWrap: true,
       viewPadding: const EdgeInsets.only(bottom: 32),
-      barLeading: FastBuilder(() {
-        if (_dataController.loading.value) {
-          return const Center(
-            child: SizedBox(
-              width: 24,
-              height: 24,
-              child: CircularProgressIndicator(),
-            ),
-          );
-        } else {
-          return const Icon(Icons.search);
-        }
-      }),
+      barLeading: leading,
+      viewLeading: leading,
+      viewBarPadding:
+          const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 16)),
       searchController: _searchController,
       barHintText: 'Enter a package name',
       onSubmitted: _submit,
@@ -77,13 +90,8 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
             ),
         ];
       },
-      barTrailing: [
-        IconButton(
-          icon: const Icon(Icons.casino),
-          onPressed: _dataController.feelingLucky,
-          tooltip: 'Feeling lucky?',
-        ),
-      ],
+      barTrailing: trailing,
+      viewTrailing: trailing,
     );
   }
 

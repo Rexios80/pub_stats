@@ -3,6 +3,8 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:get_it/get_it.dart';
+import 'package:pub_stats/repo/url_repo.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -15,6 +17,8 @@ import 'package:flutter/foundation.dart'
 /// );
 /// ```
 class DefaultFirebaseOptions {
+  static final _url = GetIt.I<UrlRepo>();
+
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
       return web;
@@ -52,12 +56,12 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
+  static final FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyD5P5WcinsZrqMMKw4F-GQcjfqvSZbkuf4',
     appId: '1:602612349235:web:bc801073a0f4599a252646',
     messagingSenderId: '602612349235',
     projectId: 'pub-stats-collector',
-    authDomain: 'pub-stats-collector.firebaseapp.com',
+    authDomain: _url.uri.host,
     databaseURL: 'https://pub-stats-collector-default-rtdb.firebaseio.com',
     storageBucket: 'pub-stats-collector.appspot.com',
     measurementId: 'G-SVB0V0S48E',

@@ -38,6 +38,7 @@ dependencies:
   firebase_ui_database: ^1.4.2
   sliver_tools: ^0.2.12
   web: ^0.5.1
+  platform_plus: ^4.8.1
 
 dev_dependencies:
   flutter_test:

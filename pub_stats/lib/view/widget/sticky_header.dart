@@ -10,9 +10,7 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
   final _dataController = GetIt.I<DataController>();
   final _searchController = SearchController();
 
-  StickyHeader({Key? key}) {
-    Future.delayed(Duration.zero, _searchController.openView);
-  }
+  StickyHeader({Key? key});
 
   @override
   Widget build(

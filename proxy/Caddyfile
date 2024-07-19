@@ -5,8 +5,6 @@
 http://proxy.pubstats.dev:{$PORT}
 
 handle_path /pub/* {
-	rewrite /pub /
-
 	reverse_proxy https://pub.dev {
 		header_up Host {upstream_hostport}
 	}
@@ -21,8 +19,9 @@ handle_path /pub/* {
 	header @originBetaPubstats Access-Control-Allow-Origin https://beta.pubstats.dev
 }
 
-handle_path /__/* {
+handle /__/* {
 	reverse_proxy https://pub-stats-collector.firebaseapp.com
 
 	header Cross-Origin-Embedder-Policy credentialless
+	header Cross-Origin-Resource-Policy same-site
 }

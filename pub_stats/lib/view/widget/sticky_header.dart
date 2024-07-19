@@ -95,7 +95,7 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
 
   void _submit(String value, {bool clear = true}) {
     _dataController.fetchStats(value, clear: clear);
-    _searchController.clear();
+    _searchController.closeView('');
   }
 
   @override

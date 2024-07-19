@@ -43,17 +43,13 @@
       ],
       "rewrites": [
         {
-          "source": "__/**",
-          "destination": "/signin_helpers"
-        },
-        {
           "source": "**",
           "destination": "/index.html"
         }
       ],
       "headers": [
         {
-          "source": "**",
+          "source": "**/*",
           "headers": [
             {
               "key": "Cross-Origin-Embedder-Policy",

@@ -31,14 +31,27 @@ class AlertsManager extends StatelessWidget {
                 children: [
                   Expanded(
                     child: SearchAnchor.bar(
+                      viewShrinkWrap: true,
+                      viewBarPadding: const WidgetStatePropertyAll(
+                        EdgeInsets.symmetric(horizontal: 16),
+                      ),
+                      barLeading: const SizedBox.shrink(),
+                      viewLeading: const SizedBox.shrink(),
+                      viewTrailing: [],
                       suggestionsBuilder: (context, controller) => const [
-                        Text('".system" for system alerts'),
-                        Text('"packageName" for single package alerts'),
-                        Text(
-                          '"publisher:publisherName" for publisher package alerts',
+                        ListTile(title: Text('".system" for system alerts')),
+                        ListTile(
+                          title:
+                              Text('"packageName" for single package alerts'),
+                        ),
+                        ListTile(
+                          title: Text(
+                            '"publisher:publisherName" for publisher package alerts',
+                          ),
                         ),
                       ],
                       searchController: slugController,
+                      onSubmitted: slugController.closeView,
                       barHintText: 'Alert slug',
                     ),
                   ),

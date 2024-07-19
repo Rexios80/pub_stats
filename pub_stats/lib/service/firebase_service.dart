@@ -8,9 +8,11 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pub_stats/repo/url_repo.dart';
 
 class FirebaseService {
   static final _logger = GetIt.I<Logger>();
+  static final _url = GetIt.I<UrlRepo>();
 
   FirebaseService._();
 
@@ -26,7 +28,7 @@ class FirebaseService {
     final database = FirebaseDatabase.instance;
     final auth = FirebaseAuth.instance;
 
-    if (kDebugMode) {
+    if (kDebugMode || _url.uri.host == 'localhost') {
       database.useDatabaseEmulator('localhost', 9000);
       await auth.useAuthEmulator('localhost', 9099);
     } else {

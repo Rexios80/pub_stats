@@ -61,6 +61,7 @@ class Footer extends StatelessWidget {
             ),
           ],
         ),
+        const SizedBox(height: 8),
         Text('Rendered with $rendererString')
       ],
     );

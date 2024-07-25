@@ -363,8 +363,12 @@ packages:
     version: "0.68.0"
   flutter:
     dependency: "direct main"
-    description: flutter
-    source: sdk
+    description:
+      path: "packages/flutter"
+      ref: "60ba165344568cee398437342d1ac5d4390f53d0"
+      resolved-ref: "60ba165344568cee398437342d1ac5d4390f53d0"
+      url: "https://github.com/Rexios80/flutter"
+    source: git
     version: "0.0.0"
   flutter_lints:
     dependency: transitive

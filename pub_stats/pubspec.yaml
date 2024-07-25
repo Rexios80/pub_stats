@@ -53,11 +53,11 @@ dependency_overrides:
       url: https://github.com/Rexios80/pub_api_client
       ref: 35c52ebdd9bd37d5893f721c1b9f1cde68458b15
   # TODO: Remove when https://github.com/flutter/flutter/pull/148856 lands to stable
-  flutter:
-    git:
-      url: https://github.com/Rexios80/flutter
-      ref: a16a90e245fecac91a60a8663ab4ae9ea6d80b0c
-      path: packages/flutter
+  # flutter:
+  #   git:
+  #     url: https://github.com/Rexios80/flutter
+  #     ref: a16a90e245fecac91a60a8663ab4ae9ea6d80b0c
+  #     path: packages/flutter
 
 flutter:
   uses-material-design: true

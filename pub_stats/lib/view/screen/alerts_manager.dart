@@ -31,7 +31,7 @@ class AlertsManager extends StatelessWidget {
                 children: [
                   Expanded(
                     child: SearchAnchor.bar(
-                      viewShrinkWrap: true,
+                      viewConstraints: const BoxConstraints(),
                       viewBarPadding: const WidgetStatePropertyAll(
                         EdgeInsets.symmetric(horizontal: 16),
                       ),

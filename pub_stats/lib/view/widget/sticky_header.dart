@@ -62,7 +62,7 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
       ),
     ];
     return SearchAnchor.bar(
-      viewShrinkWrap: true,
+      viewConstraints: const BoxConstraints(),
       viewPadding: const EdgeInsets.only(bottom: 32),
       barLeading: leading,
       viewLeading: leading,

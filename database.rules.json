@@ -24,6 +24,11 @@
       "$package": {
         ".read": "auth != null"
       }
+    },
+    "data": {
+      "$package": {
+        ".read": "auth != null"
+      }
     }
   }
 }

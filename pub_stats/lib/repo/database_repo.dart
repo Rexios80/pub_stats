@@ -86,7 +86,8 @@ class DatabaseRepo {
     if (value == null) return [];
 
     return value
-        .cast<Map<String, dynamic>>()
+        .cast<Map>()
+        .map((e) => e.cast<String, dynamic>())
         .map(AlertConfig.fromJson)
         .toList();
   }

@@ -37,9 +37,6 @@ class DataController {
   final loadedStats = <PackageStats>[].rx;
   final timeSpan = _defaultTimeSpan.rx;
 
-  final loadingDeveloperPackageStats = false.rx;
-  final developerPackageStats = <PackageStats>[].rx;
-
   DataController._({
     required this.globalStats,
     required List<PackageCountSnapshot> packageCounts,
@@ -86,13 +83,6 @@ class DataController {
   }
 
   Future<void> _parsePath(String path) async {
-    if (path == '/developer') {
-      await fetchDeveloperPackageStats();
-      return;
-    }
-
-    developerPackageStats.clear();
-
     final match = RegExp(r'\/packages\/(.+)').firstMatch(path);
     if (match == null) return;
     final pathPackages = match[1]!.split(',').toSet();
@@ -203,8 +193,6 @@ class DataController {
     final stats = await _fetchStatsForUi(package);
     if (stats == null) return;
 
-    developerPackageStats.clear();
-
     if (clear) loadedStats.clear();
     loadedStats.add(stats);
 
@@ -219,64 +207,10 @@ class DataController {
     _setPathPackages();
   }
 
-  Future<void> fetchDeveloperPackageStats() async {
-    if (developerPackageStats.isNotEmpty) {
-      // Don't fetch if we already have the stats
-      _logger.d('Already loaded developer stats');
-      return;
-    }
-
-    _url.setDeveloperPackages();
-
-    loadingDeveloperPackageStats.value = true;
-    try {
-      final packages = await _pub.getDeveloperPackages();
-      final packageStatsFutures = packages.map(_fetchStats);
-      final packageStats = await Future.wait(packageStatsFutures);
-
-      // Remove duplicates (there shouldn't be any but there are for some reason)
-      final distinctPackageStats = {
-        for (final stats in packageStats) stats.package: stats,
-      }.values.toList();
-
-      distinctPackageStats.sort(_sortStats);
-
-      loadedStats.clear();
-      developerPackageStats.replaceAll(distinctPackageStats);
-    } catch (e) {
-      _logger.e(e);
-      FastOverlays.showSnackBar(
-        const SnackBar(content: Text('Unable to get developer package stats')),
-      );
-    } finally {
-      loadingDeveloperPackageStats.value = false;
-    }
-  }
-
-  int _sortStats(PackageStats a, PackageStats b) {
-    // Sort by popularity first
-    final popularityComparison = (b.stats.lastOrNull?.popularityScore ?? -1)
-        .compareTo(a.stats.lastOrNull?.popularityScore ?? -1);
-    if (popularityComparison != 0) {
-      return popularityComparison;
-    }
-
-    // Then by like count
-    final likeComparison = (b.stats.lastOrNull?.likeCount ?? -1)
-        .compareTo(a.stats.lastOrNull?.likeCount ?? -1);
-    if (likeComparison != 0) {
-      return likeComparison;
-    }
-
-    // Then by name
-    return a.package.compareTo(b.package);
-  }
-
   /// Reset to show global stats
   void reset() {
     loading.value = false;
     loadedStats.clear();
-    developerPackageStats.clear();
 
     _url.reset();
   }

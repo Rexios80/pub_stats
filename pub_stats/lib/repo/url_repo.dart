@@ -7,10 +7,6 @@ class UrlRepo {
     _url.setPath('/packages/${packages.join(',')}');
   }
 
-  void setDeveloperPackages() {
-    _url.setPath('/developer');
-  }
-
   Uri get uri => _url.uri;
 
   Stream<Uri> get uriStream => _url.uriStream;

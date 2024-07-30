@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pub_stats/controller/data_controller.dart';
 import 'package:pub_stats/view/widget/global_stats_view.dart';
-import 'package:pub_stats/view/widget/stats/developer_package_stats.dart';
 import 'package:pub_stats/view/widget/stats/diff_list.dart';
 import 'package:pub_stats/view/widget/stats/stats_charts.dart';
 import 'package:sliver_tools/sliver_tools.dart';
@@ -34,10 +33,6 @@ class StatsView extends StatelessWidget {
                 ),
               ],
             ],
-          );
-        } else if (_controller.developerPackageStats.isNotEmpty) {
-          return DeveloperPackageStats(
-            stats: _controller.developerPackageStats,
           );
         } else {
           return SliverToBoxAdapter(

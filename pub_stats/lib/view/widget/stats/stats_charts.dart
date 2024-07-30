@@ -9,6 +9,7 @@ import 'package:pub_stats/model/package_score_snapshot.dart';
 import 'package:pub_stats/model/package_stats.dart';
 import 'package:fast_ui/fast_ui.dart';
 import 'package:pub_stats/view/widget/stats/base_stat_chart.dart';
+import 'package:pub_stats_core/pub_stats_core.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class StatsCharts extends StatelessWidget {
@@ -30,6 +31,7 @@ class StatsCharts extends StatelessWidget {
     final popularityScoreChart =
         PopularityScoreChart(spots: _createSpots((e) => e.popularityScore));
 
+    final overallRank = stats.first.overallRank;
     return Column(
       children: [
         if (stats.length == 1) ...[
@@ -46,7 +48,12 @@ class StatsCharts extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 4),
+          if (overallRank != null)
+            Text(
+              'Rank ${overallRank + 1}',
+              style: context.textTheme.labelSmall,
+            ),
+          const SizedBox(height: 12),
           Text(
             'Last updated ${stats.first.stats.isNotEmpty ? Formatting.timeAgo(stats.first.stats.last.timestamp) : 'never'}',
             style: context.textTheme.bodySmall,

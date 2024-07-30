@@ -89,7 +89,10 @@ extension PackageDataDiffExtension on PackageDataDiff {
       json.map(
         (k, v) {
           final field = PackageDataField.values.byName(k);
-          return MapEntry(field, field.diffFromJson(v));
+          return MapEntry(
+            field,
+            field.diffFromJson((v as Map).cast<String, dynamic>()),
+          );
         },
       );
 

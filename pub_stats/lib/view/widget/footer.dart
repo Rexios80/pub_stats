@@ -42,14 +42,6 @@ class Footer extends StatelessWidget {
               label: 'Built with fast_ui',
               onTap: () => launchUrlString(Links.fastUi),
             ),
-            FastBuilder(
-              () => FooterTextLink(
-                label: 'My package stats',
-                onTap: _dataController.loadingDeveloperPackageStats.value
-                    ? null
-                    : _dataController.fetchDeveloperPackageStats,
-              ),
-            ),
             FooterTextLink(
               label: 'Licenses',
               onTap: () => FastOverlays.showLicensePage(

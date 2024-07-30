@@ -19,6 +19,7 @@ class PackageData with _$PackageData {
     @JsonKey(name: 'iu') required bool isUnlisted,
     @JsonKey(name: 'iff') required bool isFlutterFavorite,
     @JsonKey(name: 'd') @Default({}) Set<String> dependents,
+    @JsonKey(name: 'n') @Default(-1) int overallRank,
   }) = _PackageData;
 
   factory PackageData.fromJson(Map<String, dynamic> json) =>

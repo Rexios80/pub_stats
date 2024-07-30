@@ -106,12 +106,16 @@ class PubRepo {
     print('Fetched all data');
 
     var handled = 0;
-    Future<void> handleWrapper(PackageDataWrapper wrapper) async {
+    Future<void> handleWrapper(
+      int overallRank,
+      PackageDataWrapper wrapper,
+    ) async {
       final score = wrapper.score;
       final package = wrapper.package;
 
       final dependents = dependentMap[package] ?? {};
-      final data = wrapper.data.copyWith(dependents: dependents);
+      final data = wrapper.data
+          .copyWith(dependents: dependents, overallRank: overallRank);
 
       if (dependents.length > mostDependedPackage.$2) {
         print('Most depended package: $package');
@@ -130,12 +134,19 @@ class PubRepo {
       }
     }
 
-    for (final wrapper in wrappers) {
+    wrappers.sort((a, b) {
+      final aScore = a.score.popularityScore ?? double.infinity;
+      final bScore = b.score.popularityScore ?? double.infinity;
+      return bScore.compareTo(aScore);
+    });
+
+    for (var i = 0; i < wrappers.length; i++) {
+      final wrapper = wrappers[i];
       unawaited(
         queue.add(() async {
           final package = wrapper.package;
           try {
-            await handleWrapper(wrapper);
+            await handleWrapper(i, wrapper);
           } catch (e) {
             print('Error handling wrapper $package: $e');
           }

@@ -37,7 +37,7 @@ mixin _$PackageData {
   @JsonKey(name: 'd')
   Set<String> get dependents => throw _privateConstructorUsedError;
   @JsonKey(name: 'n')
-  int get overallRank => throw _privateConstructorUsedError;
+  int? get overallRank => throw _privateConstructorUsedError;
 
   /// Serializes this PackageData to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -64,7 +64,7 @@ abstract class $PackageDataCopyWith<$Res> {
       @JsonKey(name: 'iu') bool isUnlisted,
       @JsonKey(name: 'iff') bool isFlutterFavorite,
       @JsonKey(name: 'd') Set<String> dependents,
-      @JsonKey(name: 'n') int overallRank});
+      @JsonKey(name: 'n') int? overallRank});
 }
 
 /// @nodoc
@@ -90,7 +90,7 @@ class _$PackageDataCopyWithImpl<$Res, $Val extends PackageData>
     Object? isUnlisted = null,
     Object? isFlutterFavorite = null,
     Object? dependents = null,
-    Object? overallRank = null,
+    Object? overallRank = freezed,
   }) {
     return _then(_value.copyWith(
       publisher: freezed == publisher
@@ -125,10 +125,10 @@ class _$PackageDataCopyWithImpl<$Res, $Val extends PackageData>
           ? _value.dependents
           : dependents // ignore: cast_nullable_to_non_nullable
               as Set<String>,
-      overallRank: null == overallRank
+      overallRank: freezed == overallRank
           ? _value.overallRank
           : overallRank // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
     ) as $Val);
   }
 }
@@ -150,7 +150,7 @@ abstract class _$$PackageDataImplCopyWith<$Res>
       @JsonKey(name: 'iu') bool isUnlisted,
       @JsonKey(name: 'iff') bool isFlutterFavorite,
       @JsonKey(name: 'd') Set<String> dependents,
-      @JsonKey(name: 'n') int overallRank});
+      @JsonKey(name: 'n') int? overallRank});
 }
 
 /// @nodoc
@@ -174,7 +174,7 @@ class __$$PackageDataImplCopyWithImpl<$Res>
     Object? isUnlisted = null,
     Object? isFlutterFavorite = null,
     Object? dependents = null,
-    Object? overallRank = null,
+    Object? overallRank = freezed,
   }) {
     return _then(_$PackageDataImpl(
       publisher: freezed == publisher
@@ -209,10 +209,10 @@ class __$$PackageDataImplCopyWithImpl<$Res>
           ? _value._dependents
           : dependents // ignore: cast_nullable_to_non_nullable
               as Set<String>,
-      overallRank: null == overallRank
+      overallRank: freezed == overallRank
           ? _value.overallRank
           : overallRank // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
     ));
   }
 }
@@ -229,7 +229,7 @@ class _$PackageDataImpl extends _PackageData {
       @JsonKey(name: 'iu') required this.isUnlisted,
       @JsonKey(name: 'iff') required this.isFlutterFavorite,
       @JsonKey(name: 'd') final Set<String> dependents = const {},
-      @JsonKey(name: 'n') this.overallRank = -1})
+      @JsonKey(name: 'n') this.overallRank})
       : _dependents = dependents,
         super._();
 
@@ -268,7 +268,7 @@ class _$PackageDataImpl extends _PackageData {
 
   @override
   @JsonKey(name: 'n')
-  final int overallRank;
+  final int? overallRank;
 
   @override
   String toString() {
@@ -339,7 +339,7 @@ abstract class _PackageData extends PackageData {
       @JsonKey(name: 'iu') required final bool isUnlisted,
       @JsonKey(name: 'iff') required final bool isFlutterFavorite,
       @JsonKey(name: 'd') final Set<String> dependents,
-      @JsonKey(name: 'n') final int overallRank}) = _$PackageDataImpl;
+      @JsonKey(name: 'n') final int? overallRank}) = _$PackageDataImpl;
   const _PackageData._() : super._();
 
   factory _PackageData.fromJson(Map<String, dynamic> json) =
@@ -371,7 +371,7 @@ abstract class _PackageData extends PackageData {
   Set<String> get dependents;
   @override
   @JsonKey(name: 'n')
-  int get overallRank;
+  int? get overallRank;
 
   /// Create a copy of PackageData
   /// with the given fields replaced by the non-null parameter values.

@@ -20,7 +20,7 @@ _$PackageDataImpl _$$PackageDataImplFromJson(Map<String, dynamic> json) =>
       dependents:
           (json['d'] as List<dynamic>?)?.map((e) => e as String).toSet() ??
               const {},
-      overallRank: (json['n'] as num?)?.toInt() ?? -1,
+      overallRank: (json['n'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$$PackageDataImplToJson(_$PackageDataImpl instance) =>

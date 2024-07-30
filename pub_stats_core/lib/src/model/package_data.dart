@@ -19,7 +19,7 @@ class PackageData with _$PackageData {
     @JsonKey(name: 'iu') required bool isUnlisted,
     @JsonKey(name: 'iff') required bool isFlutterFavorite,
     @JsonKey(name: 'd') @Default({}) Set<String> dependents,
-    @JsonKey(name: 'n') @Default(-1) int overallRank,
+    @JsonKey(name: 'n') int? overallRank,
   }) = _PackageData;
 
   factory PackageData.fromJson(Map<String, dynamic> json) =>
@@ -27,6 +27,8 @@ class PackageData with _$PackageData {
 
   PackageDataDiff diffFrom(PackageData? before) {
     if (before == null) return {};
+    final beforeOverallRank = before.overallRank;
+    final overallRank = this.overallRank;
     return {
       PackageDataField.publisher:
           StringDiff(before.publisher ?? '', publisher ?? ''),
@@ -40,7 +42,9 @@ class PackageData with _$PackageData {
       PackageDataField.isFlutterFavorite:
           StringDiff(before.isFlutterFavorite, isFlutterFavorite),
       PackageDataField.dependents: SetDiff(before.dependents, dependents),
-      PackageDataField.overallRank: StringDiff(before.overallRank, overallRank),
+      if (beforeOverallRank != null && overallRank != null)
+        PackageDataField.overallRank:
+            StringDiff(beforeOverallRank, overallRank),
     }..removeWhere((key, value) => !value.different);
   }
 }

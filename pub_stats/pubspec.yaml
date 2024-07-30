@@ -56,7 +56,7 @@ dependency_overrides:
   flutter:
     git:
       url: https://github.com/Rexios80/flutter
-      ref: 60ba165344568cee398437342d1ac5d4390f53d0
+      ref: 14b14c4bb4fdcf2b3f8aafd74bc6546741a0b958
       path: packages/flutter
 
 flutter:

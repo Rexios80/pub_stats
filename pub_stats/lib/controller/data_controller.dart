@@ -128,7 +128,13 @@ class DataController {
   Future<PackageStats> _fetchStats(String package) async {
     final stats = await _database.getScoreSnapshots(package, timeSpan.value);
     final firstScan = await _database.getFirstScan(package);
-    return PackageStats(package: package, stats: stats, firstScan: firstScan);
+    final data = await _database.getPackageData(package);
+    return PackageStats(
+      package: package,
+      stats: stats,
+      firstScan: firstScan,
+      overallRank: data.overallRank,
+    );
   }
 
   Future<PackageStats?> _fetchStatsForUi(String package) async {

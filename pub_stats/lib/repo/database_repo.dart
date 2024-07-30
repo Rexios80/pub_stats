@@ -101,4 +101,15 @@ class DatabaseRepo {
   Query diffQuery(String package) {
     return _database.child('diffs').child(package).orderByKey();
   }
+
+  Future<PackageData> getPackageData(String package) async {
+    final event = await _database.child('data').child(package).once();
+    final snap = event.snapshot;
+    if (!snap.exists) {
+      throw Exception('No data found for $package');
+    }
+
+    final data = (snap.value as Map).cast<String, dynamic>();
+    return PackageData.fromJson(data);
+  }
 }

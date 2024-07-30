@@ -40,6 +40,7 @@ const _$PackageDataFieldEnumMap = {
   PackageDataField.isUnlisted: 'isUnlisted',
   PackageDataField.isFlutterFavorite: 'isFlutterFavorite',
   PackageDataField.dependents: 'dependents',
+  PackageDataField.overallRank: 'overallRank',
   PackageDataField.pubPoints: 'pubPoints',
 };
 

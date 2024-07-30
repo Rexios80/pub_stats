@@ -40,6 +40,7 @@ class PackageData with _$PackageData {
       PackageDataField.isFlutterFavorite:
           StringDiff(before.isFlutterFavorite, isFlutterFavorite),
       PackageDataField.dependents: SetDiff(before.dependents, dependents),
+      PackageDataField.overallRank: StringDiff(before.overallRank, overallRank),
     }..removeWhere((key, value) => !value.different);
   }
 }
@@ -53,6 +54,7 @@ enum PackageDataField {
   isUnlisted,
   isFlutterFavorite,
   dependents,
+  overallRank,
 
   // Extra fields not actually on the PackageData model
   pubPoints;
@@ -66,6 +68,7 @@ enum PackageDataField {
       case PackageDataField.isDiscontinued:
       case PackageDataField.isUnlisted:
       case PackageDataField.isFlutterFavorite:
+      case PackageDataField.overallRank:
         return StringDiff.fromJson(json);
       case PackageDataField.dependents:
         return SetDiff.fromJson(json);

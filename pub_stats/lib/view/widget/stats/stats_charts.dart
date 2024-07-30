@@ -9,7 +9,6 @@ import 'package:pub_stats/model/package_score_snapshot.dart';
 import 'package:pub_stats/model/package_stats.dart';
 import 'package:fast_ui/fast_ui.dart';
 import 'package:pub_stats/view/widget/stats/base_stat_chart.dart';
-import 'package:pub_stats_core/pub_stats_core.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class StatsCharts extends StatelessWidget {

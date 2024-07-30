@@ -15,7 +15,6 @@ import 'package:pub_stats/repo/database_repo.dart';
 import 'package:pub_stats/repo/pub_repo.dart';
 import 'package:pub_stats/repo/url_repo.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
-import 'package:collection/collection.dart';
 
 class DataController {
   static final _database = DatabaseRepo();

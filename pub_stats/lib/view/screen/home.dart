@@ -38,14 +38,14 @@ class Home extends StatelessWidget {
             padding: EdgeInsets.only(top: 40, left: 16, right: 16),
             sliver: StatsView(),
           ),
-          SliverFillRemaining(
+          const SliverFillRemaining(
             hasScrollBody: false,
             child: Column(
               children: [
-                const Spacer(),
-                const SizedBox(height: 40),
+                Spacer(),
+                SizedBox(height: 40),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
+                  padding: EdgeInsets.only(bottom: 16),
                   child: Footer(),
                 ),
               ],

@@ -7,4 +7,16 @@ class PackageDataWrapper {
   final PackageData data;
 
   PackageDataWrapper(this.package, this.score, this.data);
+
+  PackageDataWrapper copyWith({
+    String? package,
+    PackageScore? score,
+    PackageData? data,
+  }) {
+    return PackageDataWrapper(
+      package ?? this.package,
+      score ?? this.score,
+      data ?? this.data,
+    );
+  }
 }

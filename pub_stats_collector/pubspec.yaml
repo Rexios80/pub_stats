@@ -18,6 +18,7 @@ dependencies:
   discord_interactions: ^0.0.15
   flutter_tools_task_queue: ^1.0.0
   recase: ^4.1.0
+  collection: ^1.19.0
 
 dev_dependencies:
   rexios_lints: ^7.0.0

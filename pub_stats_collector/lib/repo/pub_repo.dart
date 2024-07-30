@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter_tools_task_queue/flutter_tools_task_queue.dart';
 import 'package:pub_api_client/pub_api_client.dart' hide Credentials;
 import 'package:pub_stats_collector/credential/credentials.dart';
@@ -106,16 +107,12 @@ class PubRepo {
     print('Fetched all data');
 
     var handled = 0;
-    Future<void> handleWrapper(
-      int overallRank,
-      PackageDataWrapper wrapper,
-    ) async {
+    Future<void> handleWrapper(PackageDataWrapper wrapper) async {
       final score = wrapper.score;
       final package = wrapper.package;
 
       final dependents = dependentMap[package] ?? {};
-      final data = wrapper.data
-          .copyWith(dependents: dependents, overallRank: overallRank);
+      final data = wrapper.data.copyWith(dependents: dependents);
 
       if (dependents.length > mostDependedPackage.$2) {
         print('Most depended package: $package');
@@ -140,13 +137,21 @@ class PubRepo {
       return bScore.compareTo(aScore);
     });
 
+    final rankedWrappers = <PackageDataWrapper>[];
     for (var i = 0; i < wrappers.length; i++) {
       final wrapper = wrappers[i];
+      final rankedWrapper =
+          wrapper.copyWith(data: wrapper.data.copyWith(overallRank: i));
+      rankedWrappers.add(rankedWrapper);
+    }
+    rankedWrappers.sort((a, b) => a.package.compareTo(b.package));
+
+    for (final wrapper in rankedWrappers) {
       unawaited(
         queue.add(() async {
           final package = wrapper.package;
           try {
-            await handleWrapper(i, wrapper);
+            await handleWrapper(wrapper);
           } catch (e) {
             print('Error handling wrapper $package: $e');
           }

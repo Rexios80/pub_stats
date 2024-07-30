@@ -8,7 +8,6 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:pub_stats/repo/url_repo.dart';
 
 class FirebaseService {
   static final _logger = GetIt.I<Logger>();

@@ -37,7 +37,7 @@ class AlertsManager extends StatelessWidget {
                       ),
                       barLeading: const SizedBox.shrink(),
                       viewLeading: const SizedBox.shrink(),
-                      viewTrailing: [],
+                      viewTrailing: const [],
                       suggestionsBuilder: (context, controller) => const [
                         ListTile(title: Text('".system" for system alerts')),
                         ListTile(

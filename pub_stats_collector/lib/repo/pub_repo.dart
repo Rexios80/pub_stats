@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:flutter_tools_task_queue/flutter_tools_task_queue.dart';
 import 'package:pub_api_client/pub_api_client.dart' hide Credentials;
 import 'package:pub_stats_collector/credential/credentials.dart';

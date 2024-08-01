@@ -56,7 +56,7 @@ class DataController {
     // Don't wait for this since it might take a while
     instance._getCompletion();
 
-    await instance._parsePath(_url.uri.path);
+    await instance._parsePath(_url.uri.toString());
 
     return instance;
   }

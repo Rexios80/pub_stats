@@ -4,7 +4,7 @@ class UrlRepo {
   final _url = UrlService.forPlatform();
 
   void setPackages(List<String> packages) {
-    _url.setPath('/packages/${packages.join(',')}');
+    _url.setPath('packages/${packages.join(',')}');
   }
 
   Uri get uri => _url.uri;

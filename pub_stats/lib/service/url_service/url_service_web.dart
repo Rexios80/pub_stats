@@ -16,15 +16,11 @@ class UrlServiceImpl extends UrlService {
 
   @override
   void setPath(String path) {
-    web.window.history.pushState(null, 'pubstats.dev', '#$path');
+    web.window.history.pushState(null, '', path);
   }
 
   @override
-  Uri get uri {
-    final uri = Uri.parse(web.window.location.toString());
-    // Convert fragmented url to a normal one so parsing is easier
-    return Uri.parse('${uri.scheme}://${uri.host}${uri.fragment}');
-  }
+  Uri get uri => Uri.parse(web.window.location.toString());
 
   @override
   Stream<Uri> get uriStream => _uriController.stream;

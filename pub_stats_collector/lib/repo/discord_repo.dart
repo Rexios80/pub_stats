@@ -37,7 +37,7 @@ class DiscordRepo {
         Embed(
           title: package,
           color: color,
-          url: 'https://pub.dev/packages/$package',
+          url: 'https://pubstats.dev/packages/$package',
           fields: [
             ...changes.entries.map(
               (e) => EmbedField(

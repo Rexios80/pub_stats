@@ -66,8 +66,8 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
       viewPadding: const EdgeInsets.only(bottom: 32),
       barLeading: leading,
       viewLeading: leading,
-      viewBarPadding:
-          const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 16)),
+      viewBarPadding: const EdgeInsets.symmetric(horizontal: 16),
+      shrinkWrap: true,
       searchController: _searchController,
       barHintText: 'Enter a package name',
       onSubmitted: _submit,

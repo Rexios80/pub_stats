@@ -12,13 +12,13 @@ dependencies:
     sdk: flutter
 
   fast_ui: ^0.1.0
-  get_it: ^7.2.0
+  get_it: ^8.0.2
   logger: ^2.0.2+1
   intl: ^0.19.0
-  get_time_ago: ^1.1.1
+  get_time_ago: ^2.0.0
   font_awesome_flutter: ^10.0.0-beta
   url_launcher: ^6.0.17
-  fl_chart: ^0.68.0
+  fl_chart: ^0.69.0
   flutter_svg: ^2.0.0+1
   pub_api_client: ^2.2.0
 
@@ -37,14 +37,14 @@ dependencies:
   recase: ^4.1.0
   firebase_ui_database: ^1.4.2
   sliver_tools: ^0.2.12
-  web: ^0.5.1
+  web: ^1.1.0
   platform_plus: ^4.8.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  rexios_lints: ^7.0.0
+  rexios_lints: ^8.2.0
   flutter_native_splash: ^2.0.1+1
 
 dependency_overrides:
@@ -52,12 +52,6 @@ dependency_overrides:
     git:
       url: https://github.com/Rexios80/pub_api_client
       ref: 35c52ebdd9bd37d5893f721c1b9f1cde68458b15
-  # TODO: Remove when https://github.com/flutter/flutter/pull/148856 lands to stable
-  flutter:
-    git:
-      url: https://github.com/Rexios80/flutter
-      ref: 14b14c4bb4fdcf2b3f8aafd74bc6546741a0b958
-      path: packages/flutter
 
 flutter:
   uses-material-design: true

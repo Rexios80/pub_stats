@@ -10,7 +10,7 @@ class UrlServiceImpl extends UrlService {
   UrlServiceImpl() {
     web.window.addEventListener(
       'hashchange',
-      ((event) => _uriController.add(uri)).toJS,
+      (() => _uriController.add(uri)).toJS,
     );
   }
 

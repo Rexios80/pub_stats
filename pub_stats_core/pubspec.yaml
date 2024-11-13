@@ -10,10 +10,10 @@ dependencies:
   freezed_annotation: ^2.4.1
   http: ^1.1.0
   json_annotation: ^4.8.1
-  pub_api_client: ^2.2.0
+  pub_api_client: ^3.0.0
 
 dev_dependencies:
-  rexios_lints: ^7.0.0
+  rexios_lints: ^8.2.0
   build_runner: ^2.1.7
   json_serializable: ^6.1.3
   freezed: ^2.4.5

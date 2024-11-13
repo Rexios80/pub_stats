@@ -23,14 +23,14 @@ class ScoreFetchController {
   ) : _pub = PubRepo(credentials);
 
   Future<void> fetchScores() async {
-    final startTime = DateTime.now();
+    final startTime = DateTime.timestamp();
     final globalStats = await _pub.fetchAllData(_handleData);
 
     await _database.writeGlobalStats(globalStats);
     print('Global stats:');
     print(globalStats.toJson());
 
-    final duration = DateTime.now().difference(startTime);
+    final duration = DateTime.timestamp().difference(startTime);
     print('Package processing completed in ${duration.inSeconds} seconds');
 
     for (final config in _alertConfigs['.system'] ?? <AlertConfig>[]) {

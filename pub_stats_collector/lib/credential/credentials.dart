@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:path/path.dart' as path;
 
 class Credentials {
   static const _userAgent = 'Rexios80/pub_stats_collector';
@@ -12,8 +13,9 @@ class Credentials {
 
   static final debug = Credentials._(
     userAgent: _userAgent,
-    serviceAccount:
-        jsonDecode(File('secret/service_account_key.json').readAsStringSync()),
+    serviceAccount: jsonDecode(
+      File(path.join('secret', 'service_account_key.json')).readAsStringSync(),
+    ),
     databaseUrl: 'http://127.0.0.1:9000/?ns=pub-stats-collector-default-rtdb',
   );
 

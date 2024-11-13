@@ -32,7 +32,8 @@ class AlertsManager extends StatelessWidget {
                   Expanded(
                     child: SearchAnchor.bar(
                       viewConstraints: const BoxConstraints(),
-                      viewBarPadding: const EdgeInsets.symmetric(horizontal: 16),
+                      viewBarPadding:
+                          const EdgeInsets.symmetric(horizontal: 16),
                       shrinkWrap: true,
                       barLeading: const SizedBox.shrink(),
                       viewLeading: const SizedBox.shrink(),
@@ -191,7 +192,9 @@ class AlertsManager extends StatelessWidget {
       ignore: ignoredFields,
       type: selectedType.value,
       extra: extraController.text,
-    )) return;
+    )) {
+      return;
+    }
 
     slugController.clear();
     extraController.clear();

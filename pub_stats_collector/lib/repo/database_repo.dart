@@ -37,7 +37,7 @@ class DatabaseRepo {
         .ref()
         .child('diffs')
         .child(package)
-        .child(DateTime.now().secondsSinceEpoch.toString())
+        .child(DateTime.timestamp().secondsSinceEpoch.toString())
         .set(diff.toJson());
   }
 
@@ -47,7 +47,7 @@ class DatabaseRepo {
     await _database
         .ref()
         .child('package_counts')
-        .child(DateTime.now().secondsSinceEpoch.toString())
+        .child(DateTime.timestamp().secondsSinceEpoch.toString())
         .set(stats.packageCount);
   }
 

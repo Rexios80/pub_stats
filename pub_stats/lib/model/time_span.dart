@@ -13,7 +13,7 @@ enum TimeSpan {
 
   bool contains(DateTime date) {
     if (days == null) return true;
-    final diff = DateTime.now().difference(date);
+    final diff = DateTime.timestamp().difference(date);
     return diff.inDays <= days!;
   }
 
@@ -26,7 +26,7 @@ enum TimeSpan {
       return DateTime.fromMillisecondsSinceEpoch(0);
     }
 
-    final now = DateTime.now();
+    final now = DateTime.timestamp();
     return DateTime(now.year, now.month, now.day)
         .subtract(Duration(days: days));
   }

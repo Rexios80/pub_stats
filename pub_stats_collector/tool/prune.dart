@@ -2,11 +2,18 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:pub_stats_core/pub_stats_core.dart';
+import 'package:path/path.dart' as path;
 
 /// Prune duplicate score entries from the database
 void main() {
   final string = File(
-    '/Users/rexios/Downloads/pub-stats-collector-default-rtdb-export.json',
+    path.join(
+      '',
+      'Users',
+      'rexios',
+      'Downloads',
+      'pub-stats-collector-default-rtdb-export.json',
+    ),
   ).readAsStringSync();
   final json = jsonDecode(string) as Map<String, dynamic>;
   final packages = json['stats'] as Map<String, dynamic>;

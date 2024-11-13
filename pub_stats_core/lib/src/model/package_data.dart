@@ -1,3 +1,4 @@
+// These are valid
 // ignore_for_file: invalid_annotation_target
 
 import 'package:freezed_annotation/freezed_annotation.dart';

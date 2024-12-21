@@ -20,6 +20,9 @@ dependencies:
   recase: ^4.1.0
   path: ^1.9.1
 
+dev_dependencies:
+  rexios_lints: ^9.1.0
+
 dependency_overrides:
   pub_api_client:
     git:
@@ -29,6 +32,3 @@ dependency_overrides:
         - https://github.com/leoafarias/pub_api_client/pull/58
       url: https://github.com/Rexios80/pub_api_client
       ref: 4d881fcc25a35b182e028a58db844b51534b32d8
-
-dev_dependencies:
-  rexios_lints: ^8.2.0

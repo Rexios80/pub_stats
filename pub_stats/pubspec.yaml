@@ -18,7 +18,7 @@ dependencies:
   get_time_ago: ^2.0.0
   font_awesome_flutter: ^10.0.0-beta
   url_launcher: ^6.0.17
-  fl_chart: ^0.69.0
+  fl_chart: ^0.70.0
   flutter_svg: ^2.0.0+1
   pub_api_client: ^3.0.0
 
@@ -44,7 +44,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  rexios_lints: ^8.2.0
+  rexios_lints: ^9.1.0
   flutter_native_splash: ^2.0.1+1
 
 dependency_overrides:

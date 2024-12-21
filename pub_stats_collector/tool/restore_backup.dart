@@ -15,7 +15,6 @@ void main() async {
 
   // TODO: Restore alert configs?
 
-  await database.ref('data').set(null);
   final data = backupData['data'] as Map<String, dynamic>;
   for (final package in data.keys) {
     await database.ref('data/$package').set(data[package]);
@@ -23,7 +22,6 @@ void main() async {
   }
   print('Restored data');
 
-  await database.ref('diffs').set(null);
   final diffs = backupData['diffs'] as Map<String, dynamic>;
   for (final package in diffs.keys) {
     await database.ref('diffs/$package').set(diffs[package]);
@@ -36,7 +34,6 @@ void main() async {
   await database.ref('package_counts').set(backupData['package_counts']);
   print('Restored package_counts');
 
-  await database.ref('stats').set(null);
   final stats = backupData['stats'] as Map<String, dynamic>;
   for (final package in stats.keys) {
     await database.ref('stats/$package').set(stats[package]);

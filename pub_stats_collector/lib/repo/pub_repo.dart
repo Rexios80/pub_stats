@@ -73,7 +73,7 @@ class PubRepo {
             publisher: publisher,
             version: info.version,
             likeCount: likeCount,
-            popularityScore: popularityPercent,
+            legacyPopularityScore: popularityPercent,
             downloadCount: score.downloadCount30Days,
             isDiscontinued: packageOptions.isDiscontinued,
             isFlutterFavorite: isFlutterFavorite,
@@ -139,7 +139,7 @@ class PubRepo {
       final wrapper = wrappers[i];
       final rankedWrapper = wrapper.copyWith(
         data: wrapper.data.copyWith(
-          popularityScore2:
+          popularityScore:
               ((wrappers.length - i) / wrappers.length * 100).round(),
           overallRank: i,
         ),

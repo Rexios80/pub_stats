@@ -15,8 +15,8 @@ class PackageData with _$PackageData {
     @JsonKey(name: 'p') String? publisher,
     @JsonKey(name: 'v') required String version,
     @JsonKey(name: 'lc') required int likeCount,
-    @JsonKey(name: 'ps') required int? popularityScore,
-    @JsonKey(name: 'ps2') int? popularityScore2,
+    @JsonKey(name: 'ps') required int? legacyPopularityScore,
+    @JsonKey(name: 'ps2') int? popularityScore,
     @JsonKey(name: 'dc') required int? downloadCount,
     @JsonKey(name: 'id') required bool isDiscontinued,
     @JsonKey(name: 'iu') required bool isUnlisted,
@@ -35,7 +35,7 @@ class PackageData with _$PackageData {
       PackageDataField.version: StringDiff(before.version, version),
       PackageDataField.likeCount: StringDiff(before.likeCount, likeCount),
       PackageDataField.popularityScore:
-          StringDiff(before.popularityScore2, popularityScore2),
+          StringDiff(before.popularityScore, popularityScore),
       PackageDataField.downloadCount:
           StringDiff(before.downloadCount, downloadCount),
       PackageDataField.isDiscontinued:

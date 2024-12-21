@@ -52,8 +52,8 @@ class ScoreFetchController {
   ) async {
     final miniScore = MiniPackageScore(
       likeCount: data.likeCount,
+      legacyPopularityScore: data.legacyPopularityScore,
       popularityScore: data.popularityScore,
-      popularityScore2: data.popularityScore2,
       downloadCount: data.downloadCount,
     );
 

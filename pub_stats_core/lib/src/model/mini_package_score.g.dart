@@ -11,8 +11,8 @@ part of 'mini_package_score.dart';
 MiniPackageScore _$MiniPackageScoreFromJson(Map<String, dynamic> json) =>
     MiniPackageScore(
       likeCount: (json['l'] as num).toInt(),
-      popularityScore: (json['p'] as num?)?.toInt(),
-      popularityScore2: (json['p2'] as num?)?.toInt(),
+      legacyPopularityScore: (json['p'] as num?)?.toInt(),
+      popularityScore: (json['p2'] as num?)?.toInt(),
       downloadCount: (json['d'] as num?)?.toInt(),
     );
 
@@ -27,8 +27,8 @@ Map<String, dynamic> _$MiniPackageScoreToJson(MiniPackageScore instance) {
     }
   }
 
-  writeNotNull('p', instance.popularityScore);
-  writeNotNull('p2', instance.popularityScore2);
+  writeNotNull('p', instance.legacyPopularityScore);
+  writeNotNull('p2', instance.popularityScore);
   writeNotNull('d', instance.downloadCount);
   return val;
 }

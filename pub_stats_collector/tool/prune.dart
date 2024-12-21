@@ -56,8 +56,8 @@ void prune(Map<String, MiniPackageScore> scores) {
   for (final next in scores.entries.skip(1)) {
     final currentValue = current.value;
     final nextValue = next.value;
-    if (currentValue.likeCount != nextValue.likeCount ||
-        currentValue.popularityScore != nextValue.popularityScore) {
+    if (currentValue != nextValue) {
+      // Do not prune this entry
       current = next;
       continue;
     }

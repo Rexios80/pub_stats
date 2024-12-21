@@ -27,8 +27,10 @@ class StatsCharts extends StatelessWidget {
   Widget build(BuildContext context) {
     final likeCountChart =
         LikeCountChart(spots: _createSpots((e) => e.likeCount));
-    final popularityScoreChart =
-        PopularityScoreChart(spots: _createSpots((e) => e.popularityScore));
+    final popularityScoreChart = PopularityScoreChart(
+      spots: _createSpots((e) => e.popularityScore),
+      legacySpots: _createSpots((e) => e.legacyPopularityScore),
+    );
 
     final overallRank = stats.first.overallRank;
     return Column(
@@ -92,20 +94,23 @@ class StatsCharts extends StatelessWidget {
   }
 
   List<List<FlSpot>> _createSpots(
-    num Function(PackageScoreSnapshot stats) getValue,
+    num? Function(PackageScoreSnapshot stats) getValue,
   ) {
-    return stats
-        .map(
-          (e) => e.stats
-              .map(
-                (e) => FlSpot(
-                  e.timestamp.millisecondsSinceEpoch.toDouble(),
-                  getValue(e).toDouble(),
-                ),
-              )
-              .toList(),
-        )
-        .toList();
+    final groups = <List<FlSpot>>[];
+    for (final package in stats) {
+      final spots = <FlSpot>[];
+      for (final stat in package.stats) {
+        final value = getValue(stat);
+        if (value == null) continue;
+        final spot = FlSpot(
+          stat.timestamp.millisecondsSinceEpoch.toDouble(),
+          value.toDouble(),
+        );
+        spots.add(spot);
+      }
+      groups.add(spots);
+    }
+    return groups;
   }
 }
 
@@ -148,15 +153,28 @@ class LikeCountChart extends StatelessWidget {
   }
 }
 
-class PopularityScoreChart extends StatelessWidget {
+class PopularityScoreChart extends StatefulWidget {
   final List<List<FlSpot>> spots;
+  final List<List<FlSpot>> legacySpots;
 
-  const PopularityScoreChart({super.key, required this.spots});
+  const PopularityScoreChart({
+    super.key,
+    required this.spots,
+    required this.legacySpots,
+  });
+
+  @override
+  State<StatefulWidget> createState() => PopularityScoreChartState();
+}
+
+class PopularityScoreChartState extends State<PopularityScoreChart> {
+  var type = PopularityScoreType.current;
+  late List<List<FlSpot>> activeSpots = widget.spots;
 
   @override
   Widget build(BuildContext context) {
     return BaseStatChart(
-      spots: spots,
+      spots: activeSpots,
       label: 'Popularity Score',
       builder: (singleY, barData) => LineChart(
         LineChartData(
@@ -173,3 +191,5 @@ class PopularityScoreChart extends StatelessWidget {
     );
   }
 }
+
+enum PopularityScoreType { current, legacy }

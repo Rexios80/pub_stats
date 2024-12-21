@@ -13,11 +13,11 @@ class MiniPackageScore extends Equatable {
 
   /// Old popularity score calculated by pub
   @JsonKey(name: 'p')
-  final int? popularityScore;
+  final int? legacyPopularityScore;
 
   /// New popularity score calculated by pub_stats
   @JsonKey(name: 'p2')
-  final int? popularityScore2;
+  final int? popularityScore;
 
   /// Download count
   @JsonKey(name: 'd')
@@ -25,8 +25,8 @@ class MiniPackageScore extends Equatable {
 
   MiniPackageScore({
     required this.likeCount,
+    required this.legacyPopularityScore,
     required this.popularityScore,
-    required this.popularityScore2,
     required this.downloadCount,
   });
 
@@ -36,5 +36,10 @@ class MiniPackageScore extends Equatable {
   Map<String, dynamic> toJson() => _$MiniPackageScoreToJson(this);
 
   @override
-  List<Object?> get props => [likeCount, popularityScore];
+  List<Object?> get props => [
+        likeCount,
+        legacyPopularityScore,
+        popularityScore,
+        downloadCount,
+      ];
 }

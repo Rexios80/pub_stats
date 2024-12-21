@@ -7,6 +7,7 @@ class GlobalStats {
   final int packageCount;
   final String mostLikedPackage;
   final String mostPopularPackage;
+  final String mostDownloadedPackage;
   final String mostDependedPackage;
   final DateTime lastUpdated;
 
@@ -14,6 +15,7 @@ class GlobalStats {
     required this.packageCount,
     required this.mostLikedPackage,
     required this.mostPopularPackage,
+    required this.mostDownloadedPackage,
     required this.mostDependedPackage,
     required this.lastUpdated,
   });

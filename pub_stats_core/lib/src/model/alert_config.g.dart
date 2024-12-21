@@ -36,6 +36,7 @@ const _$PackageDataFieldEnumMap = {
   PackageDataField.version: 'version',
   PackageDataField.likeCount: 'likeCount',
   PackageDataField.popularityScore: 'popularityScore',
+  PackageDataField.downloadCount: 'downloadCount',
   PackageDataField.isDiscontinued: 'isDiscontinued',
   PackageDataField.isUnlisted: 'isUnlisted',
   PackageDataField.isFlutterFavorite: 'isFlutterFavorite',

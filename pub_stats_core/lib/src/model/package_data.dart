@@ -15,7 +15,9 @@ class PackageData with _$PackageData {
     @JsonKey(name: 'p') String? publisher,
     @JsonKey(name: 'v') required String version,
     @JsonKey(name: 'lc') required int likeCount,
-    @JsonKey(name: 'ps') required int popularityScore,
+    @JsonKey(name: 'ps') required int? popularityScore,
+    @JsonKey(name: 'ps2') required int popularityScore2,
+    @JsonKey(name: 'dc') required int downloadCount,
     @JsonKey(name: 'id') required bool isDiscontinued,
     @JsonKey(name: 'iu') required bool isUnlisted,
     @JsonKey(name: 'iff') required bool isFlutterFavorite,
@@ -34,7 +36,9 @@ class PackageData with _$PackageData {
       PackageDataField.version: StringDiff(before.version, version),
       PackageDataField.likeCount: StringDiff(before.likeCount, likeCount),
       PackageDataField.popularityScore:
-          StringDiff(before.popularityScore, popularityScore),
+          StringDiff(before.popularityScore2, popularityScore2),
+      PackageDataField.downloadCount:
+          StringDiff(before.downloadCount, downloadCount),
       PackageDataField.isDiscontinued:
           StringDiff(before.isDiscontinued, isDiscontinued),
       PackageDataField.isUnlisted: StringDiff(before.isUnlisted, isUnlisted),
@@ -50,6 +54,7 @@ enum PackageDataField {
   version,
   likeCount,
   popularityScore,
+  downloadCount,
   isDiscontinued,
   isUnlisted,
   isFlutterFavorite,
@@ -58,22 +63,19 @@ enum PackageDataField {
   // Extra fields not actually on the PackageData model
   pubPoints;
 
-  Diff diffFromJson(Map<String, dynamic> json) {
-    switch (this) {
-      case PackageDataField.publisher:
-      case PackageDataField.version:
-      case PackageDataField.likeCount:
-      case PackageDataField.popularityScore:
-      case PackageDataField.isDiscontinued:
-      case PackageDataField.isUnlisted:
-      case PackageDataField.isFlutterFavorite:
-        return StringDiff.fromJson(json);
-      case PackageDataField.dependents:
-        return SetDiff.fromJson(json);
-      case PackageDataField.pubPoints:
-        throw UnimplementedError();
-    }
-  }
+  Diff diffFromJson(Map<String, dynamic> json) => switch (this) {
+        publisher ||
+        version ||
+        likeCount ||
+        popularityScore ||
+        downloadCount ||
+        isDiscontinued ||
+        isUnlisted ||
+        isFlutterFavorite =>
+          StringDiff.fromJson(json),
+        dependents => SetDiff.fromJson(json),
+        pubPoints => throw UnimplementedError(),
+      };
 }
 
 typedef PackageDataDiff = Map<PackageDataField, Diff>;

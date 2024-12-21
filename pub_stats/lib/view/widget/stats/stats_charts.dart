@@ -66,6 +66,7 @@ class StatsCharts extends StatelessWidget {
           Text('Comparing', style: context.textTheme.titleLarge),
           const SizedBox(height: 16),
           Wrap(
+            alignment: WrapAlignment.center,
             spacing: 8,
             children: stats
                 .mapIndexed(
@@ -80,6 +81,7 @@ class StatsCharts extends StatelessWidget {
         ],
         const SizedBox(height: 32),
         Wrap(
+          alignment: WrapAlignment.center,
           children: [
             likeCountChart,
             popularityScoreChart,

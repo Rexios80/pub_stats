@@ -20,7 +20,7 @@ dependencies:
   url_launcher: ^6.0.17
   fl_chart: ^0.69.0
   flutter_svg: ^2.0.0+1
-  pub_api_client: ^2.2.0
+  pub_api_client: ^3.0.0
 
   pub_stats_core:
     path: ../pub_stats_core
@@ -50,8 +50,12 @@ dev_dependencies:
 dependency_overrides:
   pub_api_client:
     git:
+      prs:
+        - https://github.com/leoafarias/pub_api_client/pull/54
+        - https://github.com/leoafarias/pub_api_client/pull/55
+        - https://github.com/leoafarias/pub_api_client/pull/58
       url: https://github.com/Rexios80/pub_api_client
-      ref: 35c52ebdd9bd37d5893f721c1b9f1cde68458b15
+      ref: 4d881fcc25a35b182e028a58db844b51534b32d8
 
 flutter:
   uses-material-design: true

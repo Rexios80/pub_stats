@@ -59,7 +59,10 @@ class PubRepo {
           score.tags.contains(PackageTag.isFlutterFavorite);
 
       final info = await _client.packageInfo(package);
-      final dependencies = info.latestPubspec.allDependencies.keys;
+      final dependencies = {
+        ...info.latestPubspec.dependencies.keys,
+        ...info.latestPubspec.devDependencies.keys,
+      };
       for (final dependency in dependencies) {
         dependentMap.update(
           dependency,

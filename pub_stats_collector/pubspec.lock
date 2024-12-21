@@ -158,6 +158,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.10"
+  dart_mappable:
+    dependency: transitive
+    description:
+      name: dart_mappable
+      sha256: f69a961ae8589724ebb542e588f228ae844c5f78028899cbe2cc718977c1b382
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.3.0"
   dart_style:
     dependency: transitive
     description:
@@ -243,10 +251,10 @@ packages:
     dependency: transitive
     description:
       name: firebase_dart
-      sha256: ac50536c0346a41ebcd47e656ea10bfbcc101213528551293ff2729d3d1c718a
+      sha256: "7c84aa695bd583e1289f73a179cf319dd3e84290f3400e796670c4f73bd089f3"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.2"
+    version: "1.2.3"
   firebaseapis:
     dependency: transitive
     description:
@@ -291,10 +299,10 @@ packages:
     dependency: transitive
     description:
       name: gcloud
-      sha256: "4023f8f3dde8324ca8d17bd419767986764ac90a1173b207d4bc0e1784e9095f"
+      sha256: c63576bbd60b7dccd1548d51286e1c5b82e26b62440372a09c2aad0785d2e9f4
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.17"
+    version: "0.8.18"
   glob:
     dependency: transitive
     description:
@@ -483,11 +491,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "35c52ebdd9bd37d5893f721c1b9f1cde68458b15"
-      resolved-ref: "35c52ebdd9bd37d5893f721c1b9f1cde68458b15"
+      ref: "4d881fcc25a35b182e028a58db844b51534b32d8"
+      resolved-ref: "4d881fcc25a35b182e028a58db844b51534b32d8"
       url: "https://github.com/Rexios80/pub_api_client"
     source: git
-    version: "2.6.0"
+    version: "3.0.0"
   pub_semver:
     dependency: transitive
     description:
@@ -503,14 +511,6 @@ packages:
       relative: true
     source: path
     version: "1.0.0"
-  pubspec:
-    dependency: transitive
-    description:
-      name: pubspec
-      sha256: f534a50a2b4d48dc3bc0ec147c8bd7c304280fff23b153f3f11803c4d49d927e
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.3.0"
   pubspec_parse:
     dependency: transitive
     description:
@@ -663,6 +663,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.3"
+  type_plus:
+    dependency: transitive
+    description:
+      name: type_plus
+      sha256: d5d1019471f0d38b91603adb9b5fd4ce7ab903c879d2fbf1a3f80a630a03fcc9
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.1"
   typed_data:
     dependency: transitive
     description:
@@ -671,14 +679,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
-  uri:
-    dependency: transitive
-    description:
-      name: uri
-      sha256: "889eea21e953187c6099802b7b4cf5219ba8f3518f604a1033064d45b1b8268a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   uuid:
     dependency: transitive
     description:

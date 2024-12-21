@@ -9,8 +9,8 @@ part of 'diff.dart';
 // **************************************************************************
 
 StringDiff _$StringDiffFromJson(Map<String, dynamic> json) => StringDiff(
-      json['before'] as Object,
-      json['after'] as Object,
+      json['before'],
+      json['after'],
     );
 
 Map<String, dynamic> _$StringDiffToJson(StringDiff instance) =>

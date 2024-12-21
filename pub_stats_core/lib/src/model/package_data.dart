@@ -16,8 +16,8 @@ class PackageData with _$PackageData {
     @JsonKey(name: 'v') required String version,
     @JsonKey(name: 'lc') required int likeCount,
     @JsonKey(name: 'ps') required int? popularityScore,
-    @JsonKey(name: 'ps2') required int popularityScore2,
-    @JsonKey(name: 'dc') required int downloadCount,
+    @JsonKey(name: 'ps2') int? popularityScore2,
+    @JsonKey(name: 'dc') required int? downloadCount,
     @JsonKey(name: 'id') required bool isDiscontinued,
     @JsonKey(name: 'iu') required bool isUnlisted,
     @JsonKey(name: 'iff') required bool isFlutterFavorite,
@@ -31,8 +31,7 @@ class PackageData with _$PackageData {
   PackageDataDiff diffFrom(PackageData? before) {
     if (before == null) return {};
     return {
-      PackageDataField.publisher:
-          StringDiff(before.publisher ?? '', publisher ?? ''),
+      PackageDataField.publisher: StringDiff(before.publisher, publisher),
       PackageDataField.version: StringDiff(before.version, version),
       PackageDataField.likeCount: StringDiff(before.likeCount, likeCount),
       PackageDataField.popularityScore:

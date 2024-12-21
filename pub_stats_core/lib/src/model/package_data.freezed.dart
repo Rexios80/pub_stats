@@ -29,9 +29,9 @@ mixin _$PackageData {
   @JsonKey(name: 'ps')
   int? get popularityScore => throw _privateConstructorUsedError;
   @JsonKey(name: 'ps2')
-  int get popularityScore2 => throw _privateConstructorUsedError;
+  int? get popularityScore2 => throw _privateConstructorUsedError;
   @JsonKey(name: 'dc')
-  int get downloadCount => throw _privateConstructorUsedError;
+  int? get downloadCount => throw _privateConstructorUsedError;
   @JsonKey(name: 'id')
   bool get isDiscontinued => throw _privateConstructorUsedError;
   @JsonKey(name: 'iu')
@@ -64,8 +64,8 @@ abstract class $PackageDataCopyWith<$Res> {
       @JsonKey(name: 'v') String version,
       @JsonKey(name: 'lc') int likeCount,
       @JsonKey(name: 'ps') int? popularityScore,
-      @JsonKey(name: 'ps2') int popularityScore2,
-      @JsonKey(name: 'dc') int downloadCount,
+      @JsonKey(name: 'ps2') int? popularityScore2,
+      @JsonKey(name: 'dc') int? downloadCount,
       @JsonKey(name: 'id') bool isDiscontinued,
       @JsonKey(name: 'iu') bool isUnlisted,
       @JsonKey(name: 'iff') bool isFlutterFavorite,
@@ -92,8 +92,8 @@ class _$PackageDataCopyWithImpl<$Res, $Val extends PackageData>
     Object? version = null,
     Object? likeCount = null,
     Object? popularityScore = freezed,
-    Object? popularityScore2 = null,
-    Object? downloadCount = null,
+    Object? popularityScore2 = freezed,
+    Object? downloadCount = freezed,
     Object? isDiscontinued = null,
     Object? isUnlisted = null,
     Object? isFlutterFavorite = null,
@@ -117,14 +117,14 @@ class _$PackageDataCopyWithImpl<$Res, $Val extends PackageData>
           ? _value.popularityScore
           : popularityScore // ignore: cast_nullable_to_non_nullable
               as int?,
-      popularityScore2: null == popularityScore2
+      popularityScore2: freezed == popularityScore2
           ? _value.popularityScore2
           : popularityScore2 // ignore: cast_nullable_to_non_nullable
-              as int,
-      downloadCount: null == downloadCount
+              as int?,
+      downloadCount: freezed == downloadCount
           ? _value.downloadCount
           : downloadCount // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       isDiscontinued: null == isDiscontinued
           ? _value.isDiscontinued
           : isDiscontinued // ignore: cast_nullable_to_non_nullable
@@ -162,8 +162,8 @@ abstract class _$$PackageDataImplCopyWith<$Res>
       @JsonKey(name: 'v') String version,
       @JsonKey(name: 'lc') int likeCount,
       @JsonKey(name: 'ps') int? popularityScore,
-      @JsonKey(name: 'ps2') int popularityScore2,
-      @JsonKey(name: 'dc') int downloadCount,
+      @JsonKey(name: 'ps2') int? popularityScore2,
+      @JsonKey(name: 'dc') int? downloadCount,
       @JsonKey(name: 'id') bool isDiscontinued,
       @JsonKey(name: 'iu') bool isUnlisted,
       @JsonKey(name: 'iff') bool isFlutterFavorite,
@@ -188,8 +188,8 @@ class __$$PackageDataImplCopyWithImpl<$Res>
     Object? version = null,
     Object? likeCount = null,
     Object? popularityScore = freezed,
-    Object? popularityScore2 = null,
-    Object? downloadCount = null,
+    Object? popularityScore2 = freezed,
+    Object? downloadCount = freezed,
     Object? isDiscontinued = null,
     Object? isUnlisted = null,
     Object? isFlutterFavorite = null,
@@ -213,14 +213,14 @@ class __$$PackageDataImplCopyWithImpl<$Res>
           ? _value.popularityScore
           : popularityScore // ignore: cast_nullable_to_non_nullable
               as int?,
-      popularityScore2: null == popularityScore2
+      popularityScore2: freezed == popularityScore2
           ? _value.popularityScore2
           : popularityScore2 // ignore: cast_nullable_to_non_nullable
-              as int,
-      downloadCount: null == downloadCount
+              as int?,
+      downloadCount: freezed == downloadCount
           ? _value.downloadCount
           : downloadCount // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       isDiscontinued: null == isDiscontinued
           ? _value.isDiscontinued
           : isDiscontinued // ignore: cast_nullable_to_non_nullable
@@ -253,7 +253,7 @@ class _$PackageDataImpl extends _PackageData {
       @JsonKey(name: 'v') required this.version,
       @JsonKey(name: 'lc') required this.likeCount,
       @JsonKey(name: 'ps') required this.popularityScore,
-      @JsonKey(name: 'ps2') required this.popularityScore2,
+      @JsonKey(name: 'ps2') this.popularityScore2,
       @JsonKey(name: 'dc') required this.downloadCount,
       @JsonKey(name: 'id') required this.isDiscontinued,
       @JsonKey(name: 'iu') required this.isUnlisted,
@@ -280,10 +280,10 @@ class _$PackageDataImpl extends _PackageData {
   final int? popularityScore;
   @override
   @JsonKey(name: 'ps2')
-  final int popularityScore2;
+  final int? popularityScore2;
   @override
   @JsonKey(name: 'dc')
-  final int downloadCount;
+  final int? downloadCount;
   @override
   @JsonKey(name: 'id')
   final bool isDiscontinued;
@@ -377,8 +377,8 @@ abstract class _PackageData extends PackageData {
       @JsonKey(name: 'v') required final String version,
       @JsonKey(name: 'lc') required final int likeCount,
       @JsonKey(name: 'ps') required final int? popularityScore,
-      @JsonKey(name: 'ps2') required final int popularityScore2,
-      @JsonKey(name: 'dc') required final int downloadCount,
+      @JsonKey(name: 'ps2') final int? popularityScore2,
+      @JsonKey(name: 'dc') required final int? downloadCount,
       @JsonKey(name: 'id') required final bool isDiscontinued,
       @JsonKey(name: 'iu') required final bool isUnlisted,
       @JsonKey(name: 'iff') required final bool isFlutterFavorite,
@@ -403,10 +403,10 @@ abstract class _PackageData extends PackageData {
   int? get popularityScore;
   @override
   @JsonKey(name: 'ps2')
-  int get popularityScore2;
+  int? get popularityScore2;
   @override
   @JsonKey(name: 'dc')
-  int get downloadCount;
+  int? get downloadCount;
   @override
   @JsonKey(name: 'id')
   bool get isDiscontinued;

@@ -23,7 +23,6 @@ class PubRepo {
     print('Fetched ${packages.length} package names');
 
     var mostLikedPackage = ('', 0);
-    var mostPopularPackage = ('', 0.0);
     var mostDependedPackage = ('', 0);
 
     final wrappers = <PackageDataWrapper>[];
@@ -33,22 +32,17 @@ class PubRepo {
       final score = await _client.packageScore(package);
 
       final popularityScore = score.popularityScore;
-      final int popularityPercent;
+      final int? popularityPercent;
       if (popularityScore != null) {
         popularityPercent = (popularityScore * 100).round();
       } else {
-        print('No popularity score for $package');
-        return;
+        popularityPercent = null;
       }
 
       final likeCount = score.likeCount;
       if (likeCount > mostLikedPackage.$2) {
         print('Most liked package: $package');
         mostLikedPackage = (package, likeCount);
-      }
-      if (popularityScore > mostPopularPackage.$2) {
-        print('Most popular package: $package');
-        mostPopularPackage = (package, popularityScore);
       }
 
       final publisherData = await _client.packagePublisher(package);
@@ -80,6 +74,7 @@ class PubRepo {
             version: info.version,
             likeCount: likeCount,
             popularityScore: popularityPercent,
+            downloadCount: score.downloadCount30Days,
             isDiscontinued: packageOptions.isDiscontinued,
             isFlutterFavorite: isFlutterFavorite,
             isUnlisted: packageOptions.isUnlisted,
@@ -134,16 +129,21 @@ class PubRepo {
     }
 
     wrappers.sort((a, b) {
-      final aScore = a.score.popularityScore ?? double.infinity;
-      final bScore = b.score.popularityScore ?? double.infinity;
-      return bScore.compareTo(aScore);
+      final adc = a.score.downloadCount30Days;
+      final bdc = b.score.downloadCount30Days;
+      return bdc.compareTo(adc);
     });
 
     final rankedWrappers = <PackageDataWrapper>[];
     for (var i = 0; i < wrappers.length; i++) {
       final wrapper = wrappers[i];
-      final rankedWrapper =
-          wrapper.copyWith(data: wrapper.data.copyWith(overallRank: i));
+      final rankedWrapper = wrapper.copyWith(
+        data: wrapper.data.copyWith(
+          popularityScore2:
+              ((wrappers.length - i) / wrappers.length * 100).round(),
+          overallRank: i,
+        ),
+      );
       rankedWrappers.add(rankedWrapper);
     }
     rankedWrappers.sort((a, b) => a.package.compareTo(b.package));
@@ -166,7 +166,7 @@ class PubRepo {
     return GlobalStats(
       packageCount: packages.length,
       mostLikedPackage: mostLikedPackage.$1,
-      mostPopularPackage: mostPopularPackage.$1,
+      mostDownloadedPackage: wrappers.first.package,
       mostDependedPackage: mostDependedPackage.$1,
       lastUpdated: DateTime.timestamp(),
     );

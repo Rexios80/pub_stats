@@ -53,6 +53,8 @@ class ScoreFetchController {
     final miniScore = MiniPackageScore(
       likeCount: data.likeCount,
       popularityScore: data.popularityScore,
+      popularityScore2: data.popularityScore2,
+      downloadCount: data.downloadCount,
     );
 
     // Send alerts

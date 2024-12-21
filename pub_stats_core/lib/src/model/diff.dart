@@ -11,8 +11,8 @@ sealed class Diff {
 
 @JsonSerializable()
 class StringDiff extends Diff {
-  final Object before;
-  final Object after;
+  final Object? before;
+  final Object? after;
 
   StringDiff(this.before, this.after);
 

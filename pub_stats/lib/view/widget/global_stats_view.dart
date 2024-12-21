@@ -22,9 +22,9 @@ class GlobalStatsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final statItems = [
       GlobalStatItem(
-        stat: stats.mostPopularPackage,
-        label: 'Most popular package',
-        onTap: () => _dataController.fetchStats(stats.mostPopularPackage),
+        stat: stats.mostDownloadedPackage,
+        label: 'Most downloaded package',
+        onTap: () => _dataController.fetchStats(stats.mostDownloadedPackage),
       ),
       GlobalStatItem(
         stat: stats.mostLikedPackage,

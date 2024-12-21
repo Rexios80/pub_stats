@@ -168,7 +168,7 @@ class PopularityScoreChart extends StatefulWidget {
 }
 
 class PopularityScoreChartState extends State<PopularityScoreChart> {
-  var type = PopularityScoreType.current;
+  var type = PopularityScoreType.modern;
   late List<List<FlSpot>> activeSpots = widget.spots;
 
   @override
@@ -176,6 +176,49 @@ class PopularityScoreChartState extends State<PopularityScoreChart> {
     return BaseStatChart(
       spots: activeSpots,
       label: 'Popularity Score',
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.info_outline),
+          onPressed: () => showDialog(
+            context: context,
+            builder: (context) => const AlertDialog(
+              title: Text('About Popularity Score'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '''
+Popularity score is a metric that attempts to quantify the overall popularity of a package.
+
+Modern popularity scores are calculated by pub_stats solely based on the download count of a package relative to others.
+
+Legacy popularity scores were calculated by pub.dev based on a filtered download count, but are no longer computed.''',
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.swap_horiz),
+          tooltip: switch (type) {
+            PopularityScoreType.modern => 'Show legacy scores',
+            PopularityScoreType.legacy => 'Show modern scores',
+          },
+          onPressed: () {
+            setState(() {
+              switch (type) {
+                case PopularityScoreType.modern:
+                  type = PopularityScoreType.legacy;
+                  activeSpots = widget.legacySpots;
+                case PopularityScoreType.legacy:
+                  type = PopularityScoreType.modern;
+                  activeSpots = widget.spots;
+              }
+            });
+          },
+        ),
+      ],
       builder: (singleY, barData) => LineChart(
         LineChartData(
           minY: 0,
@@ -192,4 +235,4 @@ class PopularityScoreChartState extends State<PopularityScoreChart> {
   }
 }
 
-enum PopularityScoreType { current, legacy }
+enum PopularityScoreType { modern, legacy }

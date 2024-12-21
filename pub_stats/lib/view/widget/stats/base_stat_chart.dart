@@ -54,42 +54,44 @@ class BaseStatChart extends StatelessWidget {
       width: 400,
       height: 300,
       child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: FastBuilder(
-            () => Stack(
-              children: [
-                Positioned(top: 0, right: 0, child: Row(children: actions)),
-                Column(
-                  children: [
-                    Text(label),
-                    if (filteredSpots.first.isEmpty) ...[
-                      const Spacer(),
-                      const Text('No data'),
-                      const Spacer(),
-                    ] else if (filteredSpots.first.length < 2) ...[
-                      const Spacer(),
-                      Text(
-                        filteredSpots.first.first.y.toInt().toString(),
-                        style: context.textTheme.titleLarge,
-                      ),
-                      const Spacer(),
-                      const Text('Not enough data to show chart'),
-                    ] else ...[
-                      if (spots.length == 1) ...[
-                        const SizedBox(height: 12),
-                        StatOverview(spots: filteredSpots.first),
+        child: Stack(
+          children: [
+            Positioned(top: 22, right: 22, child: Row(children: actions)),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: FastBuilder(
+                  () => Column(
+                    children: [
+                      Text(label),
+                      if (filteredSpots.first.isEmpty) ...[
+                        const Spacer(),
+                        const Text('No data'),
+                        const Spacer(),
+                      ] else if (filteredSpots.first.length < 2) ...[
+                        const Spacer(),
+                        Text(
+                          filteredSpots.first.first.y.toInt().toString(),
+                          style: context.textTheme.titleLarge,
+                        ),
+                        const Spacer(),
+                        const Text('Not enough data to show chart'),
+                      ] else ...[
+                        if (spots.length == 1) ...[
+                          const SizedBox(height: 12),
+                          StatOverview(spots: filteredSpots.first),
+                        ],
+                        const SizedBox(height: 32),
+                        Expanded(
+                          child: builder(_singleY(), _createLineChartBarData()),
+                        ),
                       ],
-                      const SizedBox(height: 32),
-                      Expanded(
-                        child: builder(_singleY(), _createLineChartBarData()),
-                      ),
                     ],
-                  ],
+                  ),
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

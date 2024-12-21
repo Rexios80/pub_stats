@@ -190,7 +190,7 @@ class PopularityScoreChartState extends State<PopularityScoreChart> {
                     '''
 Popularity score is a metric that attempts to quantify the overall popularity of a package.
 
-Modern popularity scores are calculated by pub_stats solely based on the download count of a package relative to others.
+Modern popularity scores are calculated by pub_stats based on the raw download count of a package relative to others.
 
 Legacy popularity scores were calculated by pub.dev based on a filtered download count, but are no longer computed.''',
                   ),

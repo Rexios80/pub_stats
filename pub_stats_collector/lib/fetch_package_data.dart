@@ -9,7 +9,13 @@ import 'package:pub_stats_collector/service/firebase_service.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 import 'package:shelf/shelf.dart';
 
+var running = false;
+
 Future<Response> fetchPackageData(Request request, {bool debug = false}) async {
+  // Do not allow more than one instance to run at the same time
+  if (running) return Response.ok(null);
+  running = true;
+
   final credentials = debug ? Credentials.debug : Credentials.prod;
 
   final firebase = await FirebaseService.create(credentials);

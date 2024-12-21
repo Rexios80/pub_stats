@@ -63,5 +63,6 @@ Future<Response> fetchPackageData(Request request, {bool debug = false}) async {
     exit(1);
   }
 
+  running = false;
   return Response.ok(null);
 }

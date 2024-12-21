@@ -1,5 +1,3 @@
-library pub_stats_core;
-
 // model
 export 'src/model/alert_config.dart';
 export 'src/model/diff.dart';

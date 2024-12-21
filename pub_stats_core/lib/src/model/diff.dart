@@ -58,3 +58,49 @@ class SetDiff extends Diff {
   @override
   Map<String, dynamic> toJson() => _$SetDiffToJson(this);
 }
+
+@JsonSerializable()
+class LargeNumDiff extends Diff {
+  final num? before;
+  final num? after;
+
+  LargeNumDiff(this.before, this.after);
+
+  @override
+  bool get different => before != after;
+
+  static String format(num number) {
+    if (number < 1000) return number.toString();
+
+    const suffixes = ['K', 'M', 'B', 'T'];
+    var suffixIndex = -1;
+    var temp = number.toDouble();
+
+    while (temp >= 1000 && suffixIndex < suffixes.length - 1) {
+      temp /= 1000;
+      suffixIndex++;
+    }
+
+    final formatted = temp
+        .toStringAsFixed(2)
+        // Remove trailing zeros and possible decimal point
+        .replaceAll(RegExp(r'\.?0+$'), '');
+
+    return '$formatted${suffixes[suffixIndex]}';
+  }
+
+  @override
+  String get text {
+    final before = this.before;
+    final after = this.after;
+    final beforeText = before == null ? 'null' : format(before);
+    final afterText = after == null ? 'null' : format(after);
+    return '$beforeText -> $afterText';
+  }
+
+  factory LargeNumDiff.fromJson(Map<String, dynamic> json) =>
+      _$LargeNumDiffFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$LargeNumDiffToJson(this);
+}

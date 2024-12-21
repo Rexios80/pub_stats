@@ -37,7 +37,7 @@ class PackageData with _$PackageData {
       PackageDataField.popularityScore:
           StringDiff(before.popularityScore, popularityScore),
       PackageDataField.downloadCount:
-          StringDiff(before.downloadCount, downloadCount),
+          LargeNumDiff(before.downloadCount, downloadCount),
       PackageDataField.isDiscontinued:
           StringDiff(before.isDiscontinued, isDiscontinued),
       PackageDataField.isUnlisted: StringDiff(before.isUnlisted, isUnlisted),
@@ -67,11 +67,11 @@ enum PackageDataField {
         version ||
         likeCount ||
         popularityScore ||
-        downloadCount ||
         isDiscontinued ||
         isUnlisted ||
         isFlutterFavorite =>
           StringDiff.fromJson(json),
+        downloadCount => LargeNumDiff.fromJson(json),
         dependents => SetDiff.fromJson(json),
         pubPoints => throw UnimplementedError(),
       };

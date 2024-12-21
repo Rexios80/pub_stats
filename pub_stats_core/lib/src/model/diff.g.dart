@@ -33,3 +33,14 @@ Map<String, dynamic> _$SetDiffToJson(SetDiff instance) => <String, dynamic>{
       'added': instance.added.toList(),
       'removed': instance.removed.toList(),
     };
+
+LargeNumDiff _$LargeNumDiffFromJson(Map<String, dynamic> json) => LargeNumDiff(
+      json['before'] as num?,
+      json['after'] as num?,
+    );
+
+Map<String, dynamic> _$LargeNumDiffToJson(LargeNumDiff instance) =>
+    <String, dynamic>{
+      'before': instance.before,
+      'after': instance.after,
+    };

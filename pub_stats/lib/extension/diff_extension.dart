@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 extension DiffExtension on Diff {
   Widget get widget => switch (this) {
         (final StringDiff diff) => Text(diff.text),
+        (final LargeNumDiff diff) => Text(diff.text),
         (final SetDiff diff) => Row(
             children: [
               PackageListButton(

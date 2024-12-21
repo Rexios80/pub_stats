@@ -16,19 +16,10 @@ MiniPackageScore _$MiniPackageScoreFromJson(Map<String, dynamic> json) =>
       downloadCount: (json['d'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$MiniPackageScoreToJson(MiniPackageScore instance) {
-  final val = <String, dynamic>{
-    'l': instance.likeCount,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('p', instance.legacyPopularityScore);
-  writeNotNull('p2', instance.popularityScore);
-  writeNotNull('d', instance.downloadCount);
-  return val;
-}
+Map<String, dynamic> _$MiniPackageScoreToJson(MiniPackageScore instance) =>
+    <String, dynamic>{
+      'l': instance.likeCount,
+      if (instance.legacyPopularityScore case final value?) 'p': value,
+      if (instance.popularityScore case final value?) 'p2': value,
+      if (instance.downloadCount case final value?) 'd': value,
+    };

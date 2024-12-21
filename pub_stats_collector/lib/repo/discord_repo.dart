@@ -92,16 +92,16 @@ class DiscordRepo {
               value: stats.packageCount.toString(),
             ),
             EmbedField(
+              name: 'Most Downloaded Package',
+              value: stats.mostDownloadedPackage,
+            ),
+            EmbedField(
               name: 'Most Liked Package',
               value: stats.mostLikedPackage,
             ),
             EmbedField(
               name: 'Most Depended Package',
               value: stats.mostDependedPackage,
-            ),
-            EmbedField(
-              name: 'Most Downloaded Package',
-              value: stats.mostDownloadedPackage,
             ),
             EmbedField(
               name: 'Execution Time',

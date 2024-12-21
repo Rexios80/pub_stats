@@ -173,12 +173,14 @@ class PopularityScoreChart extends StatefulWidget {
 
 class PopularityScoreChartState extends State<PopularityScoreChart> {
   var type = PopularityScoreType.modern;
-  late List<List<FlSpot>> activeSpots = widget.spots;
 
   @override
   Widget build(BuildContext context) {
     return BaseStatChart(
-      spots: activeSpots,
+      spots: switch (type) {
+        PopularityScoreType.modern => widget.spots,
+        PopularityScoreType.legacy => widget.legacySpots,
+      },
       label: 'Popularity Score',
       actions: [
         IconButton(
@@ -211,14 +213,10 @@ Legacy popularity scores were calculated by pub.dev based on a filtered download
           },
           onPressed: () {
             setState(() {
-              switch (type) {
-                case PopularityScoreType.modern:
-                  type = PopularityScoreType.legacy;
-                  activeSpots = widget.legacySpots;
-                case PopularityScoreType.legacy:
-                  type = PopularityScoreType.modern;
-                  activeSpots = widget.spots;
-              }
+              type = switch (type) {
+                PopularityScoreType.modern => PopularityScoreType.legacy,
+                PopularityScoreType.legacy => PopularityScoreType.modern,
+              };
             });
           },
         ),

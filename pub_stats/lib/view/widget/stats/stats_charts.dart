@@ -9,6 +9,7 @@ import 'package:pub_stats/model/package_score_snapshot.dart';
 import 'package:pub_stats/model/package_stats.dart';
 import 'package:fast_ui/fast_ui.dart';
 import 'package:pub_stats/view/widget/stats/base_stat_chart.dart';
+import 'package:pub_stats_core/pub_stats_core.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class StatsCharts extends StatelessWidget {
@@ -31,6 +32,8 @@ class StatsCharts extends StatelessWidget {
       spots: _createSpots((e) => e.popularityScore),
       legacySpots: _createSpots((e) => e.legacyPopularityScore),
     );
+    final downloadCountChart =
+        DownloadCountChart(spots: _createSpots((e) => e.downloadCount));
 
     final overallRank = stats.first.overallRank;
     return Column(
@@ -80,6 +83,7 @@ class StatsCharts extends StatelessWidget {
           children: [
             likeCountChart,
             popularityScoreChart,
+            downloadCountChart,
           ],
         ),
         if (showHint) ...[
@@ -236,3 +240,31 @@ Legacy popularity scores were calculated by pub.dev based on a filtered download
 }
 
 enum PopularityScoreType { modern, legacy }
+
+class DownloadCountChart extends StatelessWidget {
+  final List<List<FlSpot>> spots;
+
+  const DownloadCountChart({super.key, required this.spots});
+
+  @override
+  Widget build(BuildContext context) {
+    return BaseStatChart(
+      spots: spots,
+      label: 'Download Count',
+      formatValue: formatLargeNum,
+      builder: (singleY, barData) => LineChart(
+        LineChartData(
+          lineBarsData: barData,
+          gridData: BaseStatChart.defaultGridData,
+          borderData: BaseStatChart.createDefaultBorderData(context),
+          titlesData: BaseStatChart.defaultTitlesData,
+          lineTouchData: BaseStatChart.createDefaultLineTouchData(
+            context,
+            formatValue: formatLargeNum,
+          ),
+        ),
+        duration: Duration.zero,
+      ),
+    );
+  }
+}

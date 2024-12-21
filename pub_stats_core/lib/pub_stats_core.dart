@@ -10,3 +10,4 @@ export 'src/service/user_agent_client.dart';
 
 // util
 export 'src/util/date_time_utils.dart';
+export 'src/util/format_utils.dart';

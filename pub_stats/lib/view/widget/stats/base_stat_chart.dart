@@ -25,7 +25,10 @@ class BaseStatChart extends StatelessWidget {
   final List<List<FlSpot>> spots;
   final String label;
   final List<Widget> actions;
+  final String Function(num value) formatValue;
   final Widget Function(bool singleY, List<LineChartBarData> barData) builder;
+
+  static String _defaultFormatValue(num value) => value.toInt().toString();
 
   List<List<FlSpot>> get filteredSpots {
     // Always access the timestamp value to register
@@ -45,6 +48,7 @@ class BaseStatChart extends StatelessWidget {
     required this.spots,
     required this.label,
     this.actions = const [],
+    this.formatValue = _defaultFormatValue,
     required this.builder,
   });
 
@@ -71,7 +75,7 @@ class BaseStatChart extends StatelessWidget {
                       ] else if (filteredSpots.first.length < 2) ...[
                         const Spacer(),
                         Text(
-                          filteredSpots.first.first.y.toInt().toString(),
+                          formatValue(filteredSpots.first.first.y),
                           style: context.textTheme.titleLarge,
                         ),
                         const Spacer(),
@@ -108,13 +112,16 @@ class BaseStatChart extends StatelessWidget {
     );
   }
 
-  static LineTouchData createDefaultLineTouchData(BuildContext context) {
+  static LineTouchData createDefaultLineTouchData(
+    BuildContext context, {
+    String Function(num value) formatValue = _defaultFormatValue,
+  }) {
     return LineTouchData(
       touchTooltipData: LineTouchTooltipData(
         getTooltipColor: (_) => context.theme.cardColor,
         getTooltipItems: (spots) => spots.mapIndexed((spotIndex, spot) {
           final barIndex = spot.barIndex;
-          final valueString = spot.y.toInt().toString();
+          final valueString = formatValue(spot.y);
           final valueStyle =
               TextStyle(color: AppColors.chartLineColors[barIndex]);
           final date = DateTime.fromMillisecondsSinceEpoch(spot.x.toInt());

@@ -19,6 +19,15 @@ class Credentials {
     databaseUrl: 'http://127.0.0.1:9000/?ns=pub-stats-collector-default-rtdb',
   );
 
+  //! THIS WILL MODIFY THE PRODUCTION DATABASE
+  static final tool = Credentials._(
+    userAgent: _userAgent,
+    serviceAccount: jsonDecode(
+      File(path.join('secret', 'service_account_key.json')).readAsStringSync(),
+    ),
+    databaseUrl: 'https://pub-stats-collector-default-rtdb.firebaseio.com/',
+  );
+
   final String userAgent;
   final Map<String, dynamic> serviceAccount;
   final String databaseUrl;

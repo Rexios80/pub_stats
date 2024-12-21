@@ -67,9 +67,10 @@ class LargeNumDiff extends Diff {
   LargeNumDiff(this.before, this.after);
 
   @override
-  bool get different => before != after;
+  bool get different => format(before) != format(after);
 
-  static String format(num number) {
+  static String format(num? number) {
+    if (number == null) return 'null';
     if (number < 1000) return number.toString();
 
     const suffixes = ['K', 'M', 'B', 'T'];
@@ -90,13 +91,7 @@ class LargeNumDiff extends Diff {
   }
 
   @override
-  String get text {
-    final before = this.before;
-    final after = this.after;
-    final beforeText = before == null ? 'null' : format(before);
-    final afterText = after == null ? 'null' : format(after);
-    return '$beforeText -> $afterText';
-  }
+  String get text => '${format(before)} -> ${format(after)}';
 
   factory LargeNumDiff.fromJson(Map<String, dynamic> json) =>
       _$LargeNumDiffFromJson(json);

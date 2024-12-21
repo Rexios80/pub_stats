@@ -9,5 +9,8 @@ void main() {
     expect(LargeNumDiff.format(1_750_000_000), '1.75B');
     expect(LargeNumDiff.format(1_750_000_000_000), '1.75T');
     expect(LargeNumDiff.format(1_700_000_000), '1.7B');
+    expect(LargeNumDiff.format(12_750_000_000), '12.8B');
+    expect(LargeNumDiff.format(123_750_000_000), '124B');
+    expect(LargeNumDiff.format(1234_000_000_000_000), '1234T');
   });
 }

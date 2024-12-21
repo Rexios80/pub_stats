@@ -93,7 +93,11 @@ class PubRepo {
       unawaited(
         queue.add(() async {
           try {
-            await fetchPackageData(package);
+            await fetchPackageData(package).timeout(
+              Duration(seconds: 30),
+              onTimeout: () =>
+                  throw TimeoutException('Timeout fetching data for $package'),
+            );
           } catch (e) {
             print('Error fetching data for $package: $e');
           }

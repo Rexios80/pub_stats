@@ -1,6 +1,6 @@
 String formatLargeNum(num? number) {
   if (number == null) return 'null';
-  if (number < 1000) return number.toString();
+  if (number < 1000) return number.toInt().toString();
 
   const suffixes = ['K', 'M', 'B', 'T'];
   var suffixIndex = -1;

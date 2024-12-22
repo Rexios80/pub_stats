@@ -62,6 +62,18 @@ enum PackageDataField {
   // Extra fields not actually on the PackageData model
   pubPoints;
 
+  bool get trackDiff => switch (this) {
+        publisher ||
+        version ||
+        isDiscontinued ||
+        isUnlisted ||
+        isFlutterFavorite ||
+        dependents =>
+          true,
+        // Don't track diffs for items that have historical data
+        likeCount || popularityScore || downloadCount || pubPoints => false,
+      };
+
   Diff diffFromJson(Map<String, dynamic> json) => switch (this) {
         publisher ||
         version ||

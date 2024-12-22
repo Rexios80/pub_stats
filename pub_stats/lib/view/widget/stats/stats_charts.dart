@@ -208,7 +208,10 @@ Legacy popularity scores were calculated by pub.dev based on a filtered download
           ),
         ),
         IconButton(
-          icon: const Icon(Icons.swap_horiz),
+          icon: Icon(Icons.swap_horiz, color: switch (type) {
+            PopularityScoreType.modern => null,
+            PopularityScoreType.legacy => AppColors.primary,
+          }),
           tooltip: switch (type) {
             PopularityScoreType.modern => 'Show legacy scores',
             PopularityScoreType.legacy => 'Show modern scores',

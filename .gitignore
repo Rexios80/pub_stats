@@ -6,3 +6,5 @@ emcache/
 
 # Log files
 *.log
+
+.dart_tool

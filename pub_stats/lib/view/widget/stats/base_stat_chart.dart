@@ -83,7 +83,10 @@ class BaseStatChart extends StatelessWidget {
                       ] else ...[
                         if (spots.length == 1) ...[
                           const SizedBox(height: 12),
-                          StatOverview(spots: filteredSpots.first),
+                          StatOverview(
+                            spots: filteredSpots.first,
+                            formatValue: formatValue,
+                          ),
                         ],
                         const SizedBox(height: 32),
                         Expanded(

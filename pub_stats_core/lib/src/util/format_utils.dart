@@ -20,10 +20,12 @@ String formatLargeNum(num? number) {
   if (decimalDigits < 0) decimalDigits = 0;
 
   // Format the number with the appropriate number of decimal places
-  final formatted = temp
-      .toStringAsFixed(decimalDigits)
-      // Remove any trailing zeros and possible decimal point
-      .replaceAll(RegExp(r'\.?0+$'), '');
+  var formatted = temp.toStringAsFixed(decimalDigits);
+
+  if (formatted.contains('.')) {
+    // Remove trailing zeros
+    formatted = formatted.replaceAll(RegExp(r'0*$'), '');
+  }
 
   return '$formatted${suffixes[suffixIndex]}';
 }

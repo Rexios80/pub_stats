@@ -1,7 +1,6 @@
 String formatLargeNum(num? number) {
   if (number == null) return 'null';
 
-  final negative = number < 0;
   final absNumber = number.abs();
   if (absNumber < 1000) return number.toInt().toString();
 
@@ -30,7 +29,7 @@ String formatLargeNum(num? number) {
     formatted = formatted.replaceAll(RegExp(r'0*$'), '');
   }
 
-  final sign = negative ? '-' : '';
+  final sign = number < 0 ? '-' : '';
   final suffix = suffixes[suffixIndex];
   return '$sign$formatted$suffix';
 }

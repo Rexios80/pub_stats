@@ -1,12 +1,11 @@
 String formatLargeNum(num? number) {
   if (number == null) return 'null';
 
-  final absNumber = number.abs();
-  if (absNumber < 1000) return number.toInt().toString();
+  var temp = number.abs().toDouble();
+  if (temp < 1000) return number.toInt().toString();
 
   const suffixes = ['K', 'M', 'B', 'T'];
   var suffixIndex = -1;
-  var temp = absNumber.toDouble();
 
   // Determine the appropriate suffix
   while (temp >= 1000 && suffixIndex < suffixes.length - 1) {

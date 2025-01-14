@@ -1,10 +1,13 @@
 String formatLargeNum(num? number) {
   if (number == null) return 'null';
-  if (number < 1000) return number.toInt().toString();
+
+  final negative = number < 0;
+  final absNumber = number.abs();
+  if (absNumber < 1000) return number.toInt().toString();
 
   const suffixes = ['K', 'M', 'B', 'T'];
   var suffixIndex = -1;
-  var temp = number.toDouble();
+  var temp = absNumber.toDouble();
 
   // Determine the appropriate suffix
   while (temp >= 1000 && suffixIndex < suffixes.length - 1) {
@@ -27,5 +30,7 @@ String formatLargeNum(num? number) {
     formatted = formatted.replaceAll(RegExp(r'0*$'), '');
   }
 
-  return '$formatted${suffixes[suffixIndex]}';
+  final sign = negative ? '-' : '';
+  final suffix = suffixes[suffixIndex];
+  return '$sign$formatted$suffix';
 }

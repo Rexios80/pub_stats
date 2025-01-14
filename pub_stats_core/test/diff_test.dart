@@ -13,5 +13,6 @@ void main() {
     expect(formatLargeNum(123_750_000_000), '124B');
     expect(formatLargeNum(1234_000_000_000_000), '1234T');
     expect(formatLargeNum(530_000), '530K');
+    expect(formatLargeNum(-6767), '-6.77K');
   });
 }

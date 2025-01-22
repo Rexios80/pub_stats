@@ -42,6 +42,8 @@ mixin _$PackageData {
   Set<String> get dependents => throw _privateConstructorUsedError;
   @JsonKey(name: 'n')
   int? get overallRank => throw _privateConstructorUsedError;
+  @JsonKey(name: 'nd')
+  int? get numDependents => throw _privateConstructorUsedError;
 
   /// Serializes this PackageData to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -70,7 +72,8 @@ abstract class $PackageDataCopyWith<$Res> {
       @JsonKey(name: 'iu') bool isUnlisted,
       @JsonKey(name: 'iff') bool isFlutterFavorite,
       @JsonKey(name: 'd') Set<String> dependents,
-      @JsonKey(name: 'n') int? overallRank});
+      @JsonKey(name: 'n') int? overallRank,
+      @JsonKey(name: 'nd') int? numDependents});
 }
 
 /// @nodoc
@@ -99,6 +102,7 @@ class _$PackageDataCopyWithImpl<$Res, $Val extends PackageData>
     Object? isFlutterFavorite = null,
     Object? dependents = null,
     Object? overallRank = freezed,
+    Object? numDependents = freezed,
   }) {
     return _then(_value.copyWith(
       publisher: freezed == publisher
@@ -145,6 +149,10 @@ class _$PackageDataCopyWithImpl<$Res, $Val extends PackageData>
           ? _value.overallRank
           : overallRank // ignore: cast_nullable_to_non_nullable
               as int?,
+      numDependents: freezed == numDependents
+          ? _value.numDependents
+          : numDependents // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 }
@@ -168,7 +176,8 @@ abstract class _$$PackageDataImplCopyWith<$Res>
       @JsonKey(name: 'iu') bool isUnlisted,
       @JsonKey(name: 'iff') bool isFlutterFavorite,
       @JsonKey(name: 'd') Set<String> dependents,
-      @JsonKey(name: 'n') int? overallRank});
+      @JsonKey(name: 'n') int? overallRank,
+      @JsonKey(name: 'nd') int? numDependents});
 }
 
 /// @nodoc
@@ -195,6 +204,7 @@ class __$$PackageDataImplCopyWithImpl<$Res>
     Object? isFlutterFavorite = null,
     Object? dependents = null,
     Object? overallRank = freezed,
+    Object? numDependents = freezed,
   }) {
     return _then(_$PackageDataImpl(
       publisher: freezed == publisher
@@ -241,6 +251,10 @@ class __$$PackageDataImplCopyWithImpl<$Res>
           ? _value.overallRank
           : overallRank // ignore: cast_nullable_to_non_nullable
               as int?,
+      numDependents: freezed == numDependents
+          ? _value.numDependents
+          : numDependents // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -259,7 +273,8 @@ class _$PackageDataImpl extends _PackageData {
       @JsonKey(name: 'iu') required this.isUnlisted,
       @JsonKey(name: 'iff') required this.isFlutterFavorite,
       @JsonKey(name: 'd') final Set<String> dependents = const {},
-      @JsonKey(name: 'n') this.overallRank})
+      @JsonKey(name: 'n') this.overallRank,
+      @JsonKey(name: 'nd') this.numDependents})
       : _dependents = dependents,
         super._();
 
@@ -305,10 +320,13 @@ class _$PackageDataImpl extends _PackageData {
   @override
   @JsonKey(name: 'n')
   final int? overallRank;
+  @override
+  @JsonKey(name: 'nd')
+  final int? numDependents;
 
   @override
   String toString() {
-    return 'PackageData(publisher: $publisher, version: $version, likeCount: $likeCount, legacyPopularityScore: $legacyPopularityScore, popularityScore: $popularityScore, downloadCount: $downloadCount, isDiscontinued: $isDiscontinued, isUnlisted: $isUnlisted, isFlutterFavorite: $isFlutterFavorite, dependents: $dependents, overallRank: $overallRank)';
+    return 'PackageData(publisher: $publisher, version: $version, likeCount: $likeCount, legacyPopularityScore: $legacyPopularityScore, popularityScore: $popularityScore, downloadCount: $downloadCount, isDiscontinued: $isDiscontinued, isUnlisted: $isUnlisted, isFlutterFavorite: $isFlutterFavorite, dependents: $dependents, overallRank: $overallRank, numDependents: $numDependents)';
   }
 
   @override
@@ -336,7 +354,9 @@ class _$PackageDataImpl extends _PackageData {
             const DeepCollectionEquality()
                 .equals(other._dependents, _dependents) &&
             (identical(other.overallRank, overallRank) ||
-                other.overallRank == overallRank));
+                other.overallRank == overallRank) &&
+            (identical(other.numDependents, numDependents) ||
+                other.numDependents == numDependents));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -353,7 +373,8 @@ class _$PackageDataImpl extends _PackageData {
       isUnlisted,
       isFlutterFavorite,
       const DeepCollectionEquality().hash(_dependents),
-      overallRank);
+      overallRank,
+      numDependents);
 
   /// Create a copy of PackageData
   /// with the given fields replaced by the non-null parameter values.
@@ -383,7 +404,8 @@ abstract class _PackageData extends PackageData {
       @JsonKey(name: 'iu') required final bool isUnlisted,
       @JsonKey(name: 'iff') required final bool isFlutterFavorite,
       @JsonKey(name: 'd') final Set<String> dependents,
-      @JsonKey(name: 'n') final int? overallRank}) = _$PackageDataImpl;
+      @JsonKey(name: 'n') final int? overallRank,
+      @JsonKey(name: 'nd') final int? numDependents}) = _$PackageDataImpl;
   const _PackageData._() : super._();
 
   factory _PackageData.fromJson(Map<String, dynamic> json) =
@@ -422,6 +444,9 @@ abstract class _PackageData extends PackageData {
   @override
   @JsonKey(name: 'n')
   int? get overallRank;
+  @override
+  @JsonKey(name: 'nd')
+  int? get numDependents;
 
   /// Create a copy of PackageData
   /// with the given fields replaced by the non-null parameter values.

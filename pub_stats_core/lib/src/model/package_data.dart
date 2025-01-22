@@ -23,6 +23,8 @@ class PackageData with _$PackageData {
     @JsonKey(name: 'iff') required bool isFlutterFavorite,
     @JsonKey(name: 'd') @Default({}) Set<String> dependents,
     @JsonKey(name: 'n') int? overallRank,
+    // Store this separately to save bandwidth when creating badges
+    @JsonKey(name: 'nd') int? numDependents,
   }) = _PackageData;
 
   factory PackageData.fromJson(Map<String, dynamic> json) =>

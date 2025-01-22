@@ -113,7 +113,10 @@ class PubRepo {
       final package = wrapper.package;
 
       final dependents = dependentMap[package] ?? {};
-      final data = wrapper.data.copyWith(dependents: dependents);
+      final data = wrapper.data.copyWith(
+        dependents: dependents,
+        numDependents: dependents.length,
+      );
 
       if (dependents.length > mostDependedPackage.$2) {
         print('Most depended package: $package');

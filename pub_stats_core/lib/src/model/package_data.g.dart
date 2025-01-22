@@ -23,6 +23,7 @@ _$PackageDataImpl _$$PackageDataImplFromJson(Map<String, dynamic> json) =>
           (json['d'] as List<dynamic>?)?.map((e) => e as String).toSet() ??
               const {},
       overallRank: (json['n'] as num?)?.toInt(),
+      numDependents: (json['nd'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$$PackageDataImplToJson(_$PackageDataImpl instance) =>
@@ -38,4 +39,5 @@ Map<String, dynamic> _$$PackageDataImplToJson(_$PackageDataImpl instance) =>
       'iff': instance.isFlutterFavorite,
       'd': instance.dependents.toList(),
       'n': instance.overallRank,
+      'nd': instance.numDependents,
     };

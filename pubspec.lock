@@ -320,13 +320,12 @@ packages:
     source: hosted
     version: "2.0.0"
   discord_interactions:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: discord_interactions
-      sha256: c70fea4fafff89b93a1cb631147274868241ea60f089ab6f59fb3c673a253ae8
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.22"
+      path: "../discord_interactions"
+      relative: true
+    source: path
+    version: "0.0.23"
   equatable:
     dependency: transitive
     description:

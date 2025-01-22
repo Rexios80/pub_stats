@@ -594,9 +594,10 @@ packages:
   firebase_js_interop:
     dependency: transitive
     description:
-      path: "../firebase_js_interop"
-      relative: true
-    source: path
+      name: firebase_js_interop
+      sha256: "3fb85c7605dcc9951895828a8e7ad8aad964bd936b07b0f4f4217bd178cb4ddf"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.0.7"
   firebase_performance:
     dependency: transitive

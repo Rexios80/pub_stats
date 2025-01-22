@@ -11,7 +11,8 @@ import 'package:firebase_js_interop/node.dart';
 
 import 'badge_maker.dart';
 
-final packageBadgeRegex = RegExp(r'^\/packages\/([^\/]+)\/([^\/]+)\.svg$');
+final packageBadgeRegex =
+    RegExp(r'^\/badges\/packages\/([^\/]+)\/([^\/]+)\.svg$');
 
 enum BadgeType {
   popularity,

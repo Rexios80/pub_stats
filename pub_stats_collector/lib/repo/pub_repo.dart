@@ -7,6 +7,8 @@ import 'package:pub_stats_collector/model/package_data_wrapper.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 
 class PubRepo {
+  static const _printInterval = 500;
+
   final PubClient _client;
 
   PubRepo(Credentials credentials)
@@ -30,7 +32,17 @@ class PubRepo {
     final numDependentsMap = <String, int>{};
     var fetched = 0;
     Future<void> fetchPackageData(String package) async {
-      final score = await _client.packageScore(package);
+      final result = await Future.wait([
+        _client.packageScore(package),
+        _client.packagePublisher(package),
+        _client.packageOptions(package),
+        _client.packageInfo(package),
+      ]);
+
+      final score = result[0] as PackageScore;
+      final publisherData = result[1] as PackagePublisher;
+      final packageOptions = result[2] as PackageOptions;
+      final info = result[3] as PubPackage;
 
       final popularityScore = score.popularityScore;
       final int? popularityPercent;
@@ -46,14 +58,11 @@ class PubRepo {
         mostLikedPackage = (package, likeCount);
       }
 
-      final publisherData = await _client.packagePublisher(package);
       final publisher = publisherData.publisherId;
-      final packageOptions = await _client.packageOptions(package);
 
       final isFlutterFavorite =
           score.tags.contains(PackageTag.isFlutterFavorite);
 
-      final info = await _client.packageInfo(package);
       final dependencies = {
         ...info.latestPubspec.dependencies.keys,
         ...info.latestPubspec.devDependencies.keys,
@@ -89,7 +98,7 @@ class PubRepo {
       );
 
       fetched++;
-      if (fetched % 100 == 0) {
+      if (fetched % _printInterval == 0) {
         print('Fetched $fetched/${packages.length} packages');
       }
     }
@@ -137,7 +146,7 @@ class PubRepo {
       );
 
       handled++;
-      if (handled % 100 == 0) {
+      if (handled % _printInterval == 0) {
         print('Handled $handled/${packages.length} packages');
       }
     }

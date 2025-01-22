@@ -7,8 +7,6 @@ environment:
 resolution: workspace
 
 dependencies:
-  pub_stats_core:
-    path: ../pub_stats_core
   firebase_js_interop: ^0.0.7
 
 dev_dependencies:

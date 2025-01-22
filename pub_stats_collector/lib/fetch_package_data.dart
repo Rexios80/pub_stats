@@ -5,12 +5,9 @@ import 'dart:js_interop_unsafe';
 
 import 'package:firebase_js_interop/express.dart' as express;
 import 'package:firebase_js_interop/node.dart';
-import 'package:pub_api_client/pub_api_client.dart' hide Credentials;
 import 'package:pub_stats_collector/controller/score_fetch_controller.dart';
-import 'package:pub_stats_collector/credential/credentials.dart';
 import 'package:pub_stats_collector/repo/database_repo.dart';
 import 'package:pub_stats_collector/repo/discord_repo.dart';
-import 'package:pub_stats_collector/service/user_agent_client.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 
 var running = false;
@@ -21,10 +18,9 @@ Future<express.Response> fetchPackageData(express.Response response) async {
   running = true;
 
   final debug = process.env['FUNCTIONS_EMULATOR'] == true.toJS;
-  final credentials = debug ? Credentials.debug : Credentials.prod;
 
   final database = DatabaseRepo();
-  final discord = DiscordRepo(credentials);
+  final discord = DiscordRepo();
 
   var alertConfigs = <String, List<AlertConfig>>{};
 
@@ -41,7 +37,6 @@ Future<express.Response> fetchPackageData(express.Response response) async {
 
     final data = await database.readPackageData();
     final controller = ScoreFetchController(
-      credentials,
       database,
       discord,
       alertConfigs,

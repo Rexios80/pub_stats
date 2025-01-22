@@ -1,5 +1,4 @@
 import 'package:discord_interactions/discord_interactions.dart';
-import 'package:pub_stats_collector/credential/credentials.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 import 'package:recase/recase.dart';
 
@@ -14,8 +13,6 @@ class DiscordRepo {
     ),
     botToken: '',
   );
-
-  DiscordRepo(Credentials credentials);
 
   Future<void> sendPackageAlert({
     required String package,

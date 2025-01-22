@@ -8,10 +8,7 @@ import 'package:pub_stats_collector/service/user_agent_client.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 
 class PubRepo {
-  final PubClient _client;
-
-  PubRepo(Credentials credentials)
-      : _client = PubClient(client: UserAgentClient(Credentials.userAgent));
+  final _client = PubClient(client: UserAgentClient(Credentials.userAgent));
 
   Future<GlobalStats> fetchAllData(
     Future<void> Function(

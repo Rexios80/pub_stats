@@ -1,26 +1,24 @@
 import 'dart:async';
 
 import 'package:pub_api_client/pub_api_client.dart' hide Credentials;
-import 'package:pub_stats_collector/credential/credentials.dart';
 import 'package:pub_stats_collector/repo/database_repo.dart';
 import 'package:pub_stats_collector/repo/discord_repo.dart';
 import 'package:pub_stats_collector/repo/pub_repo.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 
 class ScoreFetchController {
-  final PubRepo _pub;
+  final PubRepo _pub = PubRepo();
   final DatabaseRepo _database;
   final DiscordRepo _discord;
   final Map<String, List<AlertConfig>> _alertConfigs;
   final Map<String, PackageData> _data;
 
   ScoreFetchController(
-    Credentials credentials,
     this._database,
     this._discord,
     this._alertConfigs,
     this._data,
-  ) : _pub = PubRepo(credentials);
+  );
 
   Future<void> fetchScores() async {
     final startTime = DateTime.timestamp();

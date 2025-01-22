@@ -9,8 +9,9 @@ resolution: workspace
 dependencies:
   pub_stats_core:
     path: ../pub_stats_core
-  firebase_js_interop: ^0.0.7
+  firebase_js_interop: ^0.0.8
   pub_api_client: ^3.1.0
+  discord_interactions: ^0.0.15
   flutter_tools_task_queue: ^1.0.0
   recase: ^4.1.0
   path: ^1.9.0

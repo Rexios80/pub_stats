@@ -4,11 +4,12 @@ import 'package:flutter_tools_task_queue/flutter_tools_task_queue.dart';
 import 'package:pub_api_client/pub_api_client.dart' hide Credentials;
 import 'package:pub_stats_collector/credential/credentials.dart';
 import 'package:pub_stats_collector/model/package_data_wrapper.dart';
-import 'package:pub_stats_collector/service/user_agent_client.dart';
+import 'package:pub_stats_collector/service/fetch_client.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 
 class PubRepo {
-  final _client = PubClient(client: UserAgentClient(Credentials.userAgent));
+  final _client =
+      PubClient(client: FetchClient(userAgent: Credentials.userAgent));
 
   Future<GlobalStats> fetchAllData(
     Future<void> Function(

@@ -7,8 +7,6 @@ import 'package:pub_stats_collector/model/package_data_wrapper.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 
 class PubRepo {
-  static const _printInterval = 500;
-
   final PubClient _client;
 
   PubRepo(Credentials credentials)
@@ -29,20 +27,9 @@ class PubRepo {
 
     final wrappers = <PackageDataWrapper>[];
     final dependentMap = <String, Set<String>>{};
-    final numDependentsMap = <String, int>{};
     var fetched = 0;
     Future<void> fetchPackageData(String package) async {
-      final result = await Future.wait([
-        _client.packageScore(package),
-        _client.packagePublisher(package),
-        _client.packageOptions(package),
-        _client.packageInfo(package),
-      ]);
-
-      final score = result[0] as PackageScore;
-      final publisherData = result[1] as PackagePublisher;
-      final packageOptions = result[2] as PackageOptions;
-      final info = result[3] as PubPackage;
+      final score = await _client.packageScore(package);
 
       final popularityScore = score.popularityScore;
       final int? popularityPercent;
@@ -58,11 +45,14 @@ class PubRepo {
         mostLikedPackage = (package, likeCount);
       }
 
+      final publisherData = await _client.packagePublisher(package);
       final publisher = publisherData.publisherId;
+      final packageOptions = await _client.packageOptions(package);
 
       final isFlutterFavorite =
           score.tags.contains(PackageTag.isFlutterFavorite);
 
+      final info = await _client.packageInfo(package);
       final dependencies = {
         ...info.latestPubspec.dependencies.keys,
         ...info.latestPubspec.devDependencies.keys,
@@ -72,11 +62,6 @@ class PubRepo {
           dependency,
           (value) => value..add(package),
           ifAbsent: () => {package},
-        );
-        numDependentsMap.update(
-          dependency,
-          (value) => value + 1,
-          ifAbsent: () => 1,
         );
       }
 
@@ -98,7 +83,7 @@ class PubRepo {
       );
 
       fetched++;
-      if (fetched % _printInterval == 0) {
+      if (fetched % 100 == 0) {
         print('Fetched $fetched/${packages.length} packages');
       }
     }
@@ -128,15 +113,14 @@ class PubRepo {
       final package = wrapper.package;
 
       final dependents = dependentMap[package] ?? {};
-      final numDependents = numDependentsMap[package] ?? 0;
       final data = wrapper.data.copyWith(
         dependents: dependents,
-        numDependents: numDependents,
+        numDependents: dependents.length,
       );
 
-      if (numDependents > mostDependedPackage.$2) {
+      if (dependents.length > mostDependedPackage.$2) {
         print('Most depended package: $package');
-        mostDependedPackage = (package, numDependents);
+        mostDependedPackage = (package, dependents.length);
       }
 
       await handleData(package, score, data).timeout(
@@ -146,7 +130,7 @@ class PubRepo {
       );
 
       handled++;
-      if (handled % _printInterval == 0) {
+      if (handled % 100 == 0) {
         print('Handled $handled/${packages.length} packages');
       }
     }

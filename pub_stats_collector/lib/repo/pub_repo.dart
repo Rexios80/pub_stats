@@ -27,6 +27,7 @@ class PubRepo {
 
     final wrappers = <PackageDataWrapper>[];
     final dependentMap = <String, Set<String>>{};
+    final numDependentsMap = <String, int>{};
     var fetched = 0;
     Future<void> fetchPackageData(String package) async {
       final score = await _client.packageScore(package);
@@ -62,6 +63,11 @@ class PubRepo {
           dependency,
           (value) => value..add(package),
           ifAbsent: () => {package},
+        );
+        numDependentsMap.update(
+          dependency,
+          (value) => value + 1,
+          ifAbsent: () => 1,
         );
       }
 
@@ -113,14 +119,15 @@ class PubRepo {
       final package = wrapper.package;
 
       final dependents = dependentMap[package] ?? {};
+      final numDependents = numDependentsMap[package] ?? 0;
       final data = wrapper.data.copyWith(
         dependents: dependents,
-        numDependents: dependents.length,
+        numDependents: numDependents,
       );
 
-      if (dependents.length > mostDependedPackage.$2) {
+      if (numDependents > mostDependedPackage.$2) {
         print('Most depended package: $package');
-        mostDependedPackage = (package, dependents.length);
+        mostDependedPackage = (package, numDependents);
       }
 
       await handleData(package, score, data).timeout(

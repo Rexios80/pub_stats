@@ -1,25 +1,29 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
+import 'package:firebase_js_interop/express.dart' as express;
+import 'package:firebase_js_interop/node.dart';
+import 'package:pub_api_client/pub_api_client.dart' hide Credentials;
 import 'package:pub_stats_collector/controller/score_fetch_controller.dart';
 import 'package:pub_stats_collector/credential/credentials.dart';
 import 'package:pub_stats_collector/repo/database_repo.dart';
 import 'package:pub_stats_collector/repo/discord_repo.dart';
-import 'package:pub_stats_collector/service/firebase_service.dart';
+import 'package:pub_stats_collector/service/user_agent_client.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
-import 'package:shelf/shelf.dart';
 
 var running = false;
 
-Future<Response> fetchPackageData(Request request, {bool debug = false}) async {
+Future<express.Response> fetchPackageData(express.Response response) async {
   // Do not allow more than one instance to run at the same time
-  if (running) return Response.ok(null);
+  if (running) return response.send(null);
   running = true;
 
+  final debug = process.env['FUNCTIONS_EMULATOR'] == true.toJS;
   final credentials = debug ? Credentials.debug : Credentials.prod;
 
-  final firebase = await FirebaseService.create(credentials);
-  final database = DatabaseRepo(firebase.database);
+  final database = DatabaseRepo();
   final discord = DiscordRepo(credentials);
 
   var alertConfigs = <String, List<AlertConfig>>{};
@@ -69,5 +73,5 @@ Future<Response> fetchPackageData(Request request, {bool debug = false}) async {
   }
 
   running = false;
-  return Response.ok(null);
+  return response.send(null);
 }

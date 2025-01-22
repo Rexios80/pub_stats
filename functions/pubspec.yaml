@@ -8,6 +8,8 @@ resolution: workspace
 
 dependencies:
   firebase_js_interop: ^0.0.7
+  pub_stats_collector:
+    path: ../pub_stats_collector
 
 dev_dependencies:
   rexios_lints: ^9.1.0

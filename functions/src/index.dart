@@ -8,8 +8,10 @@ import 'package:firebase_js_interop/functions.dart';
 import 'package:firebase_js_interop/functions/https.dart';
 import 'package:firebase_js_interop/js.dart';
 import 'package:firebase_js_interop/node.dart';
+import 'package:pub_stats_collector/fetch_package_data.dart';
 
 import 'badge_maker.dart';
+import 'source_map_support.dart';
 
 final packageBadgeRegex =
     RegExp(r'^\/badges\/packages\/([^\/]+)\/([^\/]+)\.svg$');
@@ -27,9 +29,16 @@ enum BadgeType {
 }
 
 void main() {
+  sourceMapSupport.install();
   FirebaseAdmin.app.initializeApp();
 
   final database = FirebaseAdmin.database.getDatabase();
+
+  exports['fetchPackageData'] = FirebaseFunctions.https.onRequest(
+    (Request request, express.Response response) {
+      return promise(() => fetchPackageData(response));
+    }.toJS,
+  );
 
   exports['badges'] = FirebaseFunctions.https.onRequest(
     (Request request, express.Response response) {

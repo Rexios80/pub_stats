@@ -7,27 +7,14 @@ environment:
 resolution: workspace
 
 dependencies:
-  shelf: ^1.3.2
-  shelf_router: ^1.1.3
   pub_stats_core:
     path: ../pub_stats_core
-  firebase_admin:
-    git:
-      url: https://github.com/Rexios80/firebase_admin
-      ref: 584ab8c108e3e2938127bd224fb89b90b2e8b6c5
+  firebase_js_interop: ^0.0.7
   pub_api_client: ^3.1.0
-  discord_interactions: ^0.0.15
   flutter_tools_task_queue: ^1.0.0
   recase: ^4.1.0
   path: ^1.9.0
+  http: ^1.3.0
 
 dev_dependencies:
   rexios_lints: ^9.1.0
-
-dependency_overrides:
-  pub_api_client:
-    git:
-      prs:
-        - https://github.com/leoafarias/pub_api_client/pull/59
-      url: https://github.com/Rexios80/pub_api_client.git
-      ref: d7b648cadabfd2d10f6c567b619609d82f3d7072

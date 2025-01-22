@@ -5,9 +5,6 @@ export 'src/model/global_stats.dart';
 export 'src/model/mini_package_score.dart';
 export 'src/model/package_data.dart';
 
-// service
-export 'src/service/user_agent_client.dart';
-
 // util
 export 'src/util/date_time_utils.dart';
 export 'src/util/format_utils.dart';

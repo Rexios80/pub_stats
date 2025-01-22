@@ -1,10 +1,6 @@
 import 'dart:async';
-import 'dart:io';
-import 'dart:js_interop';
-import 'dart:js_interop_unsafe';
 
 import 'package:firebase_js_interop/express.dart' as express;
-import 'package:firebase_js_interop/node.dart';
 import 'package:pub_stats_collector/controller/score_fetch_controller.dart';
 import 'package:pub_stats_collector/repo/database_repo.dart';
 import 'package:pub_stats_collector/repo/discord_repo.dart';
@@ -16,8 +12,6 @@ Future<express.Response> fetchPackageData(express.Response response) async {
   // Do not allow more than one instance to run at the same time
   if (running) return response.send(null);
   running = true;
-
-  final debug = process.env['FUNCTIONS_EMULATOR'] == true.toJS;
 
   final database = DatabaseRepo();
   final discord = DiscordRepo();
@@ -59,7 +53,8 @@ Future<express.Response> fetchPackageData(express.Response response) async {
           )
       };
     }
-    exit(1);
+
+    response.status(500);
   }
 
   running = false;

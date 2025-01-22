@@ -13,5 +13,7 @@ workspace:
 dependency_overrides:
   pub_api_client:
     git:
+      prs:
+        - https://github.com/leoafarias/pub_api_client/pull/59
       url: https://github.com/Rexios80/pub_api_client.git
       ref: d7b648cadabfd2d10f6c567b619609d82f3d7072

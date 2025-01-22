@@ -13,11 +13,26 @@
       ],
       "rewrites": [
         {
+          "source": "/badges/**",
+          "function": {
+            "functionId": "badges"
+          }
+        },
+        {
           "source": "**",
           "destination": "/index.html"
         }
       ],
       "headers": [
+        {
+          "source": "/badges/**",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=3600, s-maxage=7200"
+            }
+          ]
+        },
         {
           "source": "**/*",
           "headers": [

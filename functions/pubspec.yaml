@@ -1,0 +1,16 @@
+name: pub_stats_firebase_functions
+publish_to: none
+
+environment:
+  sdk: ^3.6.0
+
+resolution: workspace
+
+dependencies:
+  pub_stats_core:
+    path: ../pub_stats_core
+  firebase_js_interop:
+    path: ../../firebase_js_interop
+
+dev_dependencies:
+  rexios_lints: ^9.1.0

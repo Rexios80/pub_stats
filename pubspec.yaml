@@ -5,6 +5,7 @@ environment:
   sdk: ^3.6.0
 
 workspace:
+  - functions
   - pub_stats
   - pub_stats_collector
   - pub_stats_core

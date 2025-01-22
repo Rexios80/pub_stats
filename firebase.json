@@ -76,5 +76,23 @@
     "ui": {
       "enabled": true
     }
-  }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local",
+        "pubspec.*",
+        "src",
+        "tool",
+        "analysis_options.yaml",
+        ".dart_tool"
+      ]
+    }
+  ]
 }

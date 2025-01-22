@@ -4,12 +4,10 @@ import 'dart:js_interop_unsafe';
 import 'package:firebase_js_interop/admin.dart';
 import 'package:firebase_js_interop/admin/app.dart';
 import 'package:firebase_js_interop/express.dart' as express;
-import 'package:firebase_js_interop/extensions.dart';
 import 'package:firebase_js_interop/functions.dart';
 import 'package:firebase_js_interop/functions/https.dart';
 import 'package:firebase_js_interop/js.dart';
 import 'package:firebase_js_interop/node.dart';
-import 'package:pub_stats_core/pub_stats_core.dart';
 
 import 'badge_maker.dart';
 

@@ -1115,12 +1115,13 @@ packages:
     source: hosted
     version: "6.0.1"
   pub_api_client:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: pub_api_client
-      sha256: "1b95df9b91bc1d5edf21a46e74b7aad64eaf33d56467781bfd8d730539a1f57d"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: d7b648cadabfd2d10f6c567b619609d82f3d7072
+      resolved-ref: d7b648cadabfd2d10f6c567b619609d82f3d7072
+      url: "https://github.com/Rexios80/pub_api_client.git"
+    source: git
     version: "3.1.0"
   pub_semver:
     dependency: transitive

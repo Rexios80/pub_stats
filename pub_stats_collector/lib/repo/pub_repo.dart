@@ -136,8 +136,8 @@ class PubRepo {
     }
 
     wrappers.sort((a, b) {
-      final adc = a.score.downloadCount30Days;
-      final bdc = b.score.downloadCount30Days;
+      final adc = a.score.downloadCount30Days ?? 0;
+      final bdc = b.score.downloadCount30Days ?? 0;
       return bdc.compareTo(adc);
     });
 

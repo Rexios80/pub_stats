@@ -9,3 +9,9 @@ workspace:
   - pub_stats
   - pub_stats_collector
   - pub_stats_core
+
+dependency_overrides:
+  pub_api_client:
+    git:
+      url: https://github.com/Rexios80/pub_api_client.git
+      ref: d7b648cadabfd2d10f6c567b619609d82f3d7072

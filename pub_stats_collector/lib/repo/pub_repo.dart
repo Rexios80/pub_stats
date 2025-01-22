@@ -11,7 +11,7 @@ class PubRepo {
   final PubClient _client;
 
   PubRepo(Credentials credentials)
-      : _client = PubClient(client: UserAgentClient(credentials.userAgent));
+      : _client = PubClient(client: UserAgentClient(Credentials.userAgent));
 
   Future<GlobalStats> fetchAllData(
     Future<void> Function(

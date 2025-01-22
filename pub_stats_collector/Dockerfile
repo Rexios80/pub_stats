@@ -3,9 +3,9 @@ FROM dart:stable AS build
 # Resolve app dependencies.
 # The docker build command must be run from the root of the repo
 WORKDIR /app/pub_stats_collector
+COPY pubspec.yaml ../pubspec.yaml
 COPY pub_stats_core ../pub_stats_core
 COPY pub_stats_collector .
-RUN sed -i '/resolution: workspace/d' pubspec.yaml
 RUN dart pub get
 
 RUN dart compile exe bin/server.dart -o bin/server

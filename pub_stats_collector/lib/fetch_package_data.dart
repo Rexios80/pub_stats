@@ -43,15 +43,10 @@ Future<express.Response> fetchPackageData(express.Response response) async {
       data,
     );
 
-    final scoresFuture = controller.fetchScores();
-    if (debug) {
-      await scoresFuture;
-    } else {
-      await scoresFuture.timeout(
-        Duration(minutes: 10),
-        onTimeout: () => throw TimeoutException('Global timeout reached'),
-      );
-    }
+    await controller.fetchScores().timeout(
+          Duration(minutes: 10),
+          onTimeout: () => throw TimeoutException('Global timeout reached'),
+        );
   } catch (e, stacktrace) {
     print(e);
     print(stacktrace);

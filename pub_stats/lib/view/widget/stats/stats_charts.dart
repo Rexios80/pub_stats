@@ -8,6 +8,7 @@ import 'package:pub_stats/format/formatting.dart';
 import 'package:pub_stats/model/package_score_snapshot.dart';
 import 'package:pub_stats/model/package_stats.dart';
 import 'package:fast_ui/fast_ui.dart';
+import 'package:pub_stats/view/widget/pub_stats_badge.dart';
 import 'package:pub_stats/view/widget/stats/base_stat_chart.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -35,50 +36,12 @@ class StatsCharts extends StatelessWidget {
     final downloadCountChart =
         DownloadCountChart(spots: _createSpots((e) => e.downloadCount));
 
-    final overallRank = stats.first.overallRank;
     return Column(
       children: [
-        if (stats.length == 1) ...[
-          InkWell(
-            borderRadius: AppTheme.pillRadius,
-            onTap: () => launchUrlString(
-              Constants.pubPackageBaseUrl + stats.first.package,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Text(
-                stats.first.package,
-                style: context.textTheme.titleLarge,
-              ),
-            ),
-          ),
-          if (overallRank != null)
-            Text(
-              'Rank ${overallRank + 1}',
-              style: context.textTheme.labelSmall,
-            ),
-          const SizedBox(height: 12),
-          Text(
-            'Last updated ${stats.first.stats.isNotEmpty ? Formatting.timeAgo(stats.first.stats.last.timestamp) : 'never'}',
-            style: context.textTheme.bodySmall,
-          ),
-        ] else ...[
-          Text('Comparing', style: context.textTheme.titleLarge),
-          const SizedBox(height: 16),
-          Wrap(
-            alignment: WrapAlignment.center,
-            spacing: 8,
-            children: stats
-                .mapIndexed(
-                  (index, e) => Chip(
-                    label: Text(e.package),
-                    onDeleted: () => onComparisonRemoved?.call(e.package),
-                    deleteIconColor: AppColors.chartLineColors.elementAt(index),
-                  ),
-                )
-                .toList(),
-          ),
-        ],
+        if (stats.length == 1)
+          ..._buildPackageHeader(context)
+        else
+          ..._buildCompareHeader(context),
         const SizedBox(height: 32),
         Wrap(
           alignment: WrapAlignment.center,
@@ -97,6 +60,53 @@ class StatsCharts extends StatelessWidget {
         ],
       ],
     );
+  }
+
+  List<Widget> _buildPackageHeader(BuildContext context) {
+    final package = stats.first.package;
+    final packageStats = stats.first.stats;
+    final lastUpdated = packageStats.isNotEmpty
+        ? Formatting.timeAgo(packageStats.last.timestamp)
+        : 'never';
+    return [
+      InkWell(
+        borderRadius: AppTheme.pillRadius,
+        onTap: () => launchUrlString(Constants.pubPackageBaseUrl + package),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Text(package, style: context.textTheme.titleLarge),
+        ),
+      ),
+      Row(
+        children: [
+          PubStatsBadge(package: package, type: BadgeType.rank),
+          PubStatsBadge(package: package, type: BadgeType.popularity),
+          PubStatsBadge(package: package, type: BadgeType.dependents),
+        ],
+      ),
+      const SizedBox(height: 12),
+      Text('Last updated $lastUpdated', style: context.textTheme.bodySmall),
+    ];
+  }
+
+  List<Widget> _buildCompareHeader(BuildContext context) {
+    return [
+      Text('Comparing', style: context.textTheme.titleLarge),
+      const SizedBox(height: 16),
+      Wrap(
+        alignment: WrapAlignment.center,
+        spacing: 8,
+        children: stats
+            .mapIndexed(
+              (index, e) => Chip(
+                label: Text(e.package),
+                onDeleted: () => onComparisonRemoved?.call(e.package),
+                deleteIconColor: AppColors.chartLineColors.elementAt(index),
+              ),
+            )
+            .toList(),
+      ),
+    ];
   }
 
   List<List<FlSpot>> _createSpots(

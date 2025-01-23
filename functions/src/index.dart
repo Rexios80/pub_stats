@@ -54,12 +54,18 @@ void main() {
         final data = snap.val();
         if (data == null) return response.status(404).send(null);
 
+        final message = switch (badgeType) {
+          BadgeType.popularity || BadgeType.dependents => data,
+          BadgeType.rank => (data as JSNumber).toDartInt + 1
+        }
+            .toString();
+
         return response.send(
           badgeMaker
               .makeBadge(
                 BadgeFormat(
                   label: badgeType.name,
-                  message: data.toString(),
+                  message: message,
                   color: '#007ec6',
                   logoBase64: logoData,
                   links: [

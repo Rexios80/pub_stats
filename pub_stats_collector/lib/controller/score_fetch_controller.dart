@@ -79,21 +79,20 @@ class ScoreFetchController {
       );
     }
 
-    await _database.writePackageScore(
-      package: package,
-      lastUpdated: score.lastUpdated,
-      score: miniScore,
-    );
-
-    await _database.writePackageData(package, data);
-
     // Don't track diffs for items that have historical data
     final filteredDiff =
         Map.fromEntries(diff.entries.where((e) => e.key.trackDiff));
 
-    if (filteredDiff.isNotEmpty) {
-      await _database.writePackageDiff(package, filteredDiff);
-    }
+    await Future.wait([
+      _database.writePackageScore(
+        package: package,
+        lastUpdated: score.lastUpdated,
+        score: miniScore,
+      ),
+      _database.writePackageData(package, data),
+      if (filteredDiff.isNotEmpty)
+        _database.writePackageDiff(package, filteredDiff),
+    ]);
   }
 
   Future<void> processAlert({

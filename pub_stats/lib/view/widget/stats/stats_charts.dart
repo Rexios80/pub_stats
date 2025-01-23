@@ -94,7 +94,7 @@ class StatsCharts extends StatelessWidget {
               child: Text(type.name.titleCase),
             ),
         ],
-        child: Text('Create Badge'),
+        child: const Text('Create Badge'),
       ),
       const SizedBox(height: 12),
       Text('Last updated $lastUpdated', style: context.textTheme.bodySmall),

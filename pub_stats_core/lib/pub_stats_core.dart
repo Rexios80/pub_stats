@@ -1,5 +1,6 @@
 // model
 export 'src/model/alert_config.dart';
+export 'src/model/badge_type.dart';
 export 'src/model/diff.dart';
 export 'src/model/global_stats.dart';
 export 'src/model/mini_package_score.dart';

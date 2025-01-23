@@ -9,24 +9,14 @@ import 'package:firebase_js_interop/functions/https.dart';
 import 'package:firebase_js_interop/js.dart';
 import 'package:firebase_js_interop/node.dart';
 import 'package:pub_stats_collector/fetch_package_data.dart';
+import 'package:pub_stats_core/pub_stats_core.dart';
 
-import 'badge_maker.dart';
-import 'source_map_support.dart';
+import 'assets/logo.dart';
+import 'interop/badge_maker.dart';
+import 'interop/source_map_support.dart';
 
 final packageBadgeRegex =
     RegExp(r'^\/badges\/packages\/([^\/]+)\/([^\/]+)\.svg$');
-
-enum BadgeType {
-  popularity,
-  rank,
-  dependents;
-
-  String get databaseKey => switch (this) {
-        popularity => 'ps2',
-        rank => 'n',
-        dependents => 'nd',
-      };
-}
 
 void main() {
   sourceMapSupport.install();
@@ -71,6 +61,7 @@ void main() {
                   label: badgeType.name,
                   message: data.toString(),
                   color: '#007ec6',
+                  logoBase64: logoData,
                   links: [
                     'https://pubstats.dev/packages/$packageName'.toJS,
                   ].toJS,

@@ -21,7 +21,3 @@ dependencies:
 
 dev_dependencies:
   rexios_lints: ^9.1.0
-
-dependency_overrides:
-  discord_interactions:
-    path: ../../discord_interactions

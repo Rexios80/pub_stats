@@ -27,8 +27,7 @@ class PubRepo {
       PackageData data,
     ) handleData,
   ) async {
-    // final packages = await _fetchClient.packageNames();
-    final packages = ['hive_ce'];
+    final packages = await _fetchClient.packageNames();
     print('Fetched ${packages.length} package names');
 
     var mostLikedPackage = ('', 0);

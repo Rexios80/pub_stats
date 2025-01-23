@@ -38,7 +38,8 @@ void main() {
     HttpsOptions(
       timeoutSeconds: 600.toJS,
       memory: '2GiB'.toJS,
-      cpu: '4000m'.toJS,
+      cpu: 4.toJS,
+      ingressSettings: 'ALLOW_INTERNAL_ONLY'.toJS,
     ),
     (Request request, express.Response response) {
       return promise(() => fetchPackageData(response));

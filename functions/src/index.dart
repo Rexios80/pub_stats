@@ -38,6 +38,7 @@ void main() {
   );
 
   exports['badges'] = FirebaseFunctions.https.onRequest(
+    HttpsOptions(cors: true.toJS),
     (Request request, express.Response response) {
       final match = packageBadgeRegex.firstMatch(request.path);
       final packageName = match?[1];
@@ -57,24 +58,25 @@ void main() {
         final message = switch (badgeType) {
           BadgeType.popularity || BadgeType.dependents => data,
           BadgeType.rank => (data as JSNumber).toDartInt + 1
-        }
-            .toString();
+        };
 
-        return response.send(
-          badgeMaker
-              .makeBadge(
-                BadgeFormat(
-                  label: badgeType.name,
-                  message: message,
-                  color: '#007ec6',
-                  logoBase64: logoData,
-                  links: [
-                    'https://pubstats.dev/packages/$packageName'.toJS,
-                  ].toJS,
-                ),
-              )
-              .toJS,
-        );
+        final badge = badgeMaker
+            .makeBadge(
+              BadgeFormat(
+                label: badgeType.name,
+                message: '$message',
+                color: '#007ec6',
+                logoBase64: logoData,
+                links: [
+                  'https://pubstats.dev/packages/$packageName'.toJS,
+                ].toJS,
+              ),
+            )
+            .toJS;
+
+        return response
+            .setHeader('Content-Type', 'image/svg+xml')
+            .send(badge);
       });
     }.toJS,
   );

@@ -6,7 +6,7 @@
     "build": "dart run tool/build.dart"
   },
   "engines": {
-    "node": "18"
+    "node": "22"
   },
   "main": "lib/index.js",
   "dependencies": {

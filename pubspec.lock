@@ -266,8 +266,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/dart_mappable"
-      ref: "1403c7c792a92cd1fbe50cf804fb20b67e46466d"
-      resolved-ref: "1403c7c792a92cd1fbe50cf804fb20b67e46466d"
+      ref: "793f740a6774e55226f3ec8bc3bba48badecc79f"
+      resolved-ref: "793f740a6774e55226f3ec8bc3bba48badecc79f"
       url: "https://github.com/Rexios80/dart_mappable"
     source: git
     version: "4.3.0"

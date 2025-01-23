@@ -13,7 +13,7 @@ class DiscordRepo {
       versionNumber: '1.0.0',
     ),
     botToken: '',
-  )..dio.httpClientAdapter = UndiciClientAdapter();
+  )..dio.httpClientAdapter = FetchClientAdapter();
 
   Future<void> sendPackageAlert({
     required String package,

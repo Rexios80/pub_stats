@@ -28,7 +28,17 @@ class PubRepo {
     final dependentMap = <String, Set<String>>{};
     var fetched = 0;
     Future<void> fetchPackageData(String package) async {
-      final score = await _client.packageScore(package);
+      final result = await Future.wait([
+        _client.packageScore(package),
+        _client.packagePublisher(package),
+        _client.packageOptions(package),
+        _client.packageInfo(package),
+      ]);
+
+      final score = result[0] as PackageScore;
+      final publisherData = result[1] as PackagePublisher;
+      final packageOptions = result[2] as PackageOptions;
+      final info = result[3] as PubPackage;
 
       final popularityScore = score.popularityScore;
       final int? popularityPercent;
@@ -44,14 +54,10 @@ class PubRepo {
         mostLikedPackage = (package, likeCount);
       }
 
-      final publisherData = await _client.packagePublisher(package);
       final publisher = publisherData.publisherId;
-      final packageOptions = await _client.packageOptions(package);
-
       final isFlutterFavorite =
           score.tags.contains(PackageTag.isFlutterFavorite);
 
-      final info = await _client.packageInfo(package);
       final dependencies = {
         ...info.latestPubspec.dependencies.keys,
         ...info.latestPubspec.devDependencies.keys,

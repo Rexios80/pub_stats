@@ -4,12 +4,17 @@ import 'package:flutter_tools_task_queue/flutter_tools_task_queue.dart';
 import 'package:pub_api_client/pub_api_client.dart' hide Credentials;
 import 'package:pub_stats_collector/credential/credentials.dart';
 import 'package:pub_stats_collector/model/package_data_wrapper.dart';
-import 'package:pub_stats_collector/service/node_client.dart';
+import 'package:pub_stats_collector/service/fetch_client.dart';
+import 'package:pub_stats_collector/service/undici_client.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 
 class PubRepo {
   final _client = PubClient(
-    client: NodeClient(),
+    client: UndiciClient(),
+    userAgent: Credentials.userAgent,
+  );
+  final _fetchClient = PubClient(
+    client: FetchClient(),
     userAgent: Credentials.userAgent,
   );
 
@@ -20,7 +25,7 @@ class PubRepo {
       PackageData data,
     ) handleData,
   ) async {
-    final packages = await _client.packageNames();
+    final packages = await _fetchClient.packageNames();
     print('Fetched ${packages.length} package names');
 
     var mostLikedPackage = ('', 0);

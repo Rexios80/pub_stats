@@ -2,14 +2,12 @@ import 'dart:async';
 
 import 'package:flutter_tools_task_queue/flutter_tools_task_queue.dart';
 import 'package:pub_api_client/pub_api_client.dart' hide Credentials;
-import 'package:pub_stats_collector/credential/credentials.dart';
 import 'package:pub_stats_collector/model/package_data_wrapper.dart';
-import 'package:pub_stats_collector/service/fetch_client.dart';
+import 'package:pub_stats_collector/service/node_client.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 
 class PubRepo {
-  final _client =
-      PubClient(client: FetchClient(userAgent: Credentials.userAgent));
+  final _client = PubClient(client: NodeClient());
 
   Future<GlobalStats> fetchAllData(
     Future<void> Function(
@@ -27,12 +25,15 @@ class PubRepo {
     final wrappers = <PackageDataWrapper>[];
     final dependentMap = <String, Set<String>>{};
     var fetched = 0;
+
+    // Prevent too many concurrent calls to the pub API
+    final pubQueue = TaskQueue(maxJobs: 100);
     Future<void> fetchPackageData(String package) async {
       final result = await Future.wait([
-        _client.packageScore(package),
-        _client.packagePublisher(package),
-        _client.packageOptions(package),
-        _client.packageInfo(package),
+        pubQueue.add(() => _client.packageScore(package)),
+        pubQueue.add(() => _client.packagePublisher(package)),
+        pubQueue.add(() => _client.packageOptions(package)),
+        pubQueue.add(() => _client.packageInfo(package)),
       ]);
 
       final score = result[0] as PackageScore;
@@ -93,10 +94,10 @@ class PubRepo {
       }
     }
 
-    final queue = TaskQueue(maxJobs: 100);
+    final workQueue = TaskQueue(maxJobs: 100);
     for (final package in packages) {
       unawaited(
-        queue.add(() async {
+        workQueue.add(() async {
           try {
             await fetchPackageData(package).timeout(
               Duration(seconds: 30),
@@ -110,7 +111,7 @@ class PubRepo {
         }),
       );
     }
-    await queue.tasksComplete;
+    await workQueue.tasksComplete;
     print('Fetched all data');
 
     var handled = 0;
@@ -163,7 +164,7 @@ class PubRepo {
 
     for (final wrapper in rankedWrappers) {
       unawaited(
-        queue.add(() async {
+        workQueue.add(() async {
           final package = wrapper.package;
           try {
             await handleWrapper(wrapper);
@@ -174,7 +175,7 @@ class PubRepo {
         }),
       );
     }
-    await queue.tasksComplete;
+    await workQueue.tasksComplete;
     print('Handled all wrappers');
 
     return GlobalStats(

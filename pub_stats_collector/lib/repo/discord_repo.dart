@@ -1,5 +1,5 @@
 import 'package:discord_interactions/discord_interactions.dart';
-import 'package:pub_stats_collector/service/fetch_client_adapter.dart';
+import 'package:pub_stats_collector/service/node_client_adapter.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 import 'package:recase/recase.dart';
 
@@ -13,7 +13,7 @@ class DiscordRepo {
       versionNumber: '1.0.0',
     ),
     botToken: '',
-  )..dio.httpClientAdapter = FetchClientAdapter();
+  )..dio.httpClientAdapter = NodeClientAdapter();
 
   Future<void> sendPackageAlert({
     required String package,

@@ -2,10 +2,10 @@ import 'dart:js_interop';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
-import 'package:pub_stats_collector/service/fetch_client.dart';
+import 'package:pub_stats_collector/service/undici_client.dart';
 
-class FetchClientAdapter implements HttpClientAdapter {
-  final _client = FetchClient();
+class UndiciClientAdapter implements HttpClientAdapter {
+  final _client = UndiciClient();
 
   @override
   void close({bool force = false}) => _client.close();

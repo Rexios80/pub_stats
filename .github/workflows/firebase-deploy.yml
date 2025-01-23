@@ -2,7 +2,7 @@ name: Deploy to Firebase
 on:
   push:
     branches:
-      - main
+      - master
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

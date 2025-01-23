@@ -106,13 +106,15 @@ class StatsCharts extends StatelessWidget {
     required String package,
     required BadgeType type,
   }) {
+    final hint = type.name.titleCase;
     Clipboard.setData(
       ClipboardData(
-        text: 'https://pubstats.dev/badges/packages/$package/$type.svg',
+        text:
+            '[![PubStats $hint](https://pubstats.dev/badges/packages/$package/$type.svg)](https://pubstats.dev/packages/$package)',
       ),
     );
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Badge URL copied to clipboard')),
+      const SnackBar(content: Text('Badge markdown copied to clipboard')),
     );
   }
 

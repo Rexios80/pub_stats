@@ -36,7 +36,7 @@ void main() {
 
   exports['fetchPackageData'] = FirebaseFunctions.https.onRequest(
     HttpsOptions(
-      timeoutSeconds: 600.toJS,
+      timeoutSeconds: 900.toJS,
       memory: '2GiB'.toJS,
       cpu: 4.toJS,
       ingressSettings: 'ALLOW_INTERNAL_ONLY'.toJS,

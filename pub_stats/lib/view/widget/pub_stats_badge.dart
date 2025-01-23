@@ -18,6 +18,6 @@ class PubStatsBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SvgPicture.network(url);
+    return SvgPicture.network('https://img.shields.io/pub/dm/puby?logo=dart');
   }
 }

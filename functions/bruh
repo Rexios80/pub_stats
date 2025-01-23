@@ -1,0 +1,49 @@
+[✓] Flutter (Channel beta, 3.28.0-0.1.pre, on macOS 15.3 24D60 darwin-arm64, locale en-US)
+    • Flutter version 3.28.0-0.1.pre on channel beta at /Users/rexios/fvm/versions/beta
+    • Upstream repository https://github.com/flutter/flutter.git
+    • Framework revision 3e493a3e4d (6 weeks ago), 2024-12-12 05:59:24 +0900
+    • Engine revision 2ba456fd7f
+    • Dart version 3.7.0 (build 3.7.0-209.1.beta)
+    • DevTools version 2.41.0
+
+[✓] Android toolchain - develop for Android devices (Android SDK version 35.0.0)
+    • Android SDK at /Users/rexios/Library/Android/sdk
+    • Platform android-35, build-tools 35.0.0
+    • Java binary at: /Applications/Android Studio Preview.app/Contents/jbr/Contents/Home/bin/java
+      This is the JDK bundled with the latest Android Studio installation on this machine.
+      To manually set the JDK path, use: `flutter config --jdk-dir="path/to/jdk"`.
+    • Java version OpenJDK Runtime Environment (build 21.0.5+-12771278-b631.28)
+    • All Android licenses accepted.
+
+[✓] Xcode - develop for iOS and macOS (Xcode 16.2)
+    • Xcode at /Applications/Xcode.app/Contents/Developer
+    • Build 16C5032a
+    • CocoaPods version 1.16.2
+
+[✓] Chrome - develop for the web
+    • Chrome at /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
+
+[✓] Android Studio (version 2024.3.1)
+    • Android Studio at /Applications/Android Studio Preview.app/Contents
+    • Flutter plugin can be installed from:
+      🔨 https://plugins.jetbrains.com/plugin/9212-flutter
+    • Dart plugin can be installed from:
+      🔨 https://plugins.jetbrains.com/plugin/6351-dart
+    • Java version OpenJDK Runtime Environment (build 21.0.5+-12771278-b631.28)
+
+[✓] VS Code (version 1.96.4)
+    • VS Code at /Applications/Visual Studio Code.app/Contents
+    • Flutter extension version 3.102.0
+
+[✓] Connected device (4 available)
+    • Aaron’s iPhone (mobile)         • 00008140-001E59EE3C0B001C • ios            • iOS 18.2.1 22C161
+    • macOS (desktop)                 • macos                     • darwin-arm64   • macOS 15.3 24D60 darwin-arm64
+    • Mac Designed for iPad (desktop) • mac-designed-for-ipad     • darwin         • macOS 15.3 24D60 darwin-arm64
+    • Chrome (web)                    • chrome                    • web-javascript • Google Chrome 132.0.6834.110
+    ! Error: Browsing on the local area network for iPhone. Ensure the device is unlocked and attached with a cable or associated with the same local area network as this Mac.
+      The device must be opted into Developer Mode to connect wirelessly. (code -27)
+
+[✓] Network resources
+    • All expected network resources are available.
+
+• No issues found!

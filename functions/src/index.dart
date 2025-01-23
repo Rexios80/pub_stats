@@ -35,7 +35,11 @@ void main() {
   final database = FirebaseAdmin.database.getDatabase();
 
   exports['fetchPackageData'] = FirebaseFunctions.https.onRequest(
-    HttpsOptions(timeoutSeconds: 600.toJS, memory: '2GiB'.toJS),
+    HttpsOptions(
+      timeoutSeconds: 600.toJS,
+      memory: '2GiB'.toJS,
+      cpu: '4000m'.toJS,
+    ),
     (Request request, express.Response response) {
       return promise(() => fetchPackageData(response));
     }.toJS,

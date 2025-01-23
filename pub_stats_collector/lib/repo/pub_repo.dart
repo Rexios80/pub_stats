@@ -37,12 +37,14 @@ class PubRepo {
     final dependentMap = <String, Set<String>>{};
     var fetched = 0;
 
+    // Prevent too many concurrent calls to the pub API
+    final pubQueue = TaskQueue(maxJobs: 100);
     Future<void> fetchPackageData(String package) async {
       final result = await Future.wait([
-        _client.packageScore(package),
-        _client.packagePublisher(package),
-        _client.packageOptions(package),
-        _client.packageInfo(package),
+        pubQueue.add(() => _client.packageScore(package)),
+        pubQueue.add(() => _client.packagePublisher(package)),
+        pubQueue.add(() => _client.packageOptions(package)),
+        pubQueue.add(() => _client.packageInfo(package)),
       ]);
 
       final score = result[0] as PackageScore;

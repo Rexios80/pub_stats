@@ -38,7 +38,7 @@ class PubRepo {
     var fetched = 0;
 
     // Prevent too many concurrent calls to the pub API
-    final pubQueue = TaskQueue(maxJobs: 50);
+    final pubQueue = TaskQueue(maxJobs: 100);
     Future<void> fetchPackageData(String package) async {
       final result = await Future.wait([
         pubQueue.add(() => _client.packageScore(package)),

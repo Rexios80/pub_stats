@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:js_interop';
 
 import 'package:firebase_js_interop/express.dart' as express;
+import 'package:firebase_js_interop/node.dart';
 import 'package:pub_stats_collector/controller/score_fetch_controller.dart';
 import 'package:pub_stats_collector/repo/database_repo.dart';
 import 'package:pub_stats_collector/repo/discord_repo.dart';
@@ -54,7 +56,7 @@ Future<express.Response> fetchPackageData(express.Response response) async {
       };
     }
 
-    response.status(500);
+    process.exit(1.toJS);
   }
 
   running = false;

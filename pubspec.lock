@@ -547,10 +547,10 @@ packages:
     dependency: transitive
     description:
       name: firebase_js_interop
-      sha256: "26dbb83f4019b379acd0b471e30f7f36fc2e19863e9234ce70a33026c0354aa6"
+      sha256: eeaaa237f49c46bac4649a9491492d6c080c63ac0631f28e1acaee112f0bcf63
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.8"
+    version: "0.0.9"
   firebase_performance:
     dependency: transitive
     description:

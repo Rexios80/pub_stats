@@ -1,0 +1,38 @@
+name: Deploy to Firebase
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          cache: true
+      - name: Pub cache
+        uses: actions/cache@v4
+        env:
+          CACHE_NAME: pub_stats
+        with:
+          path: ${{ env.PUB_CACHE }}
+          key: pub-cache-${{ env.CACHE_NAME }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: pub-cache-${{ env.CACHE_NAME }}-
+      - name: Install dependencies
+        run: |
+          cd functions
+          npm ci
+          dart pub get
+      - name: Deploy
+        uses: w9jds/firebase-action@v13.15.0
+        with:
+          args: deploy
+        env:
+          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PUB_STATS_COLLECTOR }}

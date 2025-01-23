@@ -9,6 +9,8 @@ import 'package:pub_stats_collector/service/undici_client.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 
 class PubRepo {
+  static const _printInterval = 100;
+
   final _client = PubClient(
     client: UndiciClient(),
     userAgent: Credentials.userAgent,
@@ -98,7 +100,7 @@ class PubRepo {
       );
 
       fetched++;
-      if (fetched % 100 == 0) {
+      if (fetched % _printInterval == 0) {
         print('Fetched $fetched/${packages.length} packages');
       }
     }
@@ -146,7 +148,7 @@ class PubRepo {
       );
 
       handled++;
-      if (handled % 100 == 0) {
+      if (handled % _printInterval == 0) {
         print('Handled $handled/${packages.length} packages');
       }
     }

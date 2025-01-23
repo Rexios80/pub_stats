@@ -40,6 +40,7 @@ void main() {
       memory: '2GiB'.toJS,
       cpu: 4.toJS,
       ingressSettings: 'ALLOW_INTERNAL_ONLY'.toJS,
+      maxInstances: 1.toJS,
     ),
     (Request request, express.Response response) {
       return promise(() => fetchPackageData(response));

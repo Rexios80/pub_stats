@@ -22,7 +22,7 @@ dependency_overrides:
       prs:
         - https://github.com/schultek/dart_mappable/pull/261
       url: https://github.com/Rexios80/dart_mappable
-      ref: 793f740a6774e55226f3ec8bc3bba48badecc79f
+      ref: 2e5dc4e914f5e86f68c022dea789563aec1b2f6b
       path: packages/dart_mappable
   # dart_mappable:
   #   path: ../dart_mappable/packages/dart_mappable

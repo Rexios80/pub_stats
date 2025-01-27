@@ -69,6 +69,7 @@ class StatsCharts extends StatelessWidget {
         ? Formatting.timeAgo(packageStats.last.timestamp)
         : 'never';
     final data = stats.first.data;
+    final overallRank = data.overallRank;
     return [
       InkWell(
         borderRadius: AppTheme.pillRadius,
@@ -92,7 +93,7 @@ class StatsCharts extends StatelessWidget {
           ShieldsBadge(
             package: package,
             type: BadgeType.rank,
-            value: data.overallRank,
+            value: overallRank != null ? overallRank + 1 : null,
           ),
           ShieldsBadge(
             package: package,

@@ -122,7 +122,7 @@ class DataController {
       package: package,
       stats: stats,
       firstScan: firstScan,
-      overallRank: data.overallRank,
+      data: data,
     );
   }
 

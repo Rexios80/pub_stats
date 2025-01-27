@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pub_stats/constant/app_colors.dart';
 import 'package:pub_stats/constant/app_theme.dart';
 import 'package:pub_stats/constant/constants.dart';
@@ -10,8 +9,8 @@ import 'package:pub_stats/model/package_score_snapshot.dart';
 import 'package:pub_stats/model/package_stats.dart';
 import 'package:fast_ui/fast_ui.dart';
 import 'package:pub_stats/view/widget/stats/base_stat_chart.dart';
+import 'package:pub_stats/view/widget/stats/shields_badge.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
-import 'package:recase/recase.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class StatsCharts extends StatelessWidget {
@@ -69,7 +68,7 @@ class StatsCharts extends StatelessWidget {
     final lastUpdated = packageStats.isNotEmpty
         ? Formatting.timeAgo(packageStats.last.timestamp)
         : 'never';
-    final overallRank = stats.first.overallRank;
+    final data = stats.first.data;
     return [
       InkWell(
         borderRadius: AppTheme.pillRadius,
@@ -79,43 +78,35 @@ class StatsCharts extends StatelessWidget {
           child: Text(package, style: context.textTheme.titleLarge),
         ),
       ),
-      if (overallRank != null)
-        Text(
-          'Rank ${overallRank + 1}',
-          style: context.textTheme.labelSmall,
-        ),
-      const SizedBox(height: 12),
-      PopupMenuButton(
-        itemBuilder: (context) => [
-          for (final type in BadgeType.values)
-            PopupMenuItem(
-              onTap: () =>
-                  _createBadge(context: context, package: package, type: type),
-              child: Text(type.name.titleCase),
-            ),
-        ],
-        child: const Text('Create Badge'),
-      ),
-      const SizedBox(height: 12),
       Text('Last updated $lastUpdated', style: context.textTheme.bodySmall),
-    ];
-  }
-
-  void _createBadge({
-    required BuildContext context,
-    required String package,
-    required BadgeType type,
-  }) {
-    final hint = type.name.titleCase;
-    Clipboard.setData(
-      ClipboardData(
-        text:
-            '[![PubStats $hint](https://pubstats.dev/badges/packages/$package/$type.svg)](https://pubstats.dev/packages/$package)',
+      const SizedBox(height: 12),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 8,
+        children: [
+          ShieldsBadge(
+            package: package,
+            type: BadgeType.popularity,
+            value: data.popularityScore,
+          ),
+          ShieldsBadge(
+            package: package,
+            type: BadgeType.rank,
+            value: data.overallRank,
+          ),
+          ShieldsBadge(
+            package: package,
+            type: BadgeType.dependents,
+            value: data.numDependents,
+          ),
+        ],
       ),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Badge markdown copied to clipboard')),
-    );
+      const SizedBox(height: 12),
+      Text(
+        'Click a badge to copy its markdown',
+        style: context.textTheme.bodySmall,
+      ),
+    ];
   }
 
   List<Widget> _buildCompareHeader(BuildContext context) {

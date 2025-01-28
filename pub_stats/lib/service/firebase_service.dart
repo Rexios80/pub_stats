@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
+import 'package:platform_plus/platform_plus.dart';
 import 'package:pub_stats/firebase_options.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
@@ -15,9 +16,14 @@ class FirebaseService {
   FirebaseService._();
 
   static Future<FirebaseService> create() async {
+    final authDomainOverride = switch (PlatformPlus.platform.webRenderer) {
+      WebRenderer.wasm => 'proxy.pubstats.dev',
+      _ => null,
+    };
+
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform
-          .copyWith(authDomain: 'proxy.pubstats.dev'),
+          .copyWith(authDomain: authDomainOverride),
     );
 
     // Initialize services

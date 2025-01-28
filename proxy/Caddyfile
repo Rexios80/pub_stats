@@ -18,10 +18,3 @@ handle_path /pub/* {
 	header @originPubstats Access-Control-Allow-Origin https://pubstats.dev
 	header @originBetaPubstats Access-Control-Allow-Origin https://beta.pubstats.dev
 }
-
-handle /__/* {
-	reverse_proxy https://pub-stats-collector.firebaseapp.com
-
-	header Cross-Origin-Embedder-Policy credentialless
-	header Cross-Origin-Resource-Policy same-site
-}

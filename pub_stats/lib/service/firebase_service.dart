@@ -8,6 +8,7 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:web/web.dart';
 
 class FirebaseService {
   static final _logger = GetIt.I<Logger>();
@@ -16,7 +17,8 @@ class FirebaseService {
 
   static Future<FirebaseService> create() async {
     await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
+      options: DefaultFirebaseOptions.currentPlatform
+          .copyWith(authDomain: window.location.hostname),
     );
 
     // Initialize services

@@ -32,19 +32,6 @@
               "value": "public, max-age=3600, s-maxage=7200"
             }
           ]
-        },
-        {
-          "source": "**/*",
-          "headers": [
-            {
-              "key": "Cross-Origin-Embedder-Policy",
-              "value": "credentialless"
-            },
-            {
-              "key": "Cross-Origin-Opener-Policy",
-              "value": "same-origin"
-            }
-          ]
         }
       ]
     },
@@ -60,21 +47,6 @@
         {
           "source": "**",
           "destination": "/index.html"
-        }
-      ],
-      "headers": [
-        {
-          "source": "**/*",
-          "headers": [
-            {
-              "key": "Cross-Origin-Embedder-Policy",
-              "value": "credentialless"
-            },
-            {
-              "key": "Cross-Origin-Opener-Policy",
-              "value": "same-origin"
-            }
-          ]
         }
       ]
     }

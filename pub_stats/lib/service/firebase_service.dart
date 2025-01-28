@@ -16,8 +16,7 @@ class FirebaseService {
 
   static Future<FirebaseService> create() async {
     await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform
-          .copyWith(authDomain: 'proxy.pubstats.dev'),
+      options: DefaultFirebaseOptions.currentPlatform,
     );
 
     // Initialize services

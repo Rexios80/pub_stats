@@ -3,7 +3,7 @@ import 'package:recase/recase.dart';
 enum TimeSpan {
   week(days: 7),
   month(days: 30),
-  threeMonths(days: 90),
+  quarter(days: 90),
   year(days: 365),
   all(days: null);
 

@@ -26,7 +26,7 @@ class Header extends StatelessWidget {
             ),
             const SizedBox(width: 20),
             Text(
-              'pubstats.dev',
+              'pubstats',
               textAlign: TextAlign.center,
               style: context.textTheme.displayMedium!
                   .copyWith(color: context.textTheme.bodyLarge!.color),

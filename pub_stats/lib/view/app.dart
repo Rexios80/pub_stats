@@ -10,7 +10,7 @@ class PubStatsApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: FastNav.init(FastOverlays.init()),
-      title: 'pubstats.dev',
+      title: 'pubstats',
       themeMode: ThemeMode.dark,
       darkTheme: AppTheme.theme,
       // Must use this instead of home for an initial route to work

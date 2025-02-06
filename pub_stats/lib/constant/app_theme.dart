@@ -6,12 +6,13 @@ class AppTheme {
 
   static final pillRadius = BorderRadius.circular(100);
 
-  static final theme = ThemeData(
-    brightness: Brightness.dark,
-    colorSchemeSeed: AppColors.primary,
-    cardTheme: CardTheme(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-    ),
-    appBarTheme: const AppBarTheme(centerTitle: true),
-  );
+  static ThemeData theme(Brightness brightness) => ThemeData(
+        brightness: brightness,
+        colorSchemeSeed: AppColors.primary,
+        cardTheme: CardTheme(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        ),
+        appBarTheme: const AppBarTheme(centerTitle: true),
+      );
 }

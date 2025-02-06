@@ -41,6 +41,7 @@ dependencies:
   sliver_tools: ^0.2.12
   web: ^1.1.0
   platform_plus: ^4.8.1
+  fast_rx_shared_preferences: ^0.1.5
 
 dev_dependencies:
   rexios_lints: ^9.1.0

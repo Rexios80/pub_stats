@@ -7,6 +7,7 @@ import 'package:pub_stats/view/widget/footer.dart';
 import 'package:pub_stats/view/widget/header.dart';
 import 'package:pub_stats/view/widget/sticky_header.dart';
 import 'package:pub_stats/view/widget/stats/stats_view.dart';
+import 'package:pub_stats/view/widget/theme_switch.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -65,34 +66,41 @@ class AppBarActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FastBuilder(() {
+      final List<Widget> items;
       if (_user.user.value != null) {
-        return Row(
-          children: [
-            ElevatedButton(
-              onPressed: () => context.push(AlertsManager()),
-              child: const Text('Manage Alerts'),
+        items = [
+          ElevatedButton(
+            onPressed: () => context.push(AlertsManager()),
+            child: const Text('Manage Alerts'),
+          ),
+          PopupMenuButton(
+            child: CircleAvatar(
+              foregroundImage: NetworkImage(_user.user.value!.photoURL ?? ''),
+              child: const Icon(Icons.person, color: Colors.white),
             ),
-            const SizedBox(width: 8),
-            PopupMenuButton(
-              child: CircleAvatar(
-                foregroundImage: NetworkImage(_user.user.value!.photoURL ?? ''),
-                child: const Icon(Icons.person, color: Colors.white),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                onTap: _user.signOut,
+                child: const Text('Sign out'),
               ),
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  onTap: _user.signOut,
-                  child: const Text('Sign out'),
-                ),
-              ],
-            ),
-          ],
-        );
+            ],
+          ),
+        ];
       } else {
-        return ElevatedButton(
-          onPressed: _user.signInWithGoogle,
-          child: const Text('Sign in'),
-        );
+        items = [
+          ElevatedButton(
+            onPressed: _user.signInWithGoogle,
+            child: const Text('Sign in'),
+          ),
+        ];
       }
+      return Row(
+        spacing: 8,
+        children: [
+          const ThemeSwitch(),
+          ...items,
+        ],
+      );
     });
   }
 }

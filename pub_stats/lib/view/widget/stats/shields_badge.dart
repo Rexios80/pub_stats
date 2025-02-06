@@ -19,33 +19,40 @@ class ShieldsBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(4),
-      child: InkWell(
-        onTap: () => _createBadge(context),
-        child: Row(
-          children: [
-            ColoredBox(
-              color: const Color(0xFF555555),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                child: Row(
-                  spacing: 4,
-                  children: [
-                    SvgPicture.asset(AppImage.logo, height: 14),
-                    Text(type.name),
-                  ],
+    return DefaultTextStyle(
+      style: const TextStyle(color: Colors.white, fontSize: 11),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(3),
+        child: InkWell(
+          onTap: () => _createBadge(context),
+          child: SizedBox(
+            height: 18,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ColoredBox(
+                  color: const Color(0xFF555555),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: Row(
+                      spacing: 4,
+                      children: [
+                        SvgPicture.asset(AppImage.logo, height: 14),
+                        Text(type.name),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+                ColoredBox(
+                  color: const Color(0xFF007EC6),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: Center(child: Text(value?.toString() ?? 'N/A')),
+                  ),
+                ),
+              ],
             ),
-            ColoredBox(
-              color: const Color(0xFF007EC6),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                child: Text(value?.toString() ?? 'N/A'),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

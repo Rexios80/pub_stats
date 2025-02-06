@@ -20,8 +20,7 @@ jobs:
         with:
           # TODO: Remove when https://github.com/dart-lang/sdk/issues/55948 lands in stable
           channel: beta
-        # TODO: Enable WASM when https://github.com/firebase/flutterfire/issues/12819 lands
-      - run: cd pub_stats && flutter pub get && flutter build web
+      - run: cd pub_stats && flutter pub get && flutter build web --wasm
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"

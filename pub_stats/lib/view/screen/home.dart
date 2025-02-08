@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fast_ui/fast_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -89,7 +91,14 @@ class AppBarActions extends StatelessWidget {
       } else {
         items = [
           ElevatedButton(
-            onPressed: _user.signInWithGoogle,
+            onPressed: () async {
+              await _user.signInWithGoogle();
+              if (_user.user.value != null) {
+                // I don't care
+                // ignore: use_build_context_synchronously
+                unawaited(context.push(AlertsManager()));
+              }
+            },
             child: const Text('Manage Alerts'),
           ),
         ];

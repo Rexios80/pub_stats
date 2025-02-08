@@ -92,8 +92,8 @@ class AppBarActions extends StatelessWidget {
         items = [
           ElevatedButton(
             onPressed: () async {
-              await _user.signInWithGoogle();
-              if (_user.user.value != null) {
+              final credential = await _user.signInWithGoogle();
+              if (credential.user != null) {
                 // I don't care
                 // ignore: use_build_context_synchronously
                 unawaited(context.push(AlertsManager()));

@@ -25,9 +25,8 @@ class UserController {
     });
   }
 
-  Future<void> signInWithGoogle() async {
-    await _auth.signInWithPopup(GoogleAuthProvider());
-  }
+  Future<UserCredential> signInWithGoogle() =>
+      _auth.signInWithPopup(GoogleAuthProvider());
 
   void _onSignedIn() async {
     final user = _auth.currentUser;

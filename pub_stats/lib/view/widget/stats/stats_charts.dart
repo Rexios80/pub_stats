@@ -27,14 +27,29 @@ class StatsCharts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final likeCountChart =
-        LikeCountChart(spots: _createSpots((e) => e.likeCount));
+    final firstDate = stats
+        .map((package) => package.stats.first.timestamp)
+        .reduce((a, b) => a.isBefore(b) ? a : b);
+    final lastDate = stats
+        .map((package) => package.stats.last.timestamp)
+        .reduce((a, b) => a.isAfter(b) ? a : b);
+
+    final likeCountChart = LikeCountChart(
+      spots: _createSpots((e) => e.likeCount),
+      firstDate: firstDate,
+      lastDate: lastDate,
+    );
     final popularityScoreChart = PopularityScoreChart(
       spots: _createSpots((e) => e.popularityScore),
       legacySpots: _createSpots((e) => e.legacyPopularityScore),
+      firstDate: firstDate,
+      lastDate: lastDate,
     );
-    final downloadCountChart =
-        DownloadCountChart(spots: _createSpots((e) => e.downloadCount));
+    final downloadCountChart = DownloadCountChart(
+      spots: _createSpots((e) => e.downloadCount),
+      firstDate: firstDate,
+      lastDate: lastDate,
+    );
 
     return Column(
       children: [
@@ -153,8 +168,15 @@ class StatsCharts extends StatelessWidget {
 
 class LikeCountChart extends StatelessWidget {
   final List<List<FlSpot>> spots;
+  final DateTime firstDate;
+  final DateTime lastDate;
 
-  const LikeCountChart({super.key, required this.spots});
+  const LikeCountChart({
+    super.key,
+    required this.spots,
+    required this.firstDate,
+    required this.lastDate,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -177,6 +199,8 @@ class LikeCountChart extends StatelessWidget {
           LineChartData(
             minY: minY,
             maxY: maxY,
+            minX: firstDate.millisecondsSinceEpoch.toDouble(),
+            maxX: lastDate.millisecondsSinceEpoch.toDouble(),
             lineBarsData: barData,
             gridData: BaseStatChart.defaultGridData,
             borderData: BaseStatChart.createDefaultBorderData(context),
@@ -193,11 +217,15 @@ class LikeCountChart extends StatelessWidget {
 class PopularityScoreChart extends StatefulWidget {
   final List<List<FlSpot>> spots;
   final List<List<FlSpot>> legacySpots;
+  final DateTime firstDate;
+  final DateTime lastDate;
 
   const PopularityScoreChart({
     super.key,
     required this.spots,
     required this.legacySpots,
+    required this.firstDate,
+    required this.lastDate,
   });
 
   @override
@@ -264,6 +292,8 @@ Legacy popularity scores were calculated by pub.dev based on a filtered download
         LineChartData(
           minY: 0,
           maxY: 100,
+          minX: widget.firstDate.millisecondsSinceEpoch.toDouble(),
+          maxX: widget.lastDate.millisecondsSinceEpoch.toDouble(),
           lineBarsData: barData,
           gridData: BaseStatChart.defaultGridData,
           borderData: BaseStatChart.createDefaultBorderData(context),
@@ -280,8 +310,15 @@ enum PopularityScoreType { modern, legacy }
 
 class DownloadCountChart extends StatelessWidget {
   final List<List<FlSpot>> spots;
+  final DateTime firstDate;
+  final DateTime lastDate;
 
-  const DownloadCountChart({super.key, required this.spots});
+  const DownloadCountChart({
+    super.key,
+    required this.spots,
+    required this.firstDate,
+    required this.lastDate,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -292,6 +329,8 @@ class DownloadCountChart extends StatelessWidget {
       builder: (singleY, barData) => LineChart(
         LineChartData(
           lineBarsData: barData,
+          minX: firstDate.millisecondsSinceEpoch.toDouble(),
+          maxX: lastDate.millisecondsSinceEpoch.toDouble(),
           gridData: BaseStatChart.defaultGridData,
           borderData: BaseStatChart.createDefaultBorderData(context),
           titlesData: BaseStatChart.defaultTitlesData,

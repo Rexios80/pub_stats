@@ -90,7 +90,7 @@ class AppBarActions extends StatelessWidget {
         items = [
           ElevatedButton(
             onPressed: _user.signInWithGoogle,
-            child: const Text('Sign in'),
+            child: const Text('Manage Alerts'),
           ),
         ];
       }

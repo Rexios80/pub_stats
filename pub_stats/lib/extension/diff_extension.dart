@@ -39,7 +39,6 @@ class PackageListButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton(
       tooltip: '',
-      enableFeedback: false,
       itemBuilder: (context) => packages
           .map(
             (package) => PopupMenuItem(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pub_stats/constant/app_theme.dart';
 import 'package:pub_stats/constant/constants.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -38,29 +37,25 @@ class PackageListButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      shape: RoundedRectangleBorder(borderRadius: AppTheme.pillRadius),
-      clipBehavior: Clip.antiAlias,
-      child: PopupMenuButton(
-        tooltip: '',
-        itemBuilder: (context) => packages
-            .map(
-              (package) => PopupMenuItem(
-                child: Text(package),
-                onTap: () =>
-                    launchUrlString(Constants.pubPackageBaseUrl + package),
-              ),
-            )
-            .toList(),
-        child: AbsorbPointer(
-          child: TextButton(
-            style: TextButton.styleFrom(padding: EdgeInsets.zero),
-            onPressed: () {},
-            child: Text(
-              '$qualifier: ${packages.length}',
-              textAlign: TextAlign.center,
+    return PopupMenuButton(
+      tooltip: '',
+      enableFeedback: false,
+      itemBuilder: (context) => packages
+          .map(
+            (package) => PopupMenuItem(
+              child: Text(package),
+              onTap: () =>
+                  launchUrlString(Constants.pubPackageBaseUrl + package),
             ),
+          )
+          .toList(),
+      child: AbsorbPointer(
+        child: TextButton(
+          style: TextButton.styleFrom(padding: EdgeInsets.zero),
+          onPressed: () {},
+          child: Text(
+            '$qualifier: ${packages.length}',
+            textAlign: TextAlign.center,
           ),
         ),
       ),

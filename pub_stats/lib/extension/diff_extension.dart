@@ -8,17 +8,19 @@ extension DiffExtension on Diff {
   Widget get widget => switch (this) {
         (final StringDiff diff) => Text(diff.text),
         (final LargeNumDiff diff) => Text(diff.text),
-        (final SetDiff diff) => Row(
+        (final SetDiff diff) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              PackageListButton(
-                packages: diff.added.cast<String>(),
-                qualifier: 'Added',
-              ),
-              const SizedBox(width: 8),
-              PackageListButton(
-                packages: diff.removed.cast<String>(),
-                qualifier: 'Removed',
-              ),
+              if (diff.added.isNotEmpty)
+                PackageListButton(
+                  packages: diff.added.cast<String>(),
+                  qualifier: 'Added',
+                ),
+              if (diff.removed.isNotEmpty)
+                PackageListButton(
+                  packages: diff.removed.cast<String>(),
+                  qualifier: 'Removed',
+                ),
             ],
           ),
       };
@@ -51,12 +53,12 @@ class PackageListButton extends StatelessWidget {
               ),
             )
             .toList(),
-        child: SizedBox(
-          width: 120,
-          child: Padding(
-            padding: const EdgeInsets.all(8),
+        child: AbsorbPointer(
+          child: TextButton(
+            style: TextButton.styleFrom(padding: EdgeInsets.zero),
+            onPressed: () {},
             child: Text(
-              '${packages.length} $qualifier',
+              '$qualifier: ${packages.length}',
               textAlign: TextAlign.center,
             ),
           ),

@@ -43,7 +43,6 @@ class PackageListButton extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: AppTheme.pillRadius),
       clipBehavior: Clip.antiAlias,
       child: PopupMenuButton(
-        tooltip: 'Show packages',
         itemBuilder: (context) => packages
             .map(
               (package) => PopupMenuItem(

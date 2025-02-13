@@ -60,6 +60,20 @@ class Home extends StatelessWidget {
   }
 }
 
+class AppBarAction {
+  final String title;
+  final VoidCallback onPressed;
+
+  const AppBarAction({
+    required this.title,
+    required this.onPressed,
+  });
+
+  Widget get button => ElevatedButton(onPressed: onPressed, child: Text(title));
+  PopupMenuItem get menuItem =>
+      PopupMenuItem(onTap: onPressed, child: Text(title));
+}
+
 class AppBarActions extends StatelessWidget {
   static final _user = GetIt.I<UserController>();
 
@@ -67,20 +81,34 @@ class AppBarActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isWide = MediaQuery.of(context).size.width > 700;
+    final manageAlerts = AppBarAction(
+      title: 'Manage Alerts',
+      onPressed: () => context.push(AlertsManager()),
+    );
+    final signIn = AppBarAction(
+      title: 'Manage Alerts',
+      onPressed: () async {
+        final credential = await _user.signInWithGoogle();
+        if (credential.user != null) {
+          // I don't care
+          // ignore: use_build_context_synchronously
+          unawaited(context.push(AlertsManager()));
+        }
+      },
+    );
     return FastBuilder(() {
       final List<Widget> items;
       if (_user.user.value != null) {
         items = [
-          ElevatedButton(
-            onPressed: () => context.push(AlertsManager()),
-            child: const Text('Manage Alerts'),
-          ),
+          if (isWide) manageAlerts.button,
           PopupMenuButton(
             child: CircleAvatar(
               foregroundImage: NetworkImage(_user.user.value!.photoURL ?? ''),
               child: const Icon(Icons.person, color: Colors.white),
             ),
             itemBuilder: (context) => [
+              if (!isWide) manageAlerts.menuItem,
               PopupMenuItem(
                 onTap: _user.signOut,
                 child: const Text('Sign out'),
@@ -90,17 +118,15 @@ class AppBarActions extends StatelessWidget {
         ];
       } else {
         items = [
-          ElevatedButton(
-            onPressed: () async {
-              final credential = await _user.signInWithGoogle();
-              if (credential.user != null) {
-                // I don't care
-                // ignore: use_build_context_synchronously
-                unawaited(context.push(AlertsManager()));
-              }
-            },
-            child: const Text('Manage Alerts'),
-          ),
+          if (isWide)
+            signIn.button
+          else
+            PopupMenuButton(
+              child: const Icon(Icons.more_vert),
+              itemBuilder: (context) => [
+                signIn.menuItem,
+              ],
+            ),
         ];
       }
       return Row(

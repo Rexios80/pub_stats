@@ -68,6 +68,8 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
       barLeading: leading,
       viewLeading: leading,
       viewBarPadding: const EdgeInsets.symmetric(horizontal: 16),
+      barElevation: const WidgetStatePropertyAll(2),
+      viewElevation: 2,
       shrinkWrap: true,
       searchController: _searchController,
       barHintText: 'Enter a package name',

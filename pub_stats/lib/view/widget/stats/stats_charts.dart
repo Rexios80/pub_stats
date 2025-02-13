@@ -60,6 +60,8 @@ class StatsCharts extends StatelessWidget {
         const SizedBox(height: 32),
         Wrap(
           alignment: WrapAlignment.center,
+          spacing: 4,
+          runSpacing: 4,
           children: [
             likeCountChart,
             popularityScoreChart,

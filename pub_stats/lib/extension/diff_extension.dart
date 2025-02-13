@@ -51,11 +51,8 @@ class PackageListButton extends StatelessWidget {
       child: AbsorbPointer(
         child: TextButton(
           style: TextButton.styleFrom(padding: EdgeInsets.zero),
+          child: Text('$qualifier: ${packages.length}'),
           onPressed: () {},
-          child: Text(
-            '$qualifier: ${packages.length}',
-            textAlign: TextAlign.center,
-          ),
         ),
       ),
     );

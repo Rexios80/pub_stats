@@ -74,9 +74,7 @@ void main() {
             )
             .toJS;
 
-        return response
-            .setHeader('Content-Type', 'image/svg+xml')
-            .send(badge);
+        return response.setHeader('Content-Type', 'image/svg+xml').send(badge);
       });
     }.toJS,
   );

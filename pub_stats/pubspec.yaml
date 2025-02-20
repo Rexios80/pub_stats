@@ -44,7 +44,7 @@ dependencies:
   fast_rx_shared_preferences: ^0.1.5
 
 dev_dependencies:
-  rexios_lints: ^9.1.0
+  rexios_lints: ^10.0.1
   flutter_native_splash: ^2.0.1+1
 
 flutter:

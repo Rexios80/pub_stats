@@ -7,7 +7,7 @@ import 'package:pub_stats_collector/repo/pub_repo.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 
 class ScoreFetchController {
-  final PubRepo _pub = PubRepo();
+  final _pub = PubRepo();
   final DatabaseRepo _database;
   final DiscordRepo _discord;
   final Map<String, List<AlertConfig>> _alertConfigs;

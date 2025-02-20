@@ -20,7 +20,7 @@ class DiscordRepo {
     required DiscordAlertConfig config,
     required Map<PackageDataField, Diff> changes,
     required List<String> warnings,
-  }) async {
+  }) {
     final int color;
     if (warnings.isNotEmpty) {
       color = DiscordColor.red;

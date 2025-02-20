@@ -14,4 +14,4 @@ dependencies:
     path: ../pub_stats_collector
 
 dev_dependencies:
-  rexios_lints: ^9.1.0
+  rexios_lints: ^10.0.1

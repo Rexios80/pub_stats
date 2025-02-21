@@ -22,7 +22,7 @@ dependencies:
   url_launcher: ^6.0.17
   fl_chart: ^0.70.0
   flutter_svg: ^2.0.0+1
-  pub_api_client: ^3.1.0
+  pub_api_client: ^3.1.1
 
   pub_stats_core:
     path: ../pub_stats_core

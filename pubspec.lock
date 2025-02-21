@@ -258,14 +258,13 @@ packages:
     source: hosted
     version: "1.0.0+7.3.0"
   dart_mappable:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "packages/dart_mappable"
-      ref: "2e5dc4e914f5e86f68c022dea789563aec1b2f6b"
-      resolved-ref: "2e5dc4e914f5e86f68c022dea789563aec1b2f6b"
-      url: "https://github.com/Rexios80/dart_mappable"
-    source: git
-    version: "4.3.0"
+      name: dart_mappable
+      sha256: a88d1637354b8e3120433cbdf2b816dd9e38659b8a9b6ed8cb19cd101e12c545
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.4.0"
   dart_style:
     dependency: transitive
     description:

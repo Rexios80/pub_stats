@@ -17,12 +17,5 @@ dependency_overrides:
         - https://github.com/leoafarias/pub_api_client/pull/59
       url: https://github.com/Rexios80/pub_api_client
       ref: d7b648cadabfd2d10f6c567b619609d82f3d7072
-  dart_mappable:
-    git:
-      prs:
-        - https://github.com/schultek/dart_mappable/pull/261
-      url: https://github.com/Rexios80/dart_mappable
-      ref: 2e5dc4e914f5e86f68c022dea789563aec1b2f6b
-      path: packages/dart_mappable
   # dart_mappable:
   #   path: ../dart_mappable/packages/dart_mappable

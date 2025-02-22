@@ -5,6 +5,8 @@ import 'package:path/path.dart' as path;
 
 final home = Platform.environment['HOME']!;
 
+// Download logs here:
+// https://console.cloud.google.com/logs/query;query=resource.type%3D%22cloud_run_revision%22%20resource.labels.service_name%3D%22badges%22%20resource.labels.location%3D%22us-central1%22?project=pub-stats-collector
 void main() {
   final logContent = Directory(path.join(home, 'Downloads'))
       .listSync()

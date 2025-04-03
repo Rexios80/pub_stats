@@ -220,10 +220,11 @@ class PubRepo {
     await workQueue.tasksComplete;
     print('Handled all wrappers');
 
+    overallWrappers.sort((a, b) => b.overallScore.compareTo(a.overallScore));
+
     return GlobalStats(
       packageCount: packages.length,
-      topPackage:
-          overallWrappers.firstWhere((e) => e.overallScore == 1).package,
+      topPackage: overallWrappers.first.package,
       mostLikedPackage: mostLikedPackage.$1,
       mostDownloadedPackage: wrappers.first.package,
       mostDependedPackage: mostDependedPackage.$1,

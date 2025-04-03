@@ -40,9 +40,9 @@ Future<express.Response> fetchPackageData(express.Response response) async {
     );
 
     await controller.fetchScores().timeout(
-          Duration(minutes: 10),
-          onTimeout: () => throw TimeoutException('Global timeout reached'),
-        );
+      Duration(minutes: 10),
+      onTimeout: () => throw TimeoutException('Global timeout reached'),
+    );
   } catch (e, stacktrace) {
     print(e);
     print(stacktrace);
@@ -50,9 +50,9 @@ Future<express.Response> fetchPackageData(express.Response response) async {
     for (final config in alertConfigs['.system'] ?? <AlertConfig>[]) {
       await switch (config.type) {
         AlertConfigType.discord => discord.sendSystemErrorAlert(
-            config: config as DiscordAlertConfig,
-            error: e,
-          )
+          config: config as DiscordAlertConfig,
+          error: e,
+        ),
       };
     }
 

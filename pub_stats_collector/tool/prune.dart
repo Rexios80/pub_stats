@@ -6,15 +6,16 @@ import 'package:path/path.dart' as path;
 
 /// Prune duplicate score entries from the database
 void main() {
-  final string = File(
-    path.join(
-      '',
-      'Users',
-      'rexios',
-      'Downloads',
-      'pub-stats-collector-default-rtdb-export.json',
-    ),
-  ).readAsStringSync();
+  final string =
+      File(
+        path.join(
+          '',
+          'Users',
+          'rexios',
+          'Downloads',
+          'pub-stats-collector-default-rtdb-export.json',
+        ),
+      ).readAsStringSync();
   final json = jsonDecode(string) as Map<String, dynamic>;
   final packages = json['stats'] as Map<String, dynamic>;
 

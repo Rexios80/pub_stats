@@ -38,16 +38,11 @@ class DiscordRepo {
           url: 'https://pubstats.dev/packages/$package',
           fields: [
             ...changes.entries.map(
-              (e) => EmbedField(
-                name: e.key.name.titleCase,
-                value: e.value.text,
-              ),
+              (e) =>
+                  EmbedField(name: e.key.name.titleCase, value: e.value.text),
             ),
             if (warnings.isNotEmpty)
-              EmbedField(
-                name: 'Warnings',
-                value: warnings.join('\n'),
-              ),
+              EmbedField(name: 'Warnings', value: warnings.join('\n')),
           ],
         ),
       ],

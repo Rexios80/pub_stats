@@ -4,10 +4,10 @@ enum BadgeType {
   dependents;
 
   String get databaseKey => switch (this) {
-        popularity => 'ps2',
-        rank => 'n',
-        dependents => 'nd',
-      };
+    popularity => 'ps2',
+    rank => 'n',
+    dependents => 'nd',
+  };
 
   @override
   String toString() => name;

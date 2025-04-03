@@ -37,9 +37,9 @@ class MiniPackageScore extends Equatable {
 
   @override
   List<Object?> get props => [
-        likeCount,
-        legacyPopularityScore,
-        popularityScore,
-        downloadCount,
-      ];
+    likeCount,
+    legacyPopularityScore,
+    popularityScore,
+    downloadCount,
+  ];
 }

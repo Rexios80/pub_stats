@@ -11,25 +11,27 @@ part of 'alert_config.dart';
 DiscordAlertConfig _$DiscordAlertConfigFromJson(Map<String, dynamic> json) =>
     DiscordAlertConfig(
       slug: json['slug'] as String,
-      ignore: (json['ignore'] as List<dynamic>?)
+      ignore:
+          (json['ignore'] as List<dynamic>?)
               ?.map((e) => $enumDecode(_$PackageDataFieldEnumMap, e))
               .toSet() ??
           const {},
       id: json['id'] as String,
       token: json['token'] as String,
-      type: $enumDecodeNullable(_$AlertConfigTypeEnumMap, json['type']) ??
+      type:
+          $enumDecodeNullable(_$AlertConfigTypeEnumMap, json['type']) ??
           AlertConfigType.discord,
     );
 
-Map<String, dynamic> _$DiscordAlertConfigToJson(DiscordAlertConfig instance) =>
-    <String, dynamic>{
-      'slug': instance.slug,
-      'ignore':
-          instance.ignore.map((e) => _$PackageDataFieldEnumMap[e]!).toList(),
-      'type': _$AlertConfigTypeEnumMap[instance.type]!,
-      'id': instance.id,
-      'token': instance.token,
-    };
+Map<String, dynamic> _$DiscordAlertConfigToJson(
+  DiscordAlertConfig instance,
+) => <String, dynamic>{
+  'slug': instance.slug,
+  'ignore': instance.ignore.map((e) => _$PackageDataFieldEnumMap[e]!).toList(),
+  'type': _$AlertConfigTypeEnumMap[instance.type]!,
+  'id': instance.id,
+  'token': instance.token,
+};
 
 const _$PackageDataFieldEnumMap = {
   PackageDataField.publisher: 'publisher',
@@ -44,6 +46,4 @@ const _$PackageDataFieldEnumMap = {
   PackageDataField.pubPoints: 'pubPoints',
 };
 
-const _$AlertConfigTypeEnumMap = {
-  AlertConfigType.discord: 'discord',
-};
+const _$AlertConfigTypeEnumMap = {AlertConfigType.discord: 'discord'};

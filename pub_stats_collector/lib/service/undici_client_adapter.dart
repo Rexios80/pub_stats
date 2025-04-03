@@ -19,10 +19,10 @@ class UndiciClientAdapter implements HttpClientAdapter {
     final bodyBytes = await requestStream?.expand((e) => e).toList();
     final response = await switch (options.method) {
       'POST' => _client.post(
-          options.uri,
-          body: Uint8List.fromList(bodyBytes ?? []).toJS,
-          headers: options.headers.cast<String, String>(),
-        ),
+        options.uri,
+        body: Uint8List.fromList(bodyBytes ?? []).toJS,
+        headers: options.headers.cast<String, String>(),
+      ),
       _ => throw UnimplementedError(),
     };
 

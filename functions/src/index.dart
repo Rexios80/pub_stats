@@ -15,8 +15,9 @@ import 'assets/logo.dart';
 import 'interop/badge_maker.dart';
 import 'interop/source_map_support.dart';
 
-final packageBadgeRegex =
-    RegExp(r'^\/badges\/packages\/([^\/]+)\/([^\/]+)\.svg$');
+final packageBadgeRegex = RegExp(
+  r'^\/badges\/packages\/([^\/]+)\/([^\/]+)\.svg$',
+);
 
 void main() {
   sourceMapSupport.install();
@@ -57,22 +58,24 @@ void main() {
 
         final message = switch (badgeType) {
           BadgeType.popularity || BadgeType.dependents => data,
-          BadgeType.rank => (data as JSNumber).toDartInt + 1
+          BadgeType.rank => (data as JSNumber).toDartInt + 1,
         };
 
-        final badge = badgeMaker
-            .makeBadge(
-              BadgeFormat(
-                label: badgeType.name,
-                message: '$message',
-                color: '#007ec6',
-                logoBase64: logoData,
-                links: [
-                  'https://pubstats.dev/packages/$packageName'.toJS,
-                ].toJS,
-              ),
-            )
-            .toJS;
+        final badge =
+            badgeMaker
+                .makeBadge(
+                  BadgeFormat(
+                    label: badgeType.name,
+                    message: '$message',
+                    color: '#007ec6',
+                    logoBase64: logoData,
+                    links:
+                        [
+                          'https://pubstats.dev/packages/$packageName'.toJS,
+                        ].toJS,
+                  ),
+                )
+                .toJS;
 
         return response.setHeader('Content-Type', 'image/svg+xml').send(badge);
       });

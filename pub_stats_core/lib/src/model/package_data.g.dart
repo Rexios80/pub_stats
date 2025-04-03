@@ -21,7 +21,7 @@ _$PackageDataImpl _$$PackageDataImplFromJson(Map<String, dynamic> json) =>
       isFlutterFavorite: json['iff'] as bool,
       dependents:
           (json['d'] as List<dynamic>?)?.map((e) => e as String).toSet() ??
-              const {},
+          const {},
       overallRank: (json['n'] as num?)?.toInt(),
       numDependents: (json['nd'] as num?)?.toInt(),
     );

@@ -10,10 +10,7 @@ extension type Undici._(JSObject _) implements JSObject {
     RequestOptions options,
   ]);
 
-  external JSPromise<ResponseData> fetch(
-    String url, [
-    RequestOptions options,
-  ]);
+  external JSPromise<ResponseData> fetch(String url, [RequestOptions options]);
 }
 
 extension type RequestOptions._(JSObject _) implements JSObject {

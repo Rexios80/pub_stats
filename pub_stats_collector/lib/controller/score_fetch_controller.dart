@@ -36,10 +36,10 @@ class ScoreFetchController {
     for (final config in _alertConfigs['.system'] ?? <AlertConfig>[]) {
       await switch (config.type) {
         AlertConfigType.discord => _discord.sendGlobalStatsAlert(
-            config: config as DiscordAlertConfig,
-            stats: globalStats,
-            duration: duration,
-          ),
+          config: config as DiscordAlertConfig,
+          stats: globalStats,
+          duration: duration,
+        ),
       };
     }
     print('System alerts sent');
@@ -82,8 +82,9 @@ class ScoreFetchController {
     }
 
     // Don't track diffs for items that have historical data
-    final filteredDiff =
-        Map.fromEntries(diff.entries.where((e) => e.key.trackDiff));
+    final filteredDiff = Map.fromEntries(
+      diff.entries.where((e) => e.key.trackDiff),
+    );
 
     await Future.wait([
       _database.writePackageScore(
@@ -127,11 +128,11 @@ class ScoreFetchController {
 
       await switch (config.type) {
         AlertConfigType.discord => _discord.sendPackageAlert(
-            package: package,
-            config: config as DiscordAlertConfig,
-            changes: filteredChanges,
-            warnings: filteredWarnings.values.toList(),
-          ),
+          package: package,
+          config: config as DiscordAlertConfig,
+          changes: filteredChanges,
+          warnings: filteredWarnings.values.toList(),
+        ),
       };
     }
   }

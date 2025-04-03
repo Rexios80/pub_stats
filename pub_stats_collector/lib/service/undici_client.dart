@@ -12,18 +12,19 @@ class UndiciClient extends http.BaseClient {
   }
 
   Map<String, String> _mapResponseHeaders(JSObject headers) => {
-        for (final MapEntry(:key, :value) in headers.toJson().entries)
-          key: value is List ? value.join(',') : value.toString(),
-      };
+    for (final MapEntry(:key, :value) in headers.toJson().entries)
+      key: value is List ? value.join(',') : value.toString(),
+  };
 
   @override
   Future<http.Response> get(Uri url, {Map<String, String>? headers}) async {
-    final response = await undici
-        .request(
-          url.toString(),
-          RequestOptions(headers: (headers ?? {}).toJS),
-        )
-        .toDart;
+    final response =
+        await undici
+            .request(
+              url.toString(),
+              RequestOptions(headers: (headers ?? {}).toJS),
+            )
+            .toDart;
     final text = await response.body.text().toDart;
     return http.Response(
       text.toDart,
@@ -39,16 +40,17 @@ class UndiciClient extends http.BaseClient {
     Object? body,
     Encoding? encoding,
   }) async {
-    final response = await undici
-        .request(
-          url.toString(),
-          RequestOptions(
-            method: 'POST',
-            headers: (headers ?? {}).toJS,
-            body: body as JSAny,
-          ),
-        )
-        .toDart;
+    final response =
+        await undici
+            .request(
+              url.toString(),
+              RequestOptions(
+                method: 'POST',
+                headers: (headers ?? {}).toJS,
+                body: body as JSAny,
+              ),
+            )
+            .toDart;
     final text = await response.body.text().toDart;
     return http.Response(
       text.toDart,

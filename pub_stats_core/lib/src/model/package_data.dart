@@ -9,7 +9,7 @@ part 'package_data.g.dart';
 
 @immutable
 @freezed
-class PackageData with _$PackageData {
+sealed class PackageData with _$PackageData {
   const PackageData._();
 
   const factory PackageData({

@@ -24,7 +24,7 @@ class PubRepo {
     Future<void> Function(String package, PackageScore score, PackageData data)
     handleData,
   ) async {
-    final packages = await _fetchClient.packageNames();
+    final packages = (await _fetchClient.packageNames()).take(100).toList();
     print('Fetched ${packages.length} package names');
 
     var mostLikedPackage = ('', 0);

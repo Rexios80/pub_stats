@@ -49,6 +49,7 @@ class PackageDataWrapper {
 
     final overall = popularity * 0.5 + points * 0.5;
 
+    // TODO: REMOVE THIS NOW
     print(
       '$package: (download: $downloadScore, like: $likeScore, popularity: $popularity, points: $points, overall: $overall',
     );

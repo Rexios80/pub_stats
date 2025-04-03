@@ -163,52 +163,58 @@ class PubRepo {
       }
     }
 
-    final maxLikeCount = mostLikedPackage.$2;
-    final maxDownloadCount = mostDownloadedPackage.$2;
+    double calculateScore(int index) =>
+        (wrappers.length - index) / wrappers.length;
 
-    final scoredWrappers = <PackageDataWrapper>[];
+    wrappers.sort((a, b) {
+      final adc = a.score.downloadCount30Days ?? 0;
+      final bdc = b.score.downloadCount30Days ?? 0;
+      return bdc.compareTo(adc);
+    });
 
-    // Apply normalization to each package
-    for (final wrapper in wrappers) {
-      final downloadCount = wrapper.score.downloadCount30Days ?? 0;
-      final likeCount = wrapper.score.likeCount;
-
-      final downloadScore = downloadCount / maxDownloadCount;
-      final likeScore = likeCount / maxLikeCount;
-
-      scoredWrappers.add(
+    final downloadedWrappers = <PackageDataWrapper>[];
+    for (var i = 0; i < wrappers.length; i++) {
+      final wrapper = wrappers[i];
+      final score = calculateScore(i);
+      downloadedWrappers.add(
         wrapper.copyWith(
-          data: wrapper.data.copyWith(
-            popularityScore: (downloadScore * 100).round(),
-          ),
-          downloadScore: downloadScore,
-          likeScore: likeScore,
+          data: wrapper.data.copyWith(popularityScore: (score * 100).round()),
+          downloadScore: score,
         ),
       );
     }
 
-    // Sort by overall score
-    scoredWrappers.sort((a, b) {
+    downloadedWrappers.sort((a, b) {
+      final alc = a.score.likeCount;
+      final blc = b.score.likeCount;
+      return blc.compareTo(alc);
+    });
+
+    final likedWrappers = <PackageDataWrapper>[];
+    for (var i = 0; i < downloadedWrappers.length; i++) {
+      final wrapper = downloadedWrappers[i];
+      likedWrappers.add(wrapper.copyWith(likeScore: calculateScore(i)));
+    }
+
+    likedWrappers.sort((a, b) {
       final ao = a.overallScore;
       final bo = b.overallScore;
       return bo.compareTo(ao);
     });
 
-    final topPackage = scoredWrappers.first.package;
+    final topPackage = likedWrappers.first.package;
 
-    // Add ranking information
-    final rankedWrappers = <PackageDataWrapper>[];
-    for (var i = 0; i < scoredWrappers.length; i++) {
-      final wrapper = scoredWrappers[i];
-      rankedWrappers.add(
+    final overallWrappers = <PackageDataWrapper>[];
+    for (var i = 0; i < likedWrappers.length; i++) {
+      final wrapper = likedWrappers[i];
+      overallWrappers.add(
         wrapper.copyWith(data: wrapper.data.copyWith(overallRank: i)),
       );
     }
 
-    // Sort by package name for final output
-    rankedWrappers.sort((a, b) => a.package.compareTo(b.package));
+    overallWrappers.sort((a, b) => a.package.compareTo(b.package));
 
-    for (final wrapper in rankedWrappers) {
+    for (final wrapper in overallWrappers) {
       unawaited(
         workQueue.add(() async {
           final package = wrapper.package;
@@ -228,7 +234,7 @@ class PubRepo {
       packageCount: packages.length,
       topPackage: topPackage,
       mostLikedPackage: mostLikedPackage.$1,
-      mostDownloadedPackage: mostDownloadedPackage.$1,
+      mostDownloadedPackage: wrappers.first.package,
       mostDependedPackage: mostDependedPackage.$1,
       lastUpdated: DateTime.timestamp(),
     );

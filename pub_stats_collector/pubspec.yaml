@@ -2,7 +2,7 @@ name: pub_stats_collector
 publish_to: none
 
 environment:
-  sdk: ^3.6.0
+  sdk: ^3.7.0
 
 resolution: workspace
 
@@ -20,4 +20,4 @@ dependencies:
   fetch_client: ^1.1.2
 
 dev_dependencies:
-  rexios_lints: ^10.0.1
+  rexios_lints: ^11.0.1

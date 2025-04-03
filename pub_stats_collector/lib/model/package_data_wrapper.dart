@@ -47,13 +47,6 @@ class PackageDataWrapper {
 
     final points = (grantedPoints ?? 0) / math.max(1, maxPoints ?? 0);
 
-    final overall = popularity * 0.5 + points * 0.5;
-
-    // TODO: REMOVE THIS NOW
-    print(
-      '$package: (download: $downloadScore, like: $likeScore, popularity: $popularity, points: $points, overall: $overall',
-    );
-
-    return overall;
+    return popularity * 0.5 + points * 0.5;
   }
 }

@@ -194,6 +194,8 @@ class PubRepo {
       return bo.compareTo(ao);
     });
 
+    final topPackage = likedWrappers.first.package;
+
     final overallWrappers = <PackageDataWrapper>[];
     for (var i = 0; i < likedWrappers.length; i++) {
       final wrapper = likedWrappers[i];
@@ -220,11 +222,9 @@ class PubRepo {
     await workQueue.tasksComplete;
     print('Handled all wrappers');
 
-    overallWrappers.sort((a, b) => b.overallScore.compareTo(a.overallScore));
-
     return GlobalStats(
       packageCount: packages.length,
-      topPackage: overallWrappers.first.package,
+      topPackage: topPackage,
       mostLikedPackage: mostLikedPackage.$1,
       mostDownloadedPackage: wrappers.first.package,
       mostDependedPackage: mostDependedPackage.$1,

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:pub_api_client/pub_api_client.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 import 'package:meta/meta.dart';
@@ -43,12 +45,7 @@ class PackageDataWrapper {
     final grantedPoints = score.grantedPoints;
     final maxPoints = score.maxPoints;
 
-    final double points;
-    if (grantedPoints == null || maxPoints == null) {
-      points = 0;
-    } else {
-      points = grantedPoints / maxPoints;
-    }
+    final points = (grantedPoints ?? 0) / math.max(1, maxPoints ?? 0);
 
     return popularity * 0.5 + points * 0.5;
   }

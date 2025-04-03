@@ -20,6 +20,11 @@ class GlobalStatsView extends StatelessWidget {
     final statItems = [
       GlobalStatItem(
         stat: stats.mostDownloadedPackage,
+        label: 'Top package',
+        onTap: () => _dataController.fetchStats(stats.topPackage),
+      ),
+      GlobalStatItem(
+        stat: stats.mostDownloadedPackage,
         label: 'Most downloaded package',
         onTap: () => _dataController.fetchStats(stats.mostDownloadedPackage),
       ),

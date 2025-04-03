@@ -222,6 +222,8 @@ class PubRepo {
 
     return GlobalStats(
       packageCount: packages.length,
+      topPackage:
+          overallWrappers.firstWhere((e) => e.overallScore == 1).package,
       mostLikedPackage: mostLikedPackage.$1,
       mostDownloadedPackage: wrappers.first.package,
       mostDependedPackage: mostDependedPackage.$1,

@@ -155,8 +155,8 @@ class PubRepo {
       }
     }
 
-    double calculateScore(int index) =>
-        (wrappers.length - index) / wrappers.length;
+    final maxIndex = wrappers.length - 1;
+    double calculateScore(int index) => (maxIndex - index) / maxIndex;
 
     wrappers.sort((a, b) {
       final adc = a.score.downloadCount30Days ?? 0;

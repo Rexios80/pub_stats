@@ -155,27 +155,56 @@ class PubRepo {
       }
     }
 
+    double calculateScore(int index) =>
+        (wrappers.length - index) / wrappers.length;
+
     wrappers.sort((a, b) {
       final adc = a.score.downloadCount30Days ?? 0;
       final bdc = b.score.downloadCount30Days ?? 0;
       return bdc.compareTo(adc);
     });
 
-    final rankedWrappers = <PackageDataWrapper>[];
+    final downloadedWrappers = <PackageDataWrapper>[];
     for (var i = 0; i < wrappers.length; i++) {
       final wrapper = wrappers[i];
-      final rankedWrapper = wrapper.copyWith(
-        data: wrapper.data.copyWith(
-          popularityScore:
-              ((wrappers.length - i) / wrappers.length * 100).round(),
-          overallRank: i,
+      final score = calculateScore(i);
+      downloadedWrappers.add(
+        wrapper.copyWith(
+          data: wrapper.data.copyWith(popularityScore: (score * 100).round()),
+          downloadScore: score,
         ),
       );
-      rankedWrappers.add(rankedWrapper);
     }
-    rankedWrappers.sort((a, b) => a.package.compareTo(b.package));
 
-    for (final wrapper in rankedWrappers) {
+    downloadedWrappers.sort((a, b) {
+      final alc = a.score.likeCount;
+      final blc = b.score.likeCount;
+      return blc.compareTo(alc);
+    });
+
+    final likedWrappers = <PackageDataWrapper>[];
+    for (var i = 0; i < downloadedWrappers.length; i++) {
+      final wrapper = downloadedWrappers[i];
+      likedWrappers.add(wrapper.copyWith(likeScore: calculateScore(i)));
+    }
+
+    likedWrappers.sort((a, b) {
+      final ao = a.overallScore;
+      final bo = b.overallScore;
+      return bo.compareTo(ao);
+    });
+
+    final overallWrappers = <PackageDataWrapper>[];
+    for (var i = 0; i < likedWrappers.length; i++) {
+      final wrapper = likedWrappers[i];
+      overallWrappers.add(
+        wrapper.copyWith(data: wrapper.data.copyWith(overallRank: i)),
+      );
+    }
+
+    overallWrappers.sort((a, b) => a.package.compareTo(b.package));
+
+    for (final wrapper in overallWrappers) {
       unawaited(
         workQueue.add(() async {
           final package = wrapper.package;

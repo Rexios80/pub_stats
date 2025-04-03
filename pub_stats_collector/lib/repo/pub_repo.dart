@@ -234,7 +234,7 @@ class PubRepo {
       packageCount: packages.length,
       topPackage: topPackage,
       mostLikedPackage: mostLikedPackage.$1,
-      mostDownloadedPackage: wrappers.first.package,
+      mostDownloadedPackage: mostDownloadedPackage.$1,
       mostDependedPackage: mostDependedPackage.$1,
       lastUpdated: DateTime.timestamp(),
     );

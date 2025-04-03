@@ -5,7 +5,9 @@ import 'package:pub_stats_collector/repo/database_repo.dart';
 import 'package:pub_stats_collector/repo/discord_repo.dart';
 import 'package:pub_stats_collector/repo/pub_repo.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
+import 'package:meta/meta.dart';
 
+@immutable
 class ScoreFetchController {
   final _pub = PubRepo();
   final DatabaseRepo _database;

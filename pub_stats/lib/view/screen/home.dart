@@ -27,16 +27,10 @@ class Home extends StatelessWidget {
               titlePadding: EdgeInsets.zero,
               title: FittedBox(fit: BoxFit.scaleDown, child: Header()),
             ),
-            actions: const [
-              AppBarActions(),
-              SizedBox(width: 8),
-            ],
+            actions: const [AppBarActions(), SizedBox(width: 8)],
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 40)),
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: StickyHeader(),
-          ),
+          SliverPersistentHeader(pinned: true, delegate: StickyHeader()),
           const SliverPadding(
             padding: EdgeInsets.only(top: 40, left: 16, right: 16),
             sliver: StatsView(),
@@ -47,10 +41,7 @@ class Home extends StatelessWidget {
               children: [
                 Spacer(),
                 SizedBox(height: 40),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 16),
-                  child: Footer(),
-                ),
+                Padding(padding: EdgeInsets.only(bottom: 16), child: Footer()),
               ],
             ),
           ),
@@ -60,14 +51,12 @@ class Home extends StatelessWidget {
   }
 }
 
+@immutable
 class AppBarAction {
   final String title;
   final VoidCallback onPressed;
 
-  const AppBarAction({
-    required this.title,
-    required this.onPressed,
-  });
+  const AppBarAction({required this.title, required this.onPressed});
 
   Widget get button => ElevatedButton(onPressed: onPressed, child: Text(title));
   PopupMenuItem get menuItem =>
@@ -107,13 +96,14 @@ class AppBarActions extends StatelessWidget {
               foregroundImage: NetworkImage(_user.user.value!.photoURL ?? ''),
               child: const Icon(Icons.person, color: Colors.white),
             ),
-            itemBuilder: (context) => [
-              if (!isWide) manageAlerts.menuItem,
-              PopupMenuItem(
-                onTap: _user.signOut,
-                child: const Text('Sign out'),
-              ),
-            ],
+            itemBuilder:
+                (context) => [
+                  if (!isWide) manageAlerts.menuItem,
+                  PopupMenuItem(
+                    onTap: _user.signOut,
+                    child: const Text('Sign out'),
+                  ),
+                ],
           ),
         ];
       } else {
@@ -123,19 +113,11 @@ class AppBarActions extends StatelessWidget {
           else
             PopupMenuButton(
               child: const Icon(Icons.more_vert),
-              itemBuilder: (context) => [
-                signIn.menuItem,
-              ],
+              itemBuilder: (context) => [signIn.menuItem],
             ),
         ];
       }
-      return Row(
-        spacing: 8,
-        children: [
-          const ThemeSwitch(),
-          ...items,
-        ],
-      );
+      return Row(spacing: 8, children: [const ThemeSwitch(), ...items]);
     });
   }
 }

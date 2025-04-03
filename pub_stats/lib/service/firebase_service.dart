@@ -17,8 +17,9 @@ class FirebaseService {
 
   static Future<FirebaseService> create() async {
     await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform
-          .copyWith(authDomain: window.location.hostname),
+      options: DefaultFirebaseOptions.currentPlatform.copyWith(
+        authDomain: window.location.hostname,
+      ),
     );
 
     // Initialize services
@@ -37,8 +38,9 @@ class FirebaseService {
         // Log the app open event on startup
         await analytics.logAppOpen();
         final enabled = await performance.isPerformanceCollectionEnabled();
-        _logger
-            .d('Performance collection is ${enabled ? 'enabled' : 'disabled'}');
+        _logger.d(
+          'Performance collection is ${enabled ? 'enabled' : 'disabled'}',
+        );
       } catch (e) {
         // These might throw if ad blocking is enabled
         _logger.e(e);
@@ -55,8 +57,9 @@ class FirebaseService {
   static Future<void> _activateAppCheck() async {
     try {
       await FirebaseAppCheck.instance.activate(
-        webProvider:
-            ReCaptchaV3Provider('6LeVDcodAAAAAFLXdyTIcFjcEGN-Gjl2nWrU08q5'),
+        webProvider: ReCaptchaV3Provider(
+          '6LeVDcodAAAAAFLXdyTIcFjcEGN-Gjl2nWrU08q5',
+        ),
       );
     } catch (e) {
       // This will throw after a hot reload

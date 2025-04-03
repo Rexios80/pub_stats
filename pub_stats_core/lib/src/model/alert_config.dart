@@ -1,8 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:pub_stats_core/src/model/package_data.dart';
+import 'package:meta/meta.dart';
 
 part 'alert_config.g.dart';
 
+@immutable
 abstract class AlertConfig {
   /// `.system`, `package`, or `publisher:name`
   final String slug;
@@ -13,7 +15,7 @@ abstract class AlertConfig {
   /// The type of alert
   final AlertConfigType type;
 
-  AlertConfig({
+  const AlertConfig({
     required this.slug,
     this.ignore = const {},
     required this.type,
@@ -27,16 +29,16 @@ abstract class AlertConfig {
   Map<String, dynamic> toJson();
 
   String get extra => switch (type) {
-        AlertConfigType.discord => (this as DiscordAlertConfig).id,
-      };
+    AlertConfigType.discord => (this as DiscordAlertConfig).id,
+  };
 }
 
 enum AlertConfigType {
   discord;
 
   String get extraLabel => switch (this) {
-        discord => 'Webhook URL',
-      };
+    discord => 'Webhook URL',
+  };
 }
 
 abstract class AlertServiceConfig {}
@@ -46,7 +48,7 @@ class DiscordAlertConfig extends AlertConfig {
   final String id;
   final String token;
 
-  DiscordAlertConfig({
+  const DiscordAlertConfig({
     required super.slug,
     super.ignore,
     required this.id,

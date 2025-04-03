@@ -84,8 +84,9 @@ class UserController {
 
     final AlertConfig config;
     if (type == AlertConfigType.discord) {
-      final match = RegExp(r'https:\/\/discord\.com\/api\/webhooks\/(.+)\/(.+)')
-          .firstMatch(extra);
+      final match = RegExp(
+        r'https:\/\/discord\.com\/api\/webhooks\/(.+)\/(.+)',
+      ).firstMatch(extra);
 
       if (match == null) {
         FastOverlays.showSnackBar(
@@ -103,10 +104,10 @@ class UserController {
       return false;
     }
 
-    await _database.writeAlertConfigs(
-      _auth.currentUser!.uid,
-      [...configs, config],
-    );
+    await _database.writeAlertConfigs(_auth.currentUser!.uid, [
+      ...configs,
+      config,
+    ]);
     configs.add(config);
     return true;
   }

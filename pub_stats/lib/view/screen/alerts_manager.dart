@@ -18,9 +18,7 @@ class AlertsManager extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Alerts Manager'),
-      ),
+      appBar: AppBar(title: const Text('Alerts Manager')),
       body: Center(
         child: Column(
           children: [
@@ -32,24 +30,29 @@ class AlertsManager extends StatelessWidget {
                   Expanded(
                     child: SearchAnchor.bar(
                       viewConstraints: const BoxConstraints(),
-                      viewBarPadding:
-                          const EdgeInsets.symmetric(horizontal: 16),
+                      viewBarPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                      ),
                       shrinkWrap: true,
                       barLeading: const SizedBox.shrink(),
                       viewLeading: const SizedBox.shrink(),
                       viewTrailing: const [],
-                      suggestionsBuilder: (context, controller) => const [
-                        ListTile(title: Text('".system" for system alerts')),
-                        ListTile(
-                          title:
-                              Text('"packageName" for single package alerts'),
-                        ),
-                        ListTile(
-                          title: Text(
-                            '"publisher:publisherName" for publisher package alerts',
-                          ),
-                        ),
-                      ],
+                      suggestionsBuilder:
+                          (context, controller) => const [
+                            ListTile(
+                              title: Text('".system" for system alerts'),
+                            ),
+                            ListTile(
+                              title: Text(
+                                '"packageName" for single package alerts',
+                              ),
+                            ),
+                            ListTile(
+                              title: Text(
+                                '"publisher:publisherName" for publisher package alerts',
+                              ),
+                            ),
+                          ],
                       searchController: slugController,
                       onSubmitted: slugController.closeView,
                       barHintText: 'Alert slug',
@@ -64,14 +67,15 @@ class AlertsManager extends StatelessWidget {
                           border: OutlineInputBorder(),
                         ),
                         value: selectedType.value,
-                        items: AlertConfigType.values
-                            .map(
-                              (e) => DropdownMenuItem(
-                                value: e,
-                                child: Text(e.name.titleCase),
-                              ),
-                            )
-                            .toList(),
+                        items:
+                            AlertConfigType.values
+                                .map(
+                                  (e) => DropdownMenuItem(
+                                    value: e,
+                                    child: Text(e.name.titleCase),
+                                  ),
+                                )
+                                .toList(),
                         onChanged: (value) {
                           if (value == null) return;
                           selectedType.value = value;
@@ -94,25 +98,27 @@ class AlertsManager extends StatelessWidget {
                   const SizedBox(width: 16),
                   PopupMenuButton(
                     tooltip: 'Alert fields',
-                    itemBuilder: (context) => PackageDataField.values
-                        .map(
-                          (e) => PopupMenuItem(
-                            child: FastBuilder(
-                              () => CheckboxListTile(
-                                value: !ignoredFields.contains(e),
-                                onChanged: (value) {
-                                  if (value == true) {
-                                    ignoredFields.remove(e);
-                                  } else {
-                                    ignoredFields.add(e);
-                                  }
-                                },
-                                title: Text(e.name.titleCase),
-                              ),
-                            ),
-                          ),
-                        )
-                        .toList(),
+                    itemBuilder:
+                        (context) =>
+                            PackageDataField.values
+                                .map(
+                                  (e) => PopupMenuItem(
+                                    child: FastBuilder(
+                                      () => CheckboxListTile(
+                                        value: !ignoredFields.contains(e),
+                                        onChanged: (value) {
+                                          if (value == true) {
+                                            ignoredFields.remove(e);
+                                          } else {
+                                            ignoredFields.add(e);
+                                          }
+                                        },
+                                        title: Text(e.name.titleCase),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
                     child: FastBuilder(
                       () => AlertFieldsButton(
                         ignoredFields: ignoredFields..register(),
@@ -138,44 +144,45 @@ class AlertsManager extends StatelessWidget {
                       DataColumn(label: Text('Fields')),
                       DataColumn(label: Text('Actions')),
                     ],
-                    rows: _user.configs
-                        .map(
-                          (e) => DataRow(
-                            cells: [
-                              DataCell(Text(e.slug)),
-                              DataCell(Text(e.type.name.titleCase)),
-                              DataCell(
-                                SizedBox(
-                                  width: 200,
-                                  child: Text(e.extra),
-                                ),
-                              ),
-                              DataCell(
-                                PopupMenuButton(
-                                  tooltip: 'Alert fields',
-                                  itemBuilder: (context) =>
-                                      enabledFields(e.ignore)
-                                          .map(
-                                            (e) => PopupMenuItem(
-                                              child: Text(e.name.titleCase),
-                                            ),
-                                          )
-                                          .toList(),
-                                  child: AlertFieldsButton(
-                                    ignoredFields: e.ignore,
+                    rows:
+                        _user.configs
+                            .map(
+                              (e) => DataRow(
+                                cells: [
+                                  DataCell(Text(e.slug)),
+                                  DataCell(Text(e.type.name.titleCase)),
+                                  DataCell(
+                                    SizedBox(width: 200, child: Text(e.extra)),
                                   ),
-                                ),
+                                  DataCell(
+                                    PopupMenuButton(
+                                      tooltip: 'Alert fields',
+                                      itemBuilder:
+                                          (context) =>
+                                              enabledFields(e.ignore)
+                                                  .map(
+                                                    (e) => PopupMenuItem(
+                                                      child: Text(
+                                                        e.name.titleCase,
+                                                      ),
+                                                    ),
+                                                  )
+                                                  .toList(),
+                                      child: AlertFieldsButton(
+                                        ignoredFields: e.ignore,
+                                      ),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    IconButton(
+                                      icon: const Icon(Icons.delete),
+                                      onPressed: () => _user.removeConfig(e),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              DataCell(
-                                IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () => _user.removeConfig(e),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                        .toList(),
+                            )
+                            .toList(),
                   ),
                 ),
               ),
@@ -204,10 +211,7 @@ class AlertsManager extends StatelessWidget {
 class AlertFieldsButton extends StatelessWidget {
   final Set<PackageDataField> ignoredFields;
 
-  const AlertFieldsButton({
-    super.key,
-    required this.ignoredFields,
-  });
+  const AlertFieldsButton({super.key, required this.ignoredFields});
 
   @override
   Widget build(BuildContext context) {

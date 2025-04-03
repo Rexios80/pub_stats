@@ -11,12 +11,13 @@ class DatabaseRepo {
     String package,
     TimeSpan span,
   ) async {
-    final event = await _database
-        .child('stats')
-        .child(package)
-        .orderByKey()
-        .startAt(span.start.secondsSinceEpoch.toString())
-        .once();
+    final event =
+        await _database
+            .child('stats')
+            .child(package)
+            .orderByKey()
+            .startAt(span.start.secondsSinceEpoch.toString())
+            .once();
     final snap = event.snapshot;
     if (!snap.exists) {
       return [];
@@ -25,8 +26,9 @@ class DatabaseRepo {
 
     return data.entries.map((e) {
       final timestamp = int.parse(e.key);
-      final score =
-          MiniPackageScore.fromJson((e.value as Map).cast<String, dynamic>());
+      final score = MiniPackageScore.fromJson(
+        (e.value as Map).cast<String, dynamic>(),
+      );
       return PackageScoreSnapshot.fromMiniPackageScore(
         timestamp: timestamp,
         score: score,
@@ -35,12 +37,13 @@ class DatabaseRepo {
   }
 
   Future<DateTime> getFirstScan(String package) async {
-    final event = await _database
-        .child('stats')
-        .child(package)
-        .orderByKey()
-        .limitToFirst(1)
-        .once();
+    final event =
+        await _database
+            .child('stats')
+            .child(package)
+            .orderByKey()
+            .limitToFirst(1)
+            .once();
 
     final snap = event.snapshot;
     if (!snap.exists) {
@@ -59,11 +62,12 @@ class DatabaseRepo {
   }
 
   Future<List<PackageCountSnapshot>> getPackageCounts(TimeSpan span) async {
-    final event = await _database
-        .child('package_counts')
-        .orderByKey()
-        .startAt(span.start.secondsSinceEpoch.toString())
-        .once();
+    final event =
+        await _database
+            .child('package_counts')
+            .orderByKey()
+            .startAt(span.start.secondsSinceEpoch.toString())
+            .once();
     final snap = event.snapshot;
     if (!snap.exists) {
       return [];

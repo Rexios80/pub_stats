@@ -23,7 +23,7 @@ class MiniPackageScore extends Equatable {
   @JsonKey(name: 'd')
   final int? downloadCount;
 
-  MiniPackageScore({
+  const MiniPackageScore({
     required this.likeCount,
     required this.legacyPopularityScore,
     required this.popularityScore,

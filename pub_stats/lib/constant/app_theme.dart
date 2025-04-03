@@ -7,12 +7,11 @@ class AppTheme {
   static final pillRadius = BorderRadius.circular(100);
 
   static ThemeData theme(Brightness brightness) => ThemeData(
-        brightness: brightness,
-        colorSchemeSeed: AppColors.primary,
-        cardTheme: CardTheme(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        ),
-        appBarTheme: const AppBarTheme(centerTitle: true),
-      );
+    brightness: brightness,
+    colorSchemeSeed: AppColors.primary,
+    cardTheme: CardTheme(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+    ),
+    appBarTheme: const AppBarTheme(centerTitle: true),
+  );
 }

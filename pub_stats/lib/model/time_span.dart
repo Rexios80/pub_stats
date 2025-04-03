@@ -27,7 +27,10 @@ enum TimeSpan {
     }
 
     final now = DateTime.timestamp();
-    return DateTime(now.year, now.month, now.day)
-        .subtract(Duration(days: days));
+    return DateTime(
+      now.year,
+      now.month,
+      now.day,
+    ).subtract(Duration(days: days));
   }
 }

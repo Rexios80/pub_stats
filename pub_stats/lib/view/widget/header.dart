@@ -20,16 +20,14 @@ class Header extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: Row(
           children: [
-            SvgPicture.asset(
-              AppImage.logo,
-              width: 75,
-            ),
+            SvgPicture.asset(AppImage.logo, width: 75),
             const SizedBox(width: 20),
             Text(
               'pubstats',
               textAlign: TextAlign.center,
-              style: context.textTheme.displayMedium!
-                  .copyWith(color: context.textTheme.bodyLarge!.color),
+              style: context.textTheme.displayMedium!.copyWith(
+                color: context.textTheme.bodyLarge!.color,
+              ),
             ),
           ],
         ),

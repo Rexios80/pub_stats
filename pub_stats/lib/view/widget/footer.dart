@@ -20,15 +20,9 @@ class Footer extends StatelessWidget {
         const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            FooterIconLink(
-              url: Links.github,
-              icon: FontAwesomeIcons.github,
-            ),
+            FooterIconLink(url: Links.github, icon: FontAwesomeIcons.github),
             SizedBox(width: 16),
-            FooterIconLink(
-              url: Links.discord,
-              icon: FontAwesomeIcons.discord,
-            ),
+            FooterIconLink(url: Links.discord, icon: FontAwesomeIcons.discord),
           ],
         ),
         Row(
@@ -40,12 +34,13 @@ class Footer extends StatelessWidget {
             ),
             FooterTextLink(
               label: 'Licenses',
-              onTap: () => FastOverlays.showLicensePage(
-                applicationIcon: Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: SvgPicture.asset(AppImage.logo, height: 75),
-                ),
-              ),
+              onTap:
+                  () => FastOverlays.showLicensePage(
+                    applicationIcon: Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: SvgPicture.asset(AppImage.logo, height: 75),
+                    ),
+                  ),
             ),
           ],
         ),
@@ -60,11 +55,7 @@ class FooterIconLink extends StatelessWidget {
   final String url;
   final IconData icon;
 
-  const FooterIconLink({
-    super.key,
-    required this.url,
-    required this.icon,
-  });
+  const FooterIconLink({super.key, required this.url, required this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -80,11 +71,7 @@ class FooterTextLink extends StatelessWidget {
   final String label;
   final VoidCallback? onTap;
 
-  const FooterTextLink({
-    super.key,
-    required this.label,
-    required this.onTap,
-  });
+  const FooterTextLink({super.key, required this.label, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -93,10 +80,7 @@ class FooterTextLink extends StatelessWidget {
       borderRadius: AppTheme.pillRadius,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        child: Text(
-          label,
-          style: context.textTheme.bodySmall,
-        ),
+        child: Text(label, style: context.textTheme.bodySmall),
       ),
     );
   }

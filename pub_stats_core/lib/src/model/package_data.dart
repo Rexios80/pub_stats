@@ -7,6 +7,7 @@ import 'package:pub_stats_core/src/model/diff.dart';
 part 'package_data.freezed.dart';
 part 'package_data.g.dart';
 
+@immutable
 @freezed
 class PackageData with _$PackageData {
   const PackageData._();
@@ -36,15 +37,23 @@ class PackageData with _$PackageData {
       PackageDataField.publisher: StringDiff(before.publisher, publisher),
       PackageDataField.version: StringDiff(before.version, version),
       PackageDataField.likeCount: StringDiff(before.likeCount, likeCount),
-      PackageDataField.popularityScore:
-          StringDiff(before.popularityScore, popularityScore),
-      PackageDataField.downloadCount:
-          LargeNumDiff(before.downloadCount, downloadCount),
-      PackageDataField.isDiscontinued:
-          StringDiff(before.isDiscontinued, isDiscontinued),
+      PackageDataField.popularityScore: StringDiff(
+        before.popularityScore,
+        popularityScore,
+      ),
+      PackageDataField.downloadCount: LargeNumDiff(
+        before.downloadCount,
+        downloadCount,
+      ),
+      PackageDataField.isDiscontinued: StringDiff(
+        before.isDiscontinued,
+        isDiscontinued,
+      ),
       PackageDataField.isUnlisted: StringDiff(before.isUnlisted, isUnlisted),
-      PackageDataField.isFlutterFavorite:
-          StringDiff(before.isFlutterFavorite, isFlutterFavorite),
+      PackageDataField.isFlutterFavorite: StringDiff(
+        before.isFlutterFavorite,
+        isFlutterFavorite,
+      ),
       PackageDataField.dependents: SetDiff(before.dependents, dependents),
     }..removeWhere((key, value) => !value.different);
   }
@@ -65,45 +74,41 @@ enum PackageDataField {
   pubPoints;
 
   bool get trackDiff => switch (this) {
-        publisher ||
-        version ||
-        isDiscontinued ||
-        isUnlisted ||
-        isFlutterFavorite ||
-        dependents =>
-          true,
-        // Don't track diffs for items that have historical data
-        likeCount || popularityScore || downloadCount || pubPoints => false,
-      };
+    publisher ||
+    version ||
+    isDiscontinued ||
+    isUnlisted ||
+    isFlutterFavorite ||
+    dependents => true,
+    // Don't track diffs for items that have historical data
+    likeCount || popularityScore || downloadCount || pubPoints => false,
+  };
 
   Diff diffFromJson(Map<String, dynamic> json) => switch (this) {
-        publisher ||
-        version ||
-        likeCount ||
-        popularityScore ||
-        isDiscontinued ||
-        isUnlisted ||
-        isFlutterFavorite =>
-          StringDiff.fromJson(json),
-        downloadCount => LargeNumDiff.fromJson(json),
-        dependents => SetDiff.fromJson(json),
-        pubPoints => throw UnimplementedError(),
-      };
+    publisher ||
+    version ||
+    likeCount ||
+    popularityScore ||
+    isDiscontinued ||
+    isUnlisted ||
+    isFlutterFavorite => StringDiff.fromJson(json),
+    downloadCount => LargeNumDiff.fromJson(json),
+    dependents => SetDiff.fromJson(json),
+    pubPoints => throw UnimplementedError(),
+  };
 }
 
 typedef PackageDataDiff = Map<PackageDataField, Diff>;
 
 extension PackageDataDiffExtension on PackageDataDiff {
   static Map<PackageDataField, Diff> fromJson(Map<String, dynamic> json) =>
-      json.map(
-        (k, v) {
-          final field = PackageDataField.values.byName(k);
-          return MapEntry(
-            field,
-            field.diffFromJson((v as Map).cast<String, dynamic>()),
-          );
-        },
-      );
+      json.map((k, v) {
+        final field = PackageDataField.values.byName(k);
+        return MapEntry(
+          field,
+          field.diffFromJson((v as Map).cast<String, dynamic>()),
+        );
+      });
 
   Map<String, dynamic> toJson() => map((k, v) => MapEntry(k.name, v.toJson()));
 }

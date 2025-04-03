@@ -14,32 +14,30 @@ class StatsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FastBuilder(
-      () {
-        if (_controller.loadedStats.isNotEmpty) {
-          return MultiSliver(
-            children: [
-              SliverToBoxAdapter(
-                child: StatsCharts(
-                  stats: _controller.loadedStats,
-                  onComparisonRemoved: _controller.removeStats,
-                ),
+    return FastBuilder(() {
+      if (_controller.loadedStats.isNotEmpty) {
+        return MultiSliver(
+          children: [
+            SliverToBoxAdapter(
+              child: StatsCharts(
+                stats: _controller.loadedStats,
+                onComparisonRemoved: _controller.removeStats,
               ),
-              if (_controller.loadedStats.length == 1) ...[
-                const SizedBox(height: 32),
-                const SliverCrossAxisConstrained(
-                  maxCrossAxisExtent: 800,
-                  child: DiffList(),
-                ),
-              ],
+            ),
+            if (_controller.loadedStats.length == 1) ...[
+              const SizedBox(height: 32),
+              const SliverCrossAxisConstrained(
+                maxCrossAxisExtent: 800,
+                child: DiffList(),
+              ),
             ],
-          );
-        } else {
-          return SliverToBoxAdapter(
-            child: GlobalStatsView(stats: _controller.globalStats),
-          );
-        }
-      },
-    );
+          ],
+        );
+      } else {
+        return SliverToBoxAdapter(
+          child: GlobalStatsView(stats: _controller.globalStats),
+        );
+      }
+    });
   }
 }

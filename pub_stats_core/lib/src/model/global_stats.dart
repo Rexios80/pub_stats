@@ -1,7 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 
 part 'global_stats.g.dart';
 
+@immutable
 @JsonSerializable()
 class GlobalStats {
   final int packageCount;
@@ -10,7 +12,7 @@ class GlobalStats {
   final String mostDependedPackage;
   final DateTime lastUpdated;
 
-  GlobalStats({
+  const GlobalStats({
     required this.packageCount,
     required this.mostLikedPackage,
     required this.mostDownloadedPackage,

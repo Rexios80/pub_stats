@@ -13,10 +13,7 @@ class GlobalStatsView extends StatelessWidget {
 
   final GlobalStats stats;
 
-  GlobalStatsView({
-    super.key,
-    required this.stats,
-  });
+  GlobalStatsView({super.key, required this.stats});
 
   @override
   Widget build(BuildContext context) {
@@ -51,14 +48,8 @@ class GlobalStatsView extends StatelessWidget {
           constraints: const BoxConstraints(maxWidth: 800),
           child: Wrap(
             alignment: WrapAlignment.center,
-            children: statItems
-                .map(
-                  (e) => SizedBox(
-                    width: 250,
-                    child: e,
-                  ),
-                )
-                .toList(),
+            children:
+                statItems.map((e) => SizedBox(width: 250, child: e)).toList(),
           ),
         ),
         const SizedBox(height: 16),
@@ -126,16 +117,17 @@ class PackageCountChart extends StatelessWidget {
     return BaseStatChart(
       spots: [spots],
       label: 'Total Package Count',
-      builder: (singleY, barData) => LineChart(
-        LineChartData(
-          lineBarsData: barData,
-          gridData: BaseStatChart.defaultGridData,
-          borderData: BaseStatChart.createDefaultBorderData(context),
-          titlesData: BaseStatChart.defaultTitlesData,
-          lineTouchData: BaseStatChart.createDefaultLineTouchData(context),
-        ),
-        duration: Duration.zero,
-      ),
+      builder:
+          (singleY, barData) => LineChart(
+            LineChartData(
+              lineBarsData: barData,
+              gridData: BaseStatChart.defaultGridData,
+              borderData: BaseStatChart.createDefaultBorderData(context),
+              titlesData: BaseStatChart.defaultTitlesData,
+              lineTouchData: BaseStatChart.createDefaultLineTouchData(context),
+            ),
+            duration: Duration.zero,
+          ),
     );
   }
 }

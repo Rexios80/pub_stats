@@ -1,5 +1,7 @@
 import 'package:pub_stats_core/pub_stats_core.dart';
+import 'package:meta/meta.dart';
 
+@immutable
 class PackageScoreSnapshot {
   final DateTime timestamp;
   final int likeCount;
@@ -7,7 +9,7 @@ class PackageScoreSnapshot {
   final int? popularityScore;
   final int? downloadCount;
 
-  PackageScoreSnapshot._({
+  const PackageScoreSnapshot._({
     required this.timestamp,
     required this.likeCount,
     required this.legacyPopularityScore,

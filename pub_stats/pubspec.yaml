@@ -42,6 +42,7 @@ dependencies:
   web: ^1.1.0
   platform_plus: ^4.8.1
   fast_rx_shared_preferences: ^0.1.5
+  meta: ^1.16.0
 
 dev_dependencies:
   rexios_lints: ^11.0.4

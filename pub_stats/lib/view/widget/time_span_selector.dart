@@ -14,23 +14,24 @@ class TimeSpanSelector extends StatelessWidget {
     return FastBuilder(
       () => SegmentedButton<TimeSpan>(
         showSelectedIcon: false,
-        segments: TimeSpan.values
-            .map(
-              (e) => ButtonSegment(
-                value: e,
-                label: Padding(
-                  padding: const EdgeInsets.all(2),
-                  child: SizedBox(
-                    height: 20,
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text('$e'),
+        segments:
+            TimeSpan.values
+                .map(
+                  (e) => ButtonSegment(
+                    value: e,
+                    label: Padding(
+                      padding: const EdgeInsets.all(2),
+                      child: SizedBox(
+                        height: 20,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text('$e'),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-            )
-            .toList(),
+                )
+                .toList(),
         selected: {controller.timeSpan.value},
         onSelectionChanged: (e) => controller.timeSpan.value = e.single,
       ),

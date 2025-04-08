@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pub_stats/constant/constants.dart';
+import 'package:get_it/get_it.dart';
+import 'package:pub_stats/controller/data_controller.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 extension DiffExtension on Diff {
   Widget get widget => switch (this) {
@@ -26,6 +26,8 @@ extension DiffExtension on Diff {
 }
 
 class PackageListButton extends StatelessWidget {
+  static final _controller = GetIt.I<DataController>();
+
   final Set<String> packages;
   final String qualifier;
 
@@ -45,10 +47,7 @@ class PackageListButton extends StatelessWidget {
                   .map(
                     (package) => PopupMenuItem(
                       child: Text(package),
-                      onTap:
-                          () => launchUrlString(
-                            Constants.pubPackageBaseUrl + package,
-                          ),
+                      onTap: () => _controller.fetchStats(package),
                     ),
                   )
                   .toList(),

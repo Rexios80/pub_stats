@@ -9,7 +9,7 @@ class AppTheme {
   static ThemeData theme(Brightness brightness) => ThemeData(
     brightness: brightness,
     colorSchemeSeed: AppColors.primary,
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
     ),
     appBarTheme: const AppBarTheme(centerTitle: true),

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: document_ignores, require_trailing_commas
+// ignore_for_file: document_ignores, require_trailing_commas, use_null_aware_elements
 
 part of 'package_data.dart';
 

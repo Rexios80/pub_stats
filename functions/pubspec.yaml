@@ -2,7 +2,7 @@ name: pub_stats_firebase_functions
 publish_to: none
 
 environment:
-  sdk: ^3.7.0
+  sdk: ^3.8.0
 
 resolution: workspace
 
@@ -14,4 +14,4 @@ dependencies:
     path: ../pub_stats_collector
 
 dev_dependencies:
-  rexios_lints: ^11.0.4
+  rexios_lints: ^12.0.0

@@ -31,8 +31,16 @@ sealed class PackageData with _$PackageData {
   factory PackageData.fromJson(Map<String, dynamic> json) =>
       _$PackageDataFromJson(json);
 
-  PackageDataDiff diffFrom(PackageData? before) {
+  PackageDataDiff diffFrom(
+    PackageData? before, {
+    required Set<String> failedPackages,
+  }) {
     if (before == null) return {};
+
+    // Do not count dependent removal for packages that failed to fetch
+    final failedDependents = before.dependents.intersection(failedPackages);
+    final afterDependents = {...dependents, ...failedDependents};
+
     return {
       PackageDataField.publisher: StringDiff(before.publisher, publisher),
       PackageDataField.version: StringDiff(before.version, version),
@@ -54,7 +62,7 @@ sealed class PackageData with _$PackageData {
         before.isFlutterFavorite,
         isFlutterFavorite,
       ),
-      PackageDataField.dependents: SetDiff(before.dependents, dependents),
+      PackageDataField.dependents: SetDiff(before.dependents, afterDependents),
     }..removeWhere((key, value) => !value.different);
   }
 }

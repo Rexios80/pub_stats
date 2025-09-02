@@ -49,6 +49,7 @@ class ScoreFetchController {
     String package,
     PackageScore score,
     PackageData data,
+    Set<String> failedPackages,
   ) async {
     final miniScore = MiniPackageScore(
       likeCount: data.likeCount,
@@ -65,7 +66,7 @@ class ScoreFetchController {
     ];
 
     final previousData = _data[package];
-    final diff = data.diffFrom(previousData);
+    final diff = data.diffFrom(previousData, failedPackages: failedPackages);
 
     // Don't alert for discontinued packages
     if (!data.isDiscontinued) {

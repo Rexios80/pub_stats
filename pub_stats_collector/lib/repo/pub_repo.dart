@@ -21,7 +21,12 @@ class PubRepo {
   );
 
   Future<GlobalStats> fetchAllData(
-    Future<void> Function(String package, PackageScore score, PackageData data)
+    Future<void> Function(
+      String package,
+      PackageScore score,
+      PackageData data,
+      Set<String> failedPackages,
+    )
     handleData,
   ) async {
     final packages = await _fetchClient.packageNames();
@@ -34,6 +39,7 @@ class PubRepo {
 
     final wrappers = <PackageDataWrapper>[];
     final dependentMap = <String, Set<String>>{};
+    final failedPackages = <String>{};
     var fetched = 0;
 
     // Prevent too many concurrent calls to the pub API
@@ -122,6 +128,7 @@ class PubRepo {
                   throw TimeoutException('Timeout fetching data for $package'),
             );
           } catch (e, s) {
+            failedPackages.add(package);
             print('Error fetching data for $package: $e');
             print(s);
           }
@@ -147,7 +154,7 @@ class PubRepo {
         mostDependedPackage = (package, dependents.length);
       }
 
-      await handleData(package, score, data).timeout(
+      await handleData(package, score, data, failedPackages).timeout(
         Duration(seconds: 30),
         onTimeout: () =>
             throw TimeoutException('Timeout handling wrapper for $package'),

@@ -138,12 +138,11 @@ class DataController {
           content: Text('Unable to get stats for $package'),
           action: SnackBarAction(
             label: 'COPY ERROR',
-            onPressed:
-                () => Clipboard.setData(
-                  ClipboardData(
-                    text: 'Unable to get stats for $package\n$e\n$stacktrace',
-                  ),
-                ),
+            onPressed: () => Clipboard.setData(
+              ClipboardData(
+                text: 'Unable to get stats for $package\n$e\n$stacktrace',
+              ),
+            ),
           ),
         ),
       );

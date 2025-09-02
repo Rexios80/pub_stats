@@ -50,8 +50,10 @@ void main() {
 
       final key = badgeType.databaseKey;
       return promise(() async {
-        final snap =
-            await database.ref('data/$packageName/$key'.toJS).get().toDart;
+        final snap = await database
+            .ref('data/$packageName/$key'.toJS)
+            .get()
+            .toDart;
 
         final data = snap.val();
         if (data == null) return response.status(404).send(null);
@@ -61,21 +63,17 @@ void main() {
           BadgeType.rank => (data as JSNumber).toDartInt + 1,
         };
 
-        final badge =
-            badgeMaker
-                .makeBadge(
-                  BadgeFormat(
-                    label: badgeType.name,
-                    message: '$message',
-                    color: '#007ec6',
-                    logoBase64: logoData,
-                    links:
-                        [
-                          'https://pubstats.dev/packages/$packageName'.toJS,
-                        ].toJS,
-                  ),
-                )
-                .toJS;
+        final badge = badgeMaker
+            .makeBadge(
+              BadgeFormat(
+                label: badgeType.name,
+                message: '$message',
+                color: '#007ec6',
+                logoBase64: logoData,
+                links: ['https://pubstats.dev/packages/$packageName'.toJS].toJS,
+              ),
+            )
+            .toJS;
 
         return response.setHeader('Content-Type', 'image/svg+xml').send(badge);
       });

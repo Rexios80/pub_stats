@@ -35,11 +35,10 @@ class BaseStatChart extends StatelessWidget {
     final timeSpan = controller.timeSpan.value;
     return spots
         .map(
-          (e) =>
-              e.where((e) {
-                final date = DateTime.fromMillisecondsSinceEpoch(e.x.toInt());
-                return timeSpan.contains(date);
-              }).toList(),
+          (e) => e.where((e) {
+            final date = DateTime.fromMillisecondsSinceEpoch(e.x.toInt());
+            return timeSpan.contains(date);
+          }).toList(),
         )
         .toList();
   }
@@ -123,31 +122,25 @@ class BaseStatChart extends StatelessWidget {
     return LineTouchData(
       touchTooltipData: LineTouchTooltipData(
         getTooltipColor: (_) => context.theme.cardColor,
-        getTooltipItems:
-            (spots) =>
-                spots.mapIndexed((spotIndex, spot) {
-                  final barIndex = spot.barIndex;
-                  final valueString = formatValue(spot.y);
-                  final valueStyle = TextStyle(
-                    color: AppColors.chartLineColors[barIndex],
-                  );
-                  final date = DateTime.fromMillisecondsSinceEpoch(
-                    spot.x.toInt(),
-                  );
-                  final dateString = Formatting.shortDate(date);
+        getTooltipItems: (spots) => spots.mapIndexed((spotIndex, spot) {
+          final barIndex = spot.barIndex;
+          final valueString = formatValue(spot.y);
+          final valueStyle = TextStyle(
+            color: AppColors.chartLineColors[barIndex],
+          );
+          final date = DateTime.fromMillisecondsSinceEpoch(spot.x.toInt());
+          final dateString = Formatting.shortDate(date);
 
-                  if (spotIndex == 0) {
-                    return LineTooltipItem(
-                      dateString,
-                      const TextStyle(),
-                      children: [
-                        TextSpan(text: '\n$valueString', style: valueStyle),
-                      ],
-                    );
-                  } else {
-                    return LineTooltipItem(valueString, valueStyle);
-                  }
-                }).toList(),
+          if (spotIndex == 0) {
+            return LineTooltipItem(
+              dateString,
+              const TextStyle(),
+              children: [TextSpan(text: '\n$valueString', style: valueStyle)],
+            );
+          } else {
+            return LineTooltipItem(valueString, valueStyle);
+          }
+        }).toList(),
       ),
     );
   }

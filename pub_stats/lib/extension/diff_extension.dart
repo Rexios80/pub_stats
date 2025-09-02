@@ -41,16 +41,14 @@ class PackageListButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton(
       tooltip: '',
-      itemBuilder:
-          (context) =>
-              packages
-                  .map(
-                    (package) => PopupMenuItem(
-                      child: Text(package),
-                      onTap: () => _controller.fetchStats(package),
-                    ),
-                  )
-                  .toList(),
+      itemBuilder: (context) => packages
+          .map(
+            (package) => PopupMenuItem(
+              child: Text(package),
+              onTap: () => _controller.fetchStats(package),
+            ),
+          )
+          .toList(),
       child: AbsorbPointer(
         child: TextButton(
           style: TextButton.styleFrom(padding: EdgeInsets.zero),

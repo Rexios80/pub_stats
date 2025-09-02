@@ -11,8 +11,11 @@ class DatabaseRepo {
   DatabaseRepo();
 
   Future<Map<String, PackageData>> readPackageData() async {
-    final data =
-        await _database.ref().child('data').once(EventType.value).toDart;
+    final data = await _database
+        .ref()
+        .child('data')
+        .once(EventType.value)
+        .toDart;
     final value = data.val()?.toJson();
     if (value == null) return {};
     return value.map(
@@ -68,8 +71,11 @@ class DatabaseRepo {
 
   /// Map of `uid` to their list of [AlertConfig]s
   Future<Map<String, List<AlertConfig>>> readAlertConfigs() async {
-    final data =
-        await _database.ref().child('alerts').once(EventType.value).toDart;
+    final data = await _database
+        .ref()
+        .child('alerts')
+        .once(EventType.value)
+        .toDart;
     final value = data.val()?.toJson();
     if (value == null) return {};
 

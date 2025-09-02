@@ -118,11 +118,8 @@ class PubRepo {
           try {
             await fetchPackageData(package).timeout(
               Duration(seconds: 30),
-              onTimeout:
-                  () =>
-                      throw TimeoutException(
-                        'Timeout fetching data for $package',
-                      ),
+              onTimeout: () =>
+                  throw TimeoutException('Timeout fetching data for $package'),
             );
           } catch (e, s) {
             print('Error fetching data for $package: $e');
@@ -152,9 +149,8 @@ class PubRepo {
 
       await handleData(package, score, data).timeout(
         Duration(seconds: 30),
-        onTimeout:
-            () =>
-                throw TimeoutException('Timeout handling wrapper for $package'),
+        onTimeout: () =>
+            throw TimeoutException('Timeout handling wrapper for $package'),
       );
 
       handled++;

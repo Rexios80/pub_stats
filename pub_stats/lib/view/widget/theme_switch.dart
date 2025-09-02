@@ -11,13 +11,12 @@ class ThemeSwitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed:
-          () =>
-              _settings.themeMode.value = switch (_settings.themeMode.value) {
-                ThemeMode.system => ThemeMode.dark,
-                ThemeMode.dark => ThemeMode.light,
-                ThemeMode.light => ThemeMode.system,
-              },
+      onPressed: () =>
+          _settings.themeMode.value = switch (_settings.themeMode.value) {
+            ThemeMode.system => ThemeMode.dark,
+            ThemeMode.dark => ThemeMode.light,
+            ThemeMode.light => ThemeMode.system,
+          },
       icon: FastBuilder(
         () => Icon(switch (_settings.themeMode.value) {
           ThemeMode.system => Icons.brightness_auto,

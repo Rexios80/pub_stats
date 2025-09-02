@@ -34,13 +34,12 @@ class Footer extends StatelessWidget {
             ),
             FooterTextLink(
               label: 'Licenses',
-              onTap:
-                  () => FastOverlays.showLicensePage(
-                    applicationIcon: Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: SvgPicture.asset(AppImage.logo, height: 75),
-                    ),
-                  ),
+              onTap: () => FastOverlays.showLicensePage(
+                applicationIcon: Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: SvgPicture.asset(AppImage.logo, height: 75),
+                ),
+              ),
             ),
           ],
         ),

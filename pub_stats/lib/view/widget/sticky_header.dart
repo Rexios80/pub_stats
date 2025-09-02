@@ -81,13 +81,12 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
           for (final suggestion in {text, ..._dataController.complete(text)})
             ListTile(
               title: Text(suggestion),
-              trailing:
-                  _dataController.loadedStats.isEmpty
-                      ? null
-                      : TextButton(
-                        onPressed: () => _submit(suggestion, clear: false),
-                        child: const Text('Compare'),
-                      ),
+              trailing: _dataController.loadedStats.isEmpty
+                  ? null
+                  : TextButton(
+                      onPressed: () => _submit(suggestion, clear: false),
+                      child: const Text('Compare'),
+                    ),
               onTap: () => _submit(suggestion),
             ),
         ];

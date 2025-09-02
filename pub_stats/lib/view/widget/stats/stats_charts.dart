@@ -78,10 +78,9 @@ class StatsCharts extends StatelessWidget {
   List<Widget> _buildPackageHeader(BuildContext context) {
     final package = stats.first.package;
     final packageStats = stats.first.stats;
-    final lastUpdated =
-        packageStats.isNotEmpty
-            ? Formatting.timeAgo(packageStats.last.timestamp)
-            : 'never';
+    final lastUpdated = packageStats.isNotEmpty
+        ? Formatting.timeAgo(packageStats.last.timestamp)
+        : 'never';
     final data = stats.first.data;
     final overallRank = data.overallRank;
     return [
@@ -131,16 +130,15 @@ class StatsCharts extends StatelessWidget {
       Wrap(
         alignment: WrapAlignment.center,
         spacing: 8,
-        children:
-            stats
-                .mapIndexed(
-                  (index, e) => Chip(
-                    label: Text(e.package),
-                    onDeleted: () => onComparisonRemoved?.call(e.package),
-                    deleteIconColor: AppColors.chartLineColors.elementAt(index),
-                  ),
-                )
-                .toList(),
+        children: stats
+            .mapIndexed(
+              (index, e) => Chip(
+                label: Text(e.package),
+                onDeleted: () => onComparisonRemoved?.call(e.package),
+                deleteIconColor: AppColors.chartLineColors.elementAt(index),
+              ),
+            )
+            .toList(),
       ),
     ];
   }
@@ -246,27 +244,25 @@ class PopularityScoreChartState extends State<PopularityScoreChart> {
       actions: [
         IconButton(
           icon: const Icon(Icons.info_outline),
-          onPressed:
-              () => showDialog(
-                context: context,
-                builder:
-                    (context) => const AlertDialog(
-                      title: Text('About Popularity Score'),
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '''
+          onPressed: () => showDialog(
+            context: context,
+            builder: (context) => const AlertDialog(
+              title: Text('About Popularity Score'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '''
 Popularity score is a metric that attempts to quantify the overall popularity of a package.
 
 Modern popularity scores are calculated by pub_stats based on the raw download count of a package relative to others.
 
 Legacy popularity scores were calculated by pub.dev based on a filtered download count, but are no longer computed.''',
-                          ),
-                        ],
-                      ),
-                    ),
+                  ),
+                ],
               ),
+            ),
+          ),
         ),
         IconButton(
           icon: Icon(
@@ -290,21 +286,20 @@ Legacy popularity scores were calculated by pub.dev based on a filtered download
           },
         ),
       ],
-      builder:
-          (singleY, barData) => LineChart(
-            LineChartData(
-              minY: 0,
-              maxY: 100,
-              minX: widget.firstDate.millisecondsSinceEpoch.toDouble(),
-              maxX: widget.lastDate.millisecondsSinceEpoch.toDouble(),
-              lineBarsData: barData,
-              gridData: BaseStatChart.defaultGridData,
-              borderData: BaseStatChart.createDefaultBorderData(context),
-              titlesData: BaseStatChart.defaultTitlesData,
-              lineTouchData: BaseStatChart.createDefaultLineTouchData(context),
-            ),
-            duration: Duration.zero,
-          ),
+      builder: (singleY, barData) => LineChart(
+        LineChartData(
+          minY: 0,
+          maxY: 100,
+          minX: widget.firstDate.millisecondsSinceEpoch.toDouble(),
+          maxX: widget.lastDate.millisecondsSinceEpoch.toDouble(),
+          lineBarsData: barData,
+          gridData: BaseStatChart.defaultGridData,
+          borderData: BaseStatChart.createDefaultBorderData(context),
+          titlesData: BaseStatChart.defaultTitlesData,
+          lineTouchData: BaseStatChart.createDefaultLineTouchData(context),
+        ),
+        duration: Duration.zero,
+      ),
     );
   }
 }
@@ -329,22 +324,21 @@ class DownloadCountChart extends StatelessWidget {
       spots: spots,
       label: 'Download Count',
       formatValue: formatLargeNum,
-      builder:
-          (singleY, barData) => LineChart(
-            LineChartData(
-              lineBarsData: barData,
-              minX: firstDate.millisecondsSinceEpoch.toDouble(),
-              maxX: lastDate.millisecondsSinceEpoch.toDouble(),
-              gridData: BaseStatChart.defaultGridData,
-              borderData: BaseStatChart.createDefaultBorderData(context),
-              titlesData: BaseStatChart.defaultTitlesData,
-              lineTouchData: BaseStatChart.createDefaultLineTouchData(
-                context,
-                formatValue: formatLargeNum,
-              ),
-            ),
-            duration: Duration.zero,
+      builder: (singleY, barData) => LineChart(
+        LineChartData(
+          lineBarsData: barData,
+          minX: firstDate.millisecondsSinceEpoch.toDouble(),
+          maxX: lastDate.millisecondsSinceEpoch.toDouble(),
+          gridData: BaseStatChart.defaultGridData,
+          borderData: BaseStatChart.createDefaultBorderData(context),
+          titlesData: BaseStatChart.defaultTitlesData,
+          lineTouchData: BaseStatChart.createDefaultLineTouchData(
+            context,
+            formatValue: formatLargeNum,
           ),
+        ),
+        duration: Duration.zero,
+      ),
     );
   }
 }

@@ -59,6 +59,8 @@ class ShieldsBadge extends StatelessWidget {
   }
 
   void _createBadge(BuildContext context) {
+    final messenger = ScaffoldMessenger.of(context);
+
     final hint = type.name.titleCase;
     Clipboard.setData(
       ClipboardData(
@@ -66,7 +68,7 @@ class ShieldsBadge extends StatelessWidget {
             '[![PubStats $hint](https://pubstats.dev/badges/packages/$package/$type.svg)](https://pubstats.dev/packages/$package)',
       ),
     );
-    ScaffoldMessenger.of(context).showSnackBar(
+    messenger.showSnackBar(
       const SnackBar(content: Text('Badge markdown copied to clipboard')),
     );
   }

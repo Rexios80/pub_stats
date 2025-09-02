@@ -19,7 +19,7 @@ MiniPackageScore _$MiniPackageScoreFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$MiniPackageScoreToJson(MiniPackageScore instance) =>
     <String, dynamic>{
       'l': instance.likeCount,
-      if (instance.legacyPopularityScore case final value?) 'p': value,
-      if (instance.popularityScore case final value?) 'p2': value,
-      if (instance.downloadCount case final value?) 'd': value,
+      'p': ?instance.legacyPopularityScore,
+      'p2': ?instance.popularityScore,
+      'd': ?instance.downloadCount,
     };

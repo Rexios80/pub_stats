@@ -70,7 +70,8 @@ class AppBarActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isWide = MediaQuery.of(context).size.width > 700;
+    final mediaQuery = MediaQuery.of(context);
+    final isWide = mediaQuery.size.width > 700;
     final manageAlerts = AppBarAction(
       title: 'Manage Alerts',
       onPressed: () => context.push(AlertsManager()),
@@ -96,14 +97,13 @@ class AppBarActions extends StatelessWidget {
               foregroundImage: NetworkImage(_user.user.value!.photoURL ?? ''),
               child: const Icon(Icons.person, color: Colors.white),
             ),
-            itemBuilder:
-                (context) => [
-                  if (!isWide) manageAlerts.menuItem,
-                  PopupMenuItem(
-                    onTap: _user.signOut,
-                    child: const Text('Sign out'),
-                  ),
-                ],
+            itemBuilder: (context) => [
+              if (!isWide) manageAlerts.menuItem,
+              PopupMenuItem(
+                onTap: _user.signOut,
+                child: const Text('Sign out'),
+              ),
+            ],
           ),
         ];
       } else {

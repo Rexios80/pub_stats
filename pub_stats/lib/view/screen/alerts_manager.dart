@@ -66,7 +66,7 @@ class AlertsManager extends StatelessWidget {
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                         ),
-                        value: selectedType.value,
+                        initialValue: selectedType.value,
                         items:
                             AlertConfigType.values
                                 .map(

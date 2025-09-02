@@ -28,16 +28,16 @@ dependencies:
     path: ../pub_stats_core
 
   # Firebase
-  firebase_core: ^3.2.0
-  firebase_analytics: ^11.2.0
-  firebase_app_check: ^0.3.0+3
-  firebase_auth: ^5.1.2
-  firebase_database: ^11.0.3
-  firebase_performance: ^0.10.0+3
+  firebase_core: ^4.1.0
+  firebase_analytics: ^12.0.1
+  firebase_app_check: ^0.4.0+1
+  firebase_auth: ^6.0.2
+  firebase_database: ^12.0.1
+  firebase_performance: ^0.11.0+1
 
   collection: ^1.16.0
   recase: ^4.1.0
-  firebase_ui_database: ^1.4.2
+  firebase_ui_database: ^2.0.0
   sliver_tools: ^0.2.12
   web: ^1.1.0
   platform_plus: ^4.8.1
@@ -45,7 +45,7 @@ dependencies:
   meta: ^1.16.0
 
 dev_dependencies:
-  rexios_lints: ^12.0.0
+  rexios_lints: ^15.0.0
   flutter_native_splash: ^2.0.1+1
 
 flutter:

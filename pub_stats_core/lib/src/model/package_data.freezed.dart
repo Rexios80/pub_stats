@@ -1,6 +1,5 @@
-// dart format width=80
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -87,6 +86,130 @@ as int?,
 
 }
 
+
+/// Adds pattern-matching-related methods to [PackageData].
+extension PackageDataPatterns on PackageData {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _PackageData value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _PackageData() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _PackageData value)  $default,){
+final _that = this;
+switch (_that) {
+case _PackageData():
+return $default(_that);}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _PackageData value)?  $default,){
+final _that = this;
+switch (_that) {
+case _PackageData() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'p')  String? publisher, @JsonKey(name: 'v')  String version, @JsonKey(name: 'lc')  int likeCount, @JsonKey(name: 'ps')  int? legacyPopularityScore, @JsonKey(name: 'ps2')  int? popularityScore, @JsonKey(name: 'dc')  int? downloadCount, @JsonKey(name: 'id')  bool isDiscontinued, @JsonKey(name: 'iu')  bool isUnlisted, @JsonKey(name: 'iff')  bool isFlutterFavorite, @JsonKey(name: 'd')  Set<String> dependents, @JsonKey(name: 'n')  int? overallRank, @JsonKey(name: 'nd')  int? numDependents)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _PackageData() when $default != null:
+return $default(_that.publisher,_that.version,_that.likeCount,_that.legacyPopularityScore,_that.popularityScore,_that.downloadCount,_that.isDiscontinued,_that.isUnlisted,_that.isFlutterFavorite,_that.dependents,_that.overallRank,_that.numDependents);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'p')  String? publisher, @JsonKey(name: 'v')  String version, @JsonKey(name: 'lc')  int likeCount, @JsonKey(name: 'ps')  int? legacyPopularityScore, @JsonKey(name: 'ps2')  int? popularityScore, @JsonKey(name: 'dc')  int? downloadCount, @JsonKey(name: 'id')  bool isDiscontinued, @JsonKey(name: 'iu')  bool isUnlisted, @JsonKey(name: 'iff')  bool isFlutterFavorite, @JsonKey(name: 'd')  Set<String> dependents, @JsonKey(name: 'n')  int? overallRank, @JsonKey(name: 'nd')  int? numDependents)  $default,) {final _that = this;
+switch (_that) {
+case _PackageData():
+return $default(_that.publisher,_that.version,_that.likeCount,_that.legacyPopularityScore,_that.popularityScore,_that.downloadCount,_that.isDiscontinued,_that.isUnlisted,_that.isFlutterFavorite,_that.dependents,_that.overallRank,_that.numDependents);}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'p')  String? publisher, @JsonKey(name: 'v')  String version, @JsonKey(name: 'lc')  int likeCount, @JsonKey(name: 'ps')  int? legacyPopularityScore, @JsonKey(name: 'ps2')  int? popularityScore, @JsonKey(name: 'dc')  int? downloadCount, @JsonKey(name: 'id')  bool isDiscontinued, @JsonKey(name: 'iu')  bool isUnlisted, @JsonKey(name: 'iff')  bool isFlutterFavorite, @JsonKey(name: 'd')  Set<String> dependents, @JsonKey(name: 'n')  int? overallRank, @JsonKey(name: 'nd')  int? numDependents)?  $default,) {final _that = this;
+switch (_that) {
+case _PackageData() when $default != null:
+return $default(_that.publisher,_that.version,_that.likeCount,_that.legacyPopularityScore,_that.popularityScore,_that.downloadCount,_that.isDiscontinued,_that.isUnlisted,_that.isFlutterFavorite,_that.dependents,_that.overallRank,_that.numDependents);case _:
+  return null;
+
+}
+}
+
+}
 
 /// @nodoc
 @JsonSerializable()

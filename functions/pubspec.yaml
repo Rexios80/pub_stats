@@ -7,7 +7,7 @@ environment:
 resolution: workspace
 
 dependencies:
-  firebase_js_interop: ^0.0.9
+  firebase_js_interop: ^0.0.10
   pub_stats_core:
     path: ../pub_stats_core
   pub_stats_collector:
@@ -15,3 +15,4 @@ dependencies:
 
 dev_dependencies:
   rexios_lints: ^15.0.0
+  flutter_tools_task_queue: ^1.0.0

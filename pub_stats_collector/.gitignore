@@ -10,6 +10,3 @@ build/
 
 # Pruned database file
 pruned.json
-
-# Secrets
-secret

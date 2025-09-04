@@ -11,3 +11,7 @@ emcache/
 
 # FVM Version Cache
 .fvm/
+
+
+# Secrets
+secret

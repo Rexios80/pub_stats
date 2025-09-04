@@ -2,7 +2,7 @@ node_modules/
 *.local
 
 # Compiled JavaScript files
-lib/**
+lib
 
 # https://dart.dev/guides/libraries/private-files
 # Created by `dart pub`

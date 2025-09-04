@@ -35,7 +35,6 @@ class DatabaseRepo {
 
   Future<void> writePackageScore({
     required String package,
-    required DateTime lastUpdated,
     required MiniPackageScore score,
   }) {
     return _database
@@ -43,7 +42,7 @@ class DatabaseRepo {
         .child('stats')
         .child(package)
         // Store as seconds since epoch to save space
-        .child(lastUpdated.secondsSinceEpoch.toString())
+        .child(DateTime.timestamp().secondsSinceEpoch.toString())
         .set(score.toJson().toJS)
         .toDart;
   }

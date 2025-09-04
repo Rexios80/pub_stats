@@ -87,12 +87,15 @@ class ScoreFetchController {
       diff.entries.where((e) => e.key.trackDiff),
     );
 
+    final writeScore = diff.keys.toSet().intersection({
+      PackageDataField.likeCount,
+      PackageDataField.popularityScore,
+      PackageDataField.downloadCount,
+    }).isNotEmpty;
+
     await Future.wait([
-      _database.writePackageScore(
-        package: package,
-        lastUpdated: score.lastUpdated,
-        score: miniScore,
-      ),
+      if (writeScore)
+        _database.writePackageScore(package: package, score: miniScore),
       _database.writePackageData(package, data),
       if (filteredDiff.isNotEmpty)
         _database.writePackageDiff(package, filteredDiff),

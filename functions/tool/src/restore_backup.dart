@@ -14,7 +14,7 @@ import '../../secret/service_account.dart';
 import '../../src/interop/source_map_support.dart';
 
 /// Run this command to increase the memory limit
-/// node --max-old-space-size=8192 tool/lib/restore_backup.js
+/// node --max-old-space-size=16384 tool/lib/restore_backup.js
 void main() async {
   sourceMapSupport.install();
 

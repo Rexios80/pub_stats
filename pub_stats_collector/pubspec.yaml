@@ -11,7 +11,7 @@ dependencies:
     path: ../pub_stats_core
   firebase_js_interop: ^0.0.10
   pub_api_client: ^3.1.1
-  discord_interactions: ^0.0.23
+  discord_interactions: ^0.0.24
   flutter_tools_task_queue: ^1.0.0
   recase: ^4.1.0
   path: ^1.9.0

@@ -57,7 +57,7 @@ class FirebaseService {
   static Future<void> _activateAppCheck() async {
     try {
       await FirebaseAppCheck.instance.activate(
-        webProvider: ReCaptchaV3Provider(
+        providerWeb: ReCaptchaV3Provider(
           '6LeVDcodAAAAAFLXdyTIcFjcEGN-Gjl2nWrU08q5',
         ),
       );

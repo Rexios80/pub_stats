@@ -36,19 +36,13 @@ class UndiciClient extends http.BaseClient {
     Object? body,
     Encoding? encoding,
   }) async {
-    // There is no other way to check this
-    // ignore: invalid_runtime_check_with_js_interop_types
-    if (body is! JSAny) {
-      throw ArgumentError.value(body, 'body', 'Must be a JS type');
-    }
-
     final response = await undici
         .request(
           url.toString(),
           RequestOptions(
             method: 'POST',
             headers: (headers ?? {}).toJS,
-            body: body,
+            body: body as JSAny?,
           ),
         )
         .toDart;

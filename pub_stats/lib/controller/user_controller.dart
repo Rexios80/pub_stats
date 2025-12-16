@@ -83,25 +83,26 @@ class UserController {
     }
 
     final AlertConfig config;
-    if (type == AlertConfigType.discord) {
-      final match = RegExp(
-        r'https:\/\/discord\.com\/api\/webhooks\/(.+)\/(.+)',
-      ).firstMatch(extra);
+    switch (type) {
+      case AlertConfigType.discord:
+        final match = RegExp(
+          r'https:\/\/discord\.com\/api\/webhooks\/(.+)\/(.+)',
+        ).firstMatch(extra);
 
-      if (match == null) {
-        FastOverlays.showSnackBar(
-          const SnackBar(content: Text('Invalid Discord webhook URL')),
+        if (match == null) {
+          FastOverlays.showSnackBar(
+            const SnackBar(content: Text('Invalid Discord webhook URL')),
+          );
+          return false;
+        }
+        config = DiscordAlertConfig(
+          slug: slug,
+          ignore: ignore,
+          id: match[1]!,
+          token: match[2]!,
         );
-        return false;
-      }
-      config = DiscordAlertConfig(
-        slug: slug,
-        ignore: ignore,
-        id: match[1]!,
-        token: match[2]!,
-      );
-    } else {
-      return false;
+      case AlertConfigType.telegram:
+        config = TelegramAlertConfig(slug: slug, ignore: ignore, chatId: extra);
     }
 
     await _database.writeAlertConfigs(_auth.currentUser!.uid, [

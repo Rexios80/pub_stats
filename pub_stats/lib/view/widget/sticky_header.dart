@@ -1,4 +1,4 @@
-import 'package:fast_ui/fast_ui.dart';
+import 'package:fast_rx_flutter/fast_rx_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pub_stats/controller/data_controller.dart';
@@ -18,11 +18,13 @@ class StickyHeader extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
+    final theme = Theme.of(context);
+
     // overlapsContent does not work if a header is pinned
     // https://github.com/flutter/flutter/issues/26667#issuecomment-937974056
     overlapsContent = shrinkOffset > 0;
     return Material(
-      color: context.theme.scaffoldBackgroundColor,
+      color: theme.scaffoldBackgroundColor,
       elevation: overlapsContent ? 4 : 0,
       child: Center(
         child: Container(

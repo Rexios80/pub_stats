@@ -39,10 +39,8 @@ class DiscordRepo implements AlertHandler {
           color: color,
           url: 'https://pubstats.dev/packages/$package',
           fields: [
-            ...changes.entries.map(
-              (e) =>
-                  EmbedField(name: e.key.name.titleCase, value: e.value.text),
-            ),
+            for (final MapEntry(key: field, value: diff) in changes.entries)
+              EmbedField(name: field.name.titleCase, value: diff.text),
             if (warnings.isNotEmpty)
               EmbedField(name: 'Warnings', value: warnings.join('\n')),
           ],

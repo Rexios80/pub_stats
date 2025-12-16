@@ -194,7 +194,6 @@ class AlertsManager extends StatelessWidget {
     }
 
     slugController.clear();
-    extraController.clear();
   }
 }
 

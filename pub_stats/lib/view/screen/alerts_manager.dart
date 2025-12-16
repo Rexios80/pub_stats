@@ -127,6 +127,13 @@ class AlertsManager extends StatelessWidget {
                 ],
               ),
             ),
+            FastBuilder(() {
+              if (selectedType.value == AlertConfigType.telegram) {
+                return const Text('Add the pubstats_bot user to your chat');
+              } else {
+                return const SizedBox.shrink();
+              }
+            }),
             Expanded(
               child: SingleChildScrollView(
                 child: FastBuilder(

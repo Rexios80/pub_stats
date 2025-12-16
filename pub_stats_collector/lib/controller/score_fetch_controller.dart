@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:pub_api_client/pub_api_client.dart' hide Credentials;
+import 'package:pub_stats_collector/repo/alert_handler.dart';
 import 'package:pub_stats_collector/repo/database_repo.dart';
-import 'package:pub_stats_collector/repo/discord_repo.dart';
 import 'package:pub_stats_collector/repo/pub_repo.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 import 'package:meta/meta.dart';
@@ -11,16 +11,10 @@ import 'package:meta/meta.dart';
 class ScoreFetchController {
   final _pub = PubRepo();
   final DatabaseRepo _database;
-  final DiscordRepo _discord;
   final Map<String, List<AlertConfig>> _alertConfigs;
   final Map<String, PackageData> _data;
 
-  ScoreFetchController(
-    this._database,
-    this._discord,
-    this._alertConfigs,
-    this._data,
-  );
+  ScoreFetchController(this._database, this._alertConfigs, this._data);
 
   Future<void> fetchScores() async {
     final startTime = DateTime.timestamp();
@@ -34,13 +28,11 @@ class ScoreFetchController {
     print('Package processing completed in ${duration.inSeconds} seconds');
 
     for (final config in _alertConfigs['.system'] ?? <AlertConfig>[]) {
-      await switch (config.type) {
-        AlertConfigType.discord => _discord.sendGlobalStatsAlert(
-          config: config as DiscordAlertConfig,
-          stats: globalStats,
-          duration: duration,
-        ),
-      };
+      await AlertHandler.instance.sendGlobalStatsAlert(
+        config: config,
+        stats: globalStats,
+        duration: duration,
+      );
     }
     print('System alerts sent');
   }
@@ -130,14 +122,12 @@ class ScoreFetchController {
 
       if (filteredChanges.isEmpty && filteredWarnings.isEmpty) continue;
 
-      await switch (config.type) {
-        AlertConfigType.discord => _discord.sendPackageAlert(
-          package: package,
-          config: config as DiscordAlertConfig,
-          changes: filteredChanges,
-          warnings: filteredWarnings.values.toList(),
-        ),
-      };
+      await AlertHandler.instance.sendPackageAlert(
+        package: package,
+        config: config,
+        changes: filteredChanges,
+        warnings: filteredWarnings.values.toList(),
+      );
     }
   }
 }

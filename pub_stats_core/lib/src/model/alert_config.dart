@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 part 'alert_config.g.dart';
 
 @immutable
-abstract class AlertConfig {
+sealed class AlertConfig {
   /// `.system`, `package`, or `publisher:name`
   final String slug;
 
@@ -24,24 +24,23 @@ abstract class AlertConfig {
   factory AlertConfig.fromJson(Map<String, dynamic> json) =>
       switch (AlertConfigType.values.byName(json['type'])) {
         AlertConfigType.discord => DiscordAlertConfig.fromJson(json),
+        AlertConfigType.telegram => TelegramAlertConfig.fromJson(json),
       };
 
   Map<String, dynamic> toJson();
 
-  String get extra => switch (type) {
-    AlertConfigType.discord => (this as DiscordAlertConfig).id,
-  };
+  String get extra;
 }
 
 enum AlertConfigType {
-  discord;
+  discord,
+  telegram;
 
   String get extraLabel => switch (this) {
     discord => 'Webhook URL',
+    telegram => 'Chat ID',
   };
 }
-
-abstract class AlertServiceConfig {}
 
 @JsonSerializable()
 class DiscordAlertConfig extends AlertConfig {
@@ -61,4 +60,28 @@ class DiscordAlertConfig extends AlertConfig {
 
   @override
   Map<String, dynamic> toJson() => _$DiscordAlertConfigToJson(this);
+
+  @override
+  String get extra => id;
+}
+
+@JsonSerializable()
+class TelegramAlertConfig extends AlertConfig {
+  final String chatId;
+
+  const TelegramAlertConfig({
+    required super.slug,
+    super.ignore,
+    required this.chatId,
+    super.type = AlertConfigType.telegram,
+  }) : assert(type == AlertConfigType.telegram);
+
+  factory TelegramAlertConfig.fromJson(Map<String, dynamic> json) =>
+      _$TelegramAlertConfigFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$TelegramAlertConfigToJson(this);
+
+  @override
+  String get extra => chatId;
 }

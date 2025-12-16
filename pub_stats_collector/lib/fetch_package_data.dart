@@ -4,8 +4,8 @@ import 'dart:js_interop';
 import 'package:firebase_js_interop/express.dart' as express;
 import 'package:firebase_js_interop/node.dart';
 import 'package:pub_stats_collector/controller/score_fetch_controller.dart';
+import 'package:pub_stats_collector/repo/alert_handler.dart';
 import 'package:pub_stats_collector/repo/database_repo.dart';
-import 'package:pub_stats_collector/repo/discord_repo.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 
 var running = false;
@@ -16,7 +16,6 @@ Future<express.Response> fetchPackageData(express.Response response) async {
   running = true;
 
   final database = DatabaseRepo();
-  final discord = DiscordRepo();
 
   var alertConfigs = <String, List<AlertConfig>>{};
 
@@ -32,12 +31,7 @@ Future<express.Response> fetchPackageData(express.Response response) async {
     }
 
     final data = await database.readPackageData();
-    final controller = ScoreFetchController(
-      database,
-      discord,
-      alertConfigs,
-      data,
-    );
+    final controller = ScoreFetchController(database, alertConfigs, data);
 
     await controller.fetchScores().timeout(
       Duration(minutes: 10),
@@ -48,12 +42,10 @@ Future<express.Response> fetchPackageData(express.Response response) async {
     print(stacktrace);
 
     for (final config in alertConfigs['.system'] ?? <AlertConfig>[]) {
-      await switch (config.type) {
-        AlertConfigType.discord => discord.sendSystemErrorAlert(
-          config: config as DiscordAlertConfig,
-          error: e,
-        ),
-      };
+      await AlertHandler.instance.sendSystemErrorAlert(
+        config: config,
+        error: e,
+      );
     }
 
     process.exit(1.toJS);

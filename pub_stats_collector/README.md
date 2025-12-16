@@ -1,0 +1,1 @@
+The pub_stats_collector used to be a standalone Cloud Run service. It is now a Firebase Cloud Function. It remains in a separate directory for readability. See the [functions](../functions) directory for the harness code.

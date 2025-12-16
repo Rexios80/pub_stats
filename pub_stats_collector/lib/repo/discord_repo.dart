@@ -1,9 +1,10 @@
 import 'package:discord_interactions/discord_interactions.dart';
+import 'package:pub_stats_collector/repo/alert_handler.dart';
 import 'package:pub_stats_collector/service/undici_client_adapter.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 import 'package:recase/recase.dart';
 
-class DiscordRepo {
+class DiscordRepo implements AlertHandler {
   static const _webhookUsername = 'Bartender';
 
   final _discord = DiscordApi(
@@ -15,6 +16,7 @@ class DiscordRepo {
     botToken: '',
   )..dio.httpClientAdapter = UndiciClientAdapter();
 
+  @override
   Future<void> sendPackageAlert({
     required String package,
     required DiscordAlertConfig config,
@@ -37,10 +39,8 @@ class DiscordRepo {
           color: color,
           url: 'https://pubstats.dev/packages/$package',
           fields: [
-            ...changes.entries.map(
-              (e) =>
-                  EmbedField(name: e.key.name.titleCase, value: e.value.text),
-            ),
+            for (final MapEntry(key: field, value: diff) in changes.entries)
+              EmbedField(name: field.name.titleCase, value: diff.text),
             if (warnings.isNotEmpty)
               EmbedField(name: 'Warnings', value: warnings.join('\n')),
           ],
@@ -49,6 +49,7 @@ class DiscordRepo {
     );
   }
 
+  @override
   Future<void> sendSystemErrorAlert({
     required DiscordAlertConfig config,
     required Object error,
@@ -66,6 +67,7 @@ class DiscordRepo {
     );
   }
 
+  @override
   Future<void> sendGlobalStatsAlert({
     required DiscordAlertConfig config,
     required GlobalStats stats,

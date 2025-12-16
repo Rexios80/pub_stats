@@ -46,4 +46,30 @@ const _$PackageDataFieldEnumMap = {
   PackageDataField.pubPoints: 'pubPoints',
 };
 
-const _$AlertConfigTypeEnumMap = {AlertConfigType.discord: 'discord'};
+const _$AlertConfigTypeEnumMap = {
+  AlertConfigType.discord: 'discord',
+  AlertConfigType.telegram: 'telegram',
+};
+
+TelegramAlertConfig _$TelegramAlertConfigFromJson(Map<String, dynamic> json) =>
+    TelegramAlertConfig(
+      slug: json['slug'] as String,
+      ignore:
+          (json['ignore'] as List<dynamic>?)
+              ?.map((e) => $enumDecode(_$PackageDataFieldEnumMap, e))
+              .toSet() ??
+          const {},
+      chatId: json['chatId'] as String,
+      type:
+          $enumDecodeNullable(_$AlertConfigTypeEnumMap, json['type']) ??
+          AlertConfigType.telegram,
+    );
+
+Map<String, dynamic> _$TelegramAlertConfigToJson(
+  TelegramAlertConfig instance,
+) => <String, dynamic>{
+  'slug': instance.slug,
+  'ignore': instance.ignore.map((e) => _$PackageDataFieldEnumMap[e]!).toList(),
+  'type': _$AlertConfigTypeEnumMap[instance.type]!,
+  'chatId': instance.chatId,
+};

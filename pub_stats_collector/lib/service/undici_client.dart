@@ -42,7 +42,7 @@ class UndiciClient extends http.BaseClient {
           RequestOptions(
             method: 'POST',
             headers: (headers ?? {}).toJS,
-            body: body as JSAny,
+            body: body as JSAny?,
           ),
         )
         .toDart;

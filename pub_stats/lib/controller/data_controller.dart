@@ -1,6 +1,7 @@
 import 'dart:math';
 
-import 'package:fast_ui/fast_ui.dart';
+import 'package:fast_overlays/fast_overlays.dart';
+import 'package:fast_rx_flutter/fast_rx_flutter.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

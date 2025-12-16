@@ -7,7 +7,6 @@ import 'package:pub_stats/constant/constants.dart';
 import 'package:pub_stats/format/formatting.dart';
 import 'package:pub_stats/model/package_score_snapshot.dart';
 import 'package:pub_stats/model/package_stats.dart';
-import 'package:fast_ui/fast_ui.dart';
 import 'package:pub_stats/view/widget/stats/base_stat_chart.dart';
 import 'package:pub_stats/view/widget/stats/shields_badge.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
@@ -27,6 +26,8 @@ class StatsCharts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = TextTheme.of(context);
+
     final firstDate = stats
         .map((package) => package.stats.first.timestamp)
         .reduce((a, b) => a.isBefore(b) ? a : b);
@@ -68,7 +69,7 @@ class StatsCharts extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'Hover/touch the charts for more information',
-            style: context.textTheme.bodySmall,
+            style: textTheme.bodySmall,
           ),
         ],
       ],
@@ -76,6 +77,8 @@ class StatsCharts extends StatelessWidget {
   }
 
   List<Widget> _buildPackageHeader(BuildContext context) {
+    final textTheme = TextTheme.of(context);
+
     final package = stats.first.package;
     final packageStats = stats.first.stats;
     final lastUpdated = packageStats.isNotEmpty
@@ -89,10 +92,10 @@ class StatsCharts extends StatelessWidget {
         onTap: () => launchUrlString(Constants.pubPackageBaseUrl + package),
         child: Padding(
           padding: const EdgeInsets.all(8),
-          child: Text(package, style: context.textTheme.titleLarge),
+          child: Text(package, style: textTheme.titleLarge),
         ),
       ),
-      Text('Last updated $lastUpdated', style: context.textTheme.bodySmall),
+      Text('Last updated $lastUpdated', style: textTheme.bodySmall),
       const SizedBox(height: 12),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -116,16 +119,15 @@ class StatsCharts extends StatelessWidget {
         ],
       ),
       const SizedBox(height: 12),
-      Text(
-        'Click a badge to copy its markdown',
-        style: context.textTheme.bodySmall,
-      ),
+      Text('Click a badge to copy its markdown', style: textTheme.bodySmall),
     ];
   }
 
   List<Widget> _buildCompareHeader(BuildContext context) {
+    final textTheme = TextTheme.of(context);
+
     return [
-      Text('Comparing', style: context.textTheme.titleLarge),
+      Text('Comparing', style: textTheme.titleLarge),
       const SizedBox(height: 16),
       Wrap(
         alignment: WrapAlignment.center,

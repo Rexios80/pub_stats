@@ -5,7 +5,7 @@ import 'package:platform_plus/platform_plus.dart';
 import 'package:pub_stats/constant/app_image.dart';
 import 'package:pub_stats/constant/app_theme.dart';
 import 'package:pub_stats/constant/links.dart';
-import 'package:fast_ui/fast_ui.dart';
+import 'package:fast_overlays/fast_overlays.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class Footer extends StatelessWidget {
@@ -28,10 +28,6 @@ class Footer extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            FooterTextLink(
-              label: 'Built with fast_ui',
-              onTap: () => launchUrlString(Links.fastUi),
-            ),
             FooterTextLink(
               label: 'Licenses',
               onTap: () => FastOverlays.showLicensePage(
@@ -74,12 +70,14 @@ class FooterTextLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = TextTheme.of(context);
+
     return InkWell(
       onTap: onTap,
       borderRadius: AppTheme.pillRadius,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        child: Text(label, style: context.textTheme.bodySmall),
+        child: Text(label, style: textTheme.bodySmall),
       ),
     );
   }

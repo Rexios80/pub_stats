@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fast_ui/fast_ui.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pub_stats/constant/app_image.dart';
@@ -13,6 +12,8 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = TextTheme.of(context);
+
     return InkWell(
       borderRadius: AppTheme.pillRadius,
       onTap: _controller.reset,
@@ -25,8 +26,8 @@ class Header extends StatelessWidget {
             Text(
               'pubstats',
               textAlign: TextAlign.center,
-              style: context.textTheme.displayMedium!.copyWith(
-                color: context.textTheme.bodyLarge!.color,
+              style: textTheme.displayMedium!.copyWith(
+                color: textTheme.bodyLarge!.color,
               ),
             ),
           ],

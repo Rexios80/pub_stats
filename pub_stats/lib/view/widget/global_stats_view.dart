@@ -6,7 +6,7 @@ import 'package:pub_stats/controller/data_controller.dart';
 import 'package:pub_stats/format/formatting.dart';
 import 'package:pub_stats/view/widget/stats/base_stat_chart.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
-import 'package:fast_ui/fast_ui.dart';
+import 'package:fast_rx_flutter/fast_rx_flutter.dart';
 
 class GlobalStatsView extends StatelessWidget {
   final _dataController = GetIt.I<DataController>();
@@ -90,6 +90,8 @@ class GlobalStatItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = TextTheme.of(context);
+
     return Card(
       shape: RoundedRectangleBorder(borderRadius: AppTheme.pillRadius),
       clipBehavior: Clip.antiAlias,
@@ -101,10 +103,10 @@ class GlobalStatItem extends StatelessWidget {
             children: [
               FittedBox(
                 fit: BoxFit.scaleDown,
-                child: Text(stat, style: context.textTheme.titleLarge),
+                child: Text(stat, style: textTheme.titleLarge),
               ),
               const SizedBox(height: 4),
-              Text(label, style: context.textTheme.bodySmall),
+              Text(label, style: textTheme.bodySmall),
             ],
           ),
         ),

@@ -1,4 +1,5 @@
-import 'package:fast_ui/fast_ui.dart';
+import 'package:fast_rx_flutter/fast_rx_flutter.dart';
+import 'package:fast_rx_persistence/fast_rx_persistence.dart';
 import 'package:flutter/material.dart';
 
 class SettingsController {

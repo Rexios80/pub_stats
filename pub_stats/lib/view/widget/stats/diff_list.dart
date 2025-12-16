@@ -1,4 +1,4 @@
-import 'package:fast_ui/fast_ui.dart';
+import 'package:fast_rx_flutter/fast_rx_flutter.dart';
 import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -16,11 +16,13 @@ class DiffList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = TextTheme.of(context);
+
     return MultiSliver(
       children: [
         Text(
           'History',
-          style: context.textTheme.titleLarge,
+          style: textTheme.titleLarge,
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 16),

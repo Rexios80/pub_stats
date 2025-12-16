@@ -1,4 +1,4 @@
-import 'package:fast_ui/fast_ui.dart';
+import 'package:fast_rx_flutter/fast_rx_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pub_stats/controller/settings_controller.dart';

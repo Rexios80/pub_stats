@@ -5,7 +5,7 @@ import 'package:pub_stats/constant/app_colors.dart';
 import 'package:pub_stats/controller/data_controller.dart';
 import 'package:pub_stats/format/formatting.dart';
 import 'package:pub_stats/view/widget/stats/stat_overview.dart';
-import 'package:fast_ui/fast_ui.dart';
+import 'package:fast_rx_flutter/fast_rx_flutter.dart';
 import 'package:collection/collection.dart';
 
 class BaseStatChart extends StatelessWidget {
@@ -54,6 +54,8 @@ class BaseStatChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = TextTheme.of(context);
+
     return SizedBox(
       width: 400,
       height: 300,
@@ -76,7 +78,7 @@ class BaseStatChart extends StatelessWidget {
                         const Spacer(),
                         Text(
                           formatValue(filteredSpots.first.first.y),
-                          style: context.textTheme.titleLarge,
+                          style: textTheme.titleLarge,
                         ),
                         const Spacer(),
                         const Text('Not enough data to show chart'),
@@ -105,11 +107,13 @@ class BaseStatChart extends StatelessWidget {
   }
 
   static FlBorderData createDefaultBorderData(BuildContext context) {
+    final textTheme = TextTheme.of(context);
+
     return FlBorderData(
       border: Border(
         top: BorderSide.none,
-        bottom: BorderSide(color: context.textTheme.bodyLarge!.color!),
-        left: BorderSide(color: context.textTheme.bodyLarge!.color!),
+        bottom: BorderSide(color: textTheme.bodyLarge!.color!),
+        left: BorderSide(color: textTheme.bodyLarge!.color!),
         right: BorderSide.none,
       ),
     );
@@ -119,9 +123,11 @@ class BaseStatChart extends StatelessWidget {
     BuildContext context, {
     String Function(num value) formatValue = _defaultFormatValue,
   }) {
+    final theme = Theme.of(context);
+
     return LineTouchData(
       touchTooltipData: LineTouchTooltipData(
-        getTooltipColor: (_) => context.theme.cardColor,
+        getTooltipColor: (_) => theme.cardColor,
         getTooltipItems: (spots) => spots.mapIndexed((spotIndex, spot) {
           final barIndex = spot.barIndex;
           final valueString = formatValue(spot.y);

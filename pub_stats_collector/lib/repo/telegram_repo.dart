@@ -7,9 +7,12 @@ import 'package:pub_stats_core/pub_stats_core.dart';
 import 'package:recase/recase.dart';
 
 class TelegramRepo implements AlertHandler {
-  final _client = UndiciClient();
+  static String _telegramEscape(String text) => text.replaceAllMapped(
+    RegExp(r'[_*\[\]()~`>#+\-=|{}.!]'),
+    (m) => '\\${m[0]}',
+  );
 
-  String _escapeUnderscores(String text) => text.replaceAll('_', '\\_');
+  final _client = UndiciClient();
 
   @override
   Future<void> sendPackageAlert({
@@ -19,19 +22,19 @@ class TelegramRepo implements AlertHandler {
     required List<String> warnings,
   }) {
     var text =
-        '*[${_escapeUnderscores(package)}](https://pubstats.dev/packages/$package)*';
+        '*[${_telegramEscape(package)}](https://pubstats.dev/packages/$package)*';
 
     if (changes.isNotEmpty) {
       text += '\n';
       for (final MapEntry(key: field, value: diff) in changes.entries) {
-        text += '\n*${field.name.titleCase}*\n${_escapeUnderscores(diff.text)}';
+        text += '\n*${field.name.titleCase}*\n${_telegramEscape(diff.text)}';
       }
     }
 
     if (warnings.isNotEmpty) {
       text += '\n\n*Warnings*';
       for (final warning in warnings) {
-        text += '\n$warning';
+        text += '\n${_telegramEscape(warning)}';
       }
     }
 
@@ -43,7 +46,10 @@ class TelegramRepo implements AlertHandler {
     required TelegramAlertConfig config,
     required Object error,
   }) {
-    return _sendMessage(chatId: config.chatId, text: '*Error*\n$error');
+    return _sendMessage(
+      chatId: config.chatId,
+      text: '*Error*\n${_telegramEscape(error.toString())}',
+    );
   }
 
   @override
@@ -62,31 +68,39 @@ class TelegramRepo implements AlertHandler {
 ${stats.packageCount}
 
 *Most Downloaded Package*
-${_escapeUnderscores(stats.mostDownloadedPackage)}
+${_telegramEscape(stats.mostDownloadedPackage)}
 
 *Most Liked Package*
-${_escapeUnderscores(stats.mostLikedPackage)}
+${_telegramEscape(stats.mostLikedPackage)}
 
 *Most Depended Package*
-${_escapeUnderscores(stats.mostDependedPackage)}
+${_telegramEscape(stats.mostDependedPackage)}
 
 *Execution Time*
 ${duration.inSeconds} seconds''',
     );
   }
 
-  Future<void> _sendMessage({required String chatId, required String text}) {
-    return _client.post(
-      Uri.parse(
-        'https://api.telegram.org/bot${Credentials.telegramBotToken}/sendMessage',
-      ),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'chat_id': chatId,
-        'text': text,
-        'parse_mode': 'MarkdownV2',
-        'disable_web_page_preview': true,
-      }),
-    );
+  Future<void> _sendMessage({
+    required String chatId,
+    required String text,
+  }) async {
+    try {
+      await _client.post(
+        Uri.parse(
+          'https://api.telegram.org/bot${Credentials.telegramBotToken}/sendMessage',
+        ),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'chat_id': chatId,
+          'text': text,
+          'parse_mode': 'MarkdownV2',
+          'disable_web_page_preview': true,
+        }),
+      );
+    } catch (e, s) {
+      print(e);
+      print(s);
+    }
   }
 }

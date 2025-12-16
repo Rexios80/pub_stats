@@ -1,4 +1,5 @@
-import 'package:firebase_js_interop/extensions.dart';
+import 'dart:convert';
+
 import 'package:pub_stats_collector/credential/credentials.ops.dart';
 import 'package:pub_stats_collector/repo/alert_handler.dart';
 import 'package:pub_stats_collector/service/undici_client.dart';
@@ -8,6 +9,8 @@ import 'package:recase/recase.dart';
 class TelegramRepo implements AlertHandler {
   final _client = UndiciClient();
 
+  String _escapeUnderscores(String text) => text.replaceAll('_', '\\_');
+
   @override
   Future<void> sendPackageAlert({
     required String package,
@@ -15,15 +18,20 @@ class TelegramRepo implements AlertHandler {
     required Map<PackageDataField, Diff> changes,
     required List<String> warnings,
   }) {
-    var text = '## [$package](https://pubstats.dev/packages/$package)';
-    for (final MapEntry(key: field, value: diff) in changes.entries) {
-      text += '\n#### ${field.name.titleCase}\n${diff.text}';
+    var text =
+        '*[${_escapeUnderscores(package)}](https://pubstats.dev/packages/$package)*';
+
+    if (changes.isNotEmpty) {
+      text += '\n';
+      for (final MapEntry(key: field, value: diff) in changes.entries) {
+        text += '\n*${field.name.titleCase}*\n${_escapeUnderscores(diff.text)}';
+      }
     }
 
     if (warnings.isNotEmpty) {
-      text += '\n#### Warnings';
+      text += '\n\n*Warnings*';
       for (final warning in warnings) {
-        text += '\n\n$warning';
+        text += '\n$warning';
       }
     }
 
@@ -48,34 +56,37 @@ class TelegramRepo implements AlertHandler {
       chatId: config.chatId,
       text:
           '''
-## Package Scan Completed
+*Package Scan Completed*
 
-#### Package Count
+*Package Count*
 ${stats.packageCount}
 
-#### Most Downloaded Package
-${stats.mostDownloadedPackage}
+*Most Downloaded Package*
+${_escapeUnderscores(stats.mostDownloadedPackage)}
 
-#### Most Liked Package
-${stats.mostLikedPackage}
+*Most Liked Package*
+${_escapeUnderscores(stats.mostLikedPackage)}
 
-#### Most Depended Package
-${stats.mostDependedPackage}
+*Most Depended Package*
+${_escapeUnderscores(stats.mostDependedPackage)}
 
-#### Execution Time
+*Execution Time*
 ${duration.inSeconds} seconds''',
     );
   }
 
-  Future<void> _sendMessage({
-    required String chatId,
-    required String text,
-  }) async {
-    await _client.post(
+  Future<void> _sendMessage({required String chatId, required String text}) {
+    return _client.post(
       Uri.parse(
         'https://api.telegram.org/bot${Credentials.telegramBotToken}/sendMessage',
       ),
-      body: {'chat_id': chatId, 'text': text, 'parse_mode': 'Markdown'}.toJS,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'chat_id': chatId,
+        'text': text,
+        'parse_mode': 'MarkdownV2',
+        'disable_web_page_preview': true,
+      }),
     );
   }
 }

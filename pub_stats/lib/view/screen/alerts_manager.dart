@@ -149,10 +149,13 @@ class AlertsManager extends StatelessWidget {
                           .map(
                             (e) => DataRow(
                               cells: [
-                                DataCell(Text(e.slug)),
+                                DataCell(SelectableText(e.slug)),
                                 DataCell(Text(e.type.name.titleCase)),
                                 DataCell(
-                                  SizedBox(width: 200, child: Text(e.extra)),
+                                  SizedBox(
+                                    width: 200,
+                                    child: SelectableText(e.extra),
+                                  ),
                                 ),
                                 DataCell(
                                   PopupMenuButton(

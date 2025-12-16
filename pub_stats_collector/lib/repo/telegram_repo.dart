@@ -1,3 +1,4 @@
+import 'package:firebase_js_interop/extensions.dart';
 import 'package:pub_stats_collector/credential/credentials.ops.dart';
 import 'package:pub_stats_collector/repo/alert_handler.dart';
 import 'package:pub_stats_collector/service/undici_client.dart';
@@ -74,7 +75,7 @@ ${duration.inSeconds} seconds''',
       Uri.parse(
         'https://api.telegram.org/bot${Credentials.telegramBotToken}/sendMessage',
       ),
-      body: {'chat_id': chatId, 'text': text, 'parse_mode': 'Markdown'},
+      body: {'chat_id': chatId, 'text': text, 'parse_mode': 'Markdown'}.toJS,
     );
   }
 }

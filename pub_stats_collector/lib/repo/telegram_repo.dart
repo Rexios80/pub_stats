@@ -43,7 +43,7 @@ class TelegramRepo implements AlertHandler {
     required TelegramAlertConfig config,
     required Object error,
   }) {
-    return _sendMessage(chatId: config.chatId, text: '## Error\n$error');
+    return _sendMessage(chatId: config.chatId, text: '*Error*\n$error');
   }
 
   @override

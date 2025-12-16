@@ -4,7 +4,7 @@ import 'package:pub_stats_core/pub_stats_core.dart';
 class TelegramRepo implements AlertHandler {
   @override
   Future<void> sendGlobalStatsAlert({
-    required AlertConfig config,
+    required TelegramAlertConfig config,
     required GlobalStats stats,
     required Duration duration,
   }) {
@@ -15,7 +15,7 @@ class TelegramRepo implements AlertHandler {
   @override
   Future<void> sendPackageAlert({
     required String package,
-    required AlertConfig config,
+    required TelegramAlertConfig config,
     required Map<PackageDataField, Diff> changes,
     required List<String> warnings,
   }) {
@@ -25,10 +25,12 @@ class TelegramRepo implements AlertHandler {
 
   @override
   Future<void> sendSystemErrorAlert({
-    required AlertConfig config,
+    required TelegramAlertConfig config,
     required Object error,
   }) {
     // TODO: implement sendSystemErrorAlert
     throw UnimplementedError();
   }
+
+  
 }

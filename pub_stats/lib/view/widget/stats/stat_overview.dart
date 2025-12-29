@@ -16,21 +16,21 @@ class StatOverview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final last = spots.last.y;
-    final secondToLast = spots.elementAt(spots.length - 2).y;
-    final lastChange = (last - secondToLast).round();
+    final first = spots.first.y;
+    final change = (last - first).round();
 
-    final lastChangeFormatted = formatValue(lastChange);
+    final changeFormatted = formatValue(change);
     final String lastChangeText;
     final Color changeColor;
-    if (lastChange > 0) {
-      lastChangeText = '(+$lastChangeFormatted)';
+    if (change > 0) {
+      lastChangeText = '(+$changeFormatted)';
       changeColor = Colors.green;
-    } else if (lastChange < 0) {
+    } else if (change < 0) {
       // Don't need a negative sign for a negative number
-      lastChangeText = '($lastChangeFormatted)';
+      lastChangeText = '($changeFormatted)';
       changeColor = Colors.red;
     } else {
-      lastChangeText = '(+0)';
+      lastChangeText = '(0)';
       changeColor = Colors.grey;
     }
 

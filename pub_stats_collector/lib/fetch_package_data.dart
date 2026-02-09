@@ -8,6 +8,8 @@ import 'package:pub_stats_collector/repo/alert_handler.dart';
 import 'package:pub_stats_collector/repo/database_repo.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 
+const timeout = Duration(minutes: 15);
+
 var running = false;
 
 Future<express.Response> fetchPackageData(express.Response response) async {
@@ -34,7 +36,7 @@ Future<express.Response> fetchPackageData(express.Response response) async {
     final controller = ScoreFetchController(database, alertConfigs, data);
 
     await controller.fetchScores().timeout(
-      Duration(minutes: 10),
+      timeout,
       onTimeout: () => throw TimeoutException('Global timeout reached'),
     );
   } catch (e, stacktrace) {

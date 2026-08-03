@@ -79,11 +79,14 @@ class ScoreFetchController {
       diff.entries.where((e) => e.key.trackDiff),
     );
 
-    final writeScore = diff.keys.toSet().intersection({
-      PackageDataField.likeCount,
-      PackageDataField.popularityScore,
-      PackageDataField.downloadCount,
-    }).isNotEmpty;
+    // First scan has no previous data (empty diff) — still write a baseline.
+    final writeScore =
+        previousData == null ||
+        diff.keys.toSet().intersection({
+          PackageDataField.likeCount,
+          PackageDataField.popularityScore,
+          PackageDataField.downloadCount,
+        }).isNotEmpty;
 
     await Future.wait([
       if (writeScore)

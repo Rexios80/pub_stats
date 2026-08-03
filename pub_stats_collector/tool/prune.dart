@@ -6,9 +6,7 @@ import 'package:path/path.dart' as path;
 
 /// Prune duplicate score entries from the database
 void main() {
-  final string = File(
-    path.join('tool', 'pub-stats-collector-default-rtdb-export.json'),
-  ).readAsStringSync();
+  final string = File(path.join('tool', 'export.json')).readAsStringSync();
   final json = jsonDecode(string) as Map<String, dynamic>;
   final packages = json['stats'] as Map<String, dynamic>;
 
@@ -17,7 +15,7 @@ void main() {
   for (final package in packages.keys) {
     final scoresJson = packages[package] as Map<String, dynamic>;
     final scores = scoresJson.map(
-      (k, v) => MapEntry(k, MiniPackageScore.fromJson(v)),
+      (k, v) => MapEntry(k, MiniPackageScore.fromJson(v as List)),
     );
 
     final before = scores.length;

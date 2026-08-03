@@ -1,26 +1,23 @@
 import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
-import 'package:pub_api_client/pub_api_client.dart';
 
-part 'mini_package_score.g.dart';
-
-/// Optimize the storage used by [PackageScore]s
-@JsonSerializable(includeIfNull: false)
+/// Optimize the storage used by package scores.
+///
+/// Wire format is a positional array:
+/// `[likeCount, legacyPopularity, popularity, downloads]`.
+/// Absent optionals use sentinel [-1] so Firebase RTDB keeps dense list slots.
 class MiniPackageScore extends Equatable {
+  static const _absent = -1;
+
   /// Like count
-  @JsonKey(name: 'l')
   final int likeCount;
 
   /// Old popularity score calculated by pub
-  @JsonKey(name: 'p')
   final int? legacyPopularityScore;
 
   /// New popularity score calculated by pub_stats
-  @JsonKey(name: 'p2')
   final int? popularityScore;
 
   /// Download count
-  @JsonKey(name: 'd')
   final int? downloadCount;
 
   const MiniPackageScore({
@@ -30,10 +27,27 @@ class MiniPackageScore extends Equatable {
     required this.downloadCount,
   });
 
-  factory MiniPackageScore.fromJson(Map<String, dynamic> json) =>
-      _$MiniPackageScoreFromJson(json);
+  factory MiniPackageScore.fromJson(List<dynamic> json) {
+    int? decode(Object? value) {
+      final decoded = (value as num).toInt();
+      if (decoded == _absent) return null;
+      return decoded;
+    }
 
-  Map<String, dynamic> toJson() => _$MiniPackageScoreToJson(this);
+    return MiniPackageScore(
+      likeCount: (json[0] as num).toInt(),
+      legacyPopularityScore: decode(json[1]),
+      popularityScore: decode(json[2]),
+      downloadCount: decode(json[3]),
+    );
+  }
+
+  List<Object> toJson() => [
+    likeCount,
+    legacyPopularityScore ?? _absent,
+    popularityScore ?? _absent,
+    downloadCount ?? _absent,
+  ];
 
   @override
   List<Object?> get props => [

@@ -15,7 +15,7 @@ class DatabaseRepo {
         .child('stats')
         .child(package)
         .orderByKey()
-        .startAt(span.start.secondsSinceEpoch.toString())
+        .startAt(span.start.hoursSinceEpoch.toString())
         .once();
     final snap = event.snapshot;
     if (!snap.exists) {
@@ -24,12 +24,10 @@ class DatabaseRepo {
     final data = (snap.value as Map).cast<String, dynamic>();
 
     return data.entries.map((e) {
-      final timestamp = int.parse(e.key);
-      final score = MiniPackageScore.fromJson(
-        (e.value as Map).cast<String, dynamic>(),
-      );
+      final hours = int.parse(e.key);
+      final score = MiniPackageScore.fromJson(e.value as List);
       return PackageScoreSnapshot.fromMiniPackageScore(
-        timestamp: timestamp,
+        timestamp: hours,
         score: score,
       );
     }).toList();
@@ -49,8 +47,8 @@ class DatabaseRepo {
     }
 
     final data = (snap.value as Map).cast<String, dynamic>();
-    final timestamp = int.parse(data.keys.first);
-    return DateTimeExtension.fromSecondsSinceEpoch(timestamp);
+    final hours = int.parse(data.keys.first);
+    return DateTimeExtension.fromHoursSinceEpoch(hours);
   }
 
   Future<GlobalStats> getGlobalStats() async {

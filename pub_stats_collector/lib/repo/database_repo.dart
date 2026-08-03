@@ -41,9 +41,9 @@ class DatabaseRepo {
         .ref()
         .child('stats')
         .child(package)
-        // Store as seconds since epoch to save space
-        .child(DateTime.timestamp().secondsSinceEpoch.toString())
-        .set(score.toJson().toJS)
+        // Store as hours since epoch to save space
+        .child(DateTime.timestamp().hoursSinceEpoch.toString())
+        .set(score.toJson().jsify())
         .toDart;
   }
 

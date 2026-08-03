@@ -22,7 +22,7 @@ class PackageScoreSnapshot {
     required MiniPackageScore score,
   }) {
     return PackageScoreSnapshot._(
-      timestamp: DateTimeExtension.fromSecondsSinceEpoch(timestamp),
+      timestamp: DateTimeExtension.fromHoursSinceEpoch(timestamp),
       likeCount: score.likeCount,
       legacyPopularityScore: score.legacyPopularityScore,
       popularityScore: score.popularityScore,

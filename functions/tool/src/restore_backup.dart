@@ -1,20 +1,34 @@
 // Too annoying
 // ignore_for_file: unawaited_futures
 
-import 'dart:convert';
 import 'dart:js_interop';
 
 import 'package:firebase_js_interop/admin.dart';
 import 'package:firebase_js_interop/admin/app.dart';
 import 'package:firebase_js_interop/extensions.dart';
+import 'package:firebase_js_interop/js.dart';
 import 'package:firebase_js_interop/node.dart';
-import 'package:flutter_tools_task_queue/flutter_tools_task_queue.dart';
 
 import '../../secret/service_account.dart';
 import '../../src/interop/source_map_support.dart';
 
-/// Run this command to increase the memory limit
-/// node --max-old-space-size=16384 tool/lib/restore_backup.js
+/// Streams entries from a large Firebase RTDB backup without loading it as one
+/// string (Node's max string length is ~512MB; backup.json is larger).
+extension type _StreamBackup._(JSObject _) implements JSObject {
+  external JSPromise forEachObjectEntry(
+    JSString file,
+    JSString path,
+    JSFunction fn, [
+    JSNumber? concurrency,
+  ]);
+
+  external JSPromise<JSAny?> readPath(JSString file, JSString path);
+}
+
+final _streamBackup = require('../src/stream_backup.js') as _StreamBackup;
+
+/// Run with:
+/// node --max-old-space-size=8192 tool/lib/restore_backup.js
 void main() async {
   sourceMapSupport.install();
 
@@ -26,32 +40,35 @@ void main() async {
     ),
   );
 
-  final fs = Node.fs;
-
-  final backupContent =
-      fs.readFileSync('backup.json'.toJS, 'utf8'.toJS) as JSString;
-  final backupData = jsonDecode(backupContent.toDart);
-
   final database = FirebaseAdmin.database.getDatabase();
+  const backupFile = 'backup.json';
 
   print('Restoring backup...');
 
   Future<void> restoreForPackages(String path) async {
-    final queue = TaskQueue(maxJobs: 10);
-    final data = backupData[path] as Map<String, dynamic>;
     var i = 0;
-    for (final package in data.keys) {
-      queue.add(() async {
-        final packageData = (data[package] as Map).cast<String, dynamic>();
-        await database.ref('$path/$package'.toJS).set(packageData.toJS).toDart;
-        i++;
-        if (i % 100 == 0) {
-          print('Restored $path for $i/${data.length} packages');
-        }
-      });
-    }
-    await queue.tasksComplete;
-    print('Restored $path');
+
+    await _streamBackup
+        .forEachObjectEntry(
+          backupFile.toJS,
+          path.toJS,
+          ((JSString package, JSAny packageData) {
+            return promise(() async {
+              await database
+                  .ref('$path/${package.toDart}'.toJS)
+                  .set(packageData)
+                  .toDart;
+              i++;
+              if (i % 100 == 0) {
+                print('Restored $path for $i packages');
+              }
+            });
+          }).toJS,
+          10.toJS,
+        )
+        .toDart;
+
+    print('Restored $path ($i packages)');
   }
 
   // TODO: Restore alert configs?
@@ -59,13 +76,16 @@ void main() async {
   await restoreForPackages('data');
   await restoreForPackages('diffs');
 
-  final globalStatsData = (backupData['global_stats'] as Map)
-      .cast<String, dynamic>();
-  await database.ref('global_stats'.toJS).set(globalStatsData.toJS).toDart;
+  final globalStatsData = await _streamBackup
+      .readPath(backupFile.toJS, 'global_stats'.toJS)
+      .toDart;
+  await database.ref('global_stats'.toJS).set(globalStatsData).toDart;
   print('Restored global_stats');
-  final packageCountsData = (backupData['package_counts'] as Map)
-      .cast<String, dynamic>();
-  await database.ref('package_counts'.toJS).set(packageCountsData.toJS).toDart;
+
+  final packageCountsData = await _streamBackup
+      .readPath(backupFile.toJS, 'package_counts'.toJS)
+      .toDart;
+  await database.ref('package_counts'.toJS).set(packageCountsData).toDart;
   print('Restored package_counts');
 
   await restoreForPackages('stats');

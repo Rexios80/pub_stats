@@ -7,13 +7,7 @@ import 'package:path/path.dart' as path;
 /// Prune duplicate score entries from the database
 void main() {
   final string = File(
-    path.join(
-      '',
-      'Users',
-      'rexios',
-      'Downloads',
-      'pub-stats-collector-default-rtdb-export.json',
-    ),
+    path.join('tool', 'pub-stats-collector-default-rtdb-export.json'),
   ).readAsStringSync();
   final json = jsonDecode(string) as Map<String, dynamic>;
   final packages = json['stats'] as Map<String, dynamic>;
@@ -33,6 +27,10 @@ void main() {
     afterTotal += after;
     final diff = before - after;
     print('Pruned $diff entries from $package');
+
+    packages[package] = {
+      for (final e in scores.entries) e.key: e.value.toJson(),
+    };
   }
 
   final newString = jsonEncode(json);
@@ -51,22 +49,25 @@ void main() {
 }
 
 void prune(Map<String, MiniPackageScore> scores) {
-  final collisions = <String>{};
-  var current = scores.entries.first;
-  for (final next in scores.entries.skip(1)) {
-    final currentValue = current.value;
-    final nextValue = next.value;
-    if (currentValue != nextValue) {
-      // Do not prune this entry
-      current = next;
-      continue;
-    }
-    collisions.add(next.key);
-  }
+  if (scores.length < 2) return;
 
-  for (final collision in collisions) {
-    scores.remove(collision);
+  final keys = scores.keys.toList()
+    ..sort((a, b) => int.parse(a).compareTo(int.parse(b)));
+
+  final toRemove = <String>{};
+  var runStart = 0;
+  for (var i = 1; i <= keys.length; i++) {
+    final runEnded =
+        i == keys.length || scores[keys[i]] != scores[keys[runStart]];
+    if (!runEnded) continue;
+
+    // Keep first and last of each plateau; drop interior duplicates
+    for (var j = runStart + 1; j < i - 1; j++) {
+      toRemove.add(keys[j]);
+    }
+    runStart = i;
   }
+  toRemove.forEach(scores.remove);
 }
 
 int stringToMegabytes(String string) {

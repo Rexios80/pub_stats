@@ -48,7 +48,7 @@ class Footer extends StatelessWidget {
 
 class FooterIconLink extends StatelessWidget {
   final String url;
-  final IconData icon;
+  final FaIconData icon;
 
   const FooterIconLink({super.key, required this.url, required this.icon});
 

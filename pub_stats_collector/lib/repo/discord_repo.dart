@@ -6,6 +6,7 @@ import 'package:recase/recase.dart';
 
 class DiscordRepo implements AlertHandler {
   static const _webhookUsername = 'Bartender';
+  static const _iconUrl = 'https://pubstats.dev/images/icon.png';
 
   final _discord = DiscordApi(
     applicationId: '',
@@ -105,7 +106,7 @@ class DiscordRepo implements AlertHandler {
           ],
           footer: EmbedFooter(
             text: 'See historical package stats on pubstats.dev',
-            iconUrl: 'https://pubstats.dev/splash/img/dark-2x.png',
+            iconUrl: _iconUrl,
           ),
         ),
       ],
@@ -121,6 +122,7 @@ class DiscordRepo implements AlertHandler {
       id,
       token: token,
       username: _webhookUsername,
+      avatarUrl: _iconUrl,
       embeds: embeds,
     );
   }

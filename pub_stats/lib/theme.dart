@@ -183,16 +183,15 @@ List<StyleRule> get styles => [
   css('.search-bar').styles(
     display: .flex,
     height: 56.px,
-    padding: .symmetric(horizontal: 8.px),
+    padding: .symmetric(horizontal: 16.px),
     radius: .circular(28.px),
     alignItems: .center,
     raw: {'box-shadow': _elevation2},
-    gap: .all(4.px),
     backgroundColor: .variable('--surface-high'),
   ),
   css('.search-bar input').styles(
     height: 100.percent,
-    padding: .zero,
+    padding: .symmetric(vertical: 0.px, horizontal: 16.px),
     border: .none,
     outline: Outline(style: .none),
     flex: .grow(1),
@@ -637,6 +636,10 @@ List<StyleRule> get styles => [
     padding: .symmetric(vertical: 8.px),
     color: .variable('--muted'),
     fontSize: 13.px,
+    lineHeight: 1.4.em,
+  ),
+  css('.hint-list div').styles(
+    padding: .symmetric(vertical: 8.px, horizontal: 16.px),
   ),
   css('.table-wrap').styles(
     width: 100.percent,

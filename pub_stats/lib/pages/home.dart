@@ -64,10 +64,9 @@ class _HomeState extends State<Home> {
       );
     }
 
-    final loading = controller.loading ? 'page is-loading' : 'page';
     if (packages.isEmpty) {
       return div(
-        classes: loading,
+        classes: 'page',
         [
           Document.head(title: title),
           const GlobalStatsView(),
@@ -76,7 +75,7 @@ class _HomeState extends State<Home> {
     }
     if (controller.loadedStats.isEmpty) {
       return div(
-        classes: loading,
+        classes: 'page',
         [
           Document.head(title: title),
           div(
@@ -90,7 +89,7 @@ class _HomeState extends State<Home> {
       );
     }
     return div(
-      classes: loading,
+      classes: 'page',
       [
         Document.head(title: title),
         PackageStatsView(stats: controller.loadedStats),
@@ -149,14 +148,19 @@ class GlobalStatsView extends StatelessComponent {
                 ),
           ],
         ),
-        StatChart(
-          label: 'Total Package Count',
-          formatValue: formatNumber,
-          series: [
-            ChartSeries(
-              label: 'Packages',
-              color: chartColors.first,
-              points: [for (final count in counts) ChartPoint(count.timestamp, count.count.toDouble())],
+        div(
+          classes: controller.loading ? 'chart-slot is-loading' : 'chart-slot',
+          [
+            StatChart(
+              label: 'Total Package Count',
+              formatValue: formatNumber,
+              series: [
+                ChartSeries(
+                  label: 'Packages',
+                  color: chartColors.first,
+                  points: [for (final count in counts) ChartPoint(count.timestamp, count.count.toDouble())],
+                ),
+              ],
             ),
           ],
         ),
@@ -212,7 +216,7 @@ class PackageStatsView extends StatelessComponent {
             ],
           ),
         div(
-          classes: 'chart-grid',
+          classes: controller.loading ? 'chart-grid is-loading' : 'chart-grid',
           [
             StatChart(
               label: 'Like Count',

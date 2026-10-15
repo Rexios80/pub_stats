@@ -158,10 +158,10 @@ class AppController {
   Future<void> setTimeSpan(TimeSpan span) async {
     if (span == timeSpan) return;
     timeSpan = span;
+    loading = true;
     notify();
     try {
       packageCounts = await _database.packageCounts(span);
-      notify();
     } catch (error) {
       snack('Unable to update package counts');
     }
@@ -169,7 +169,10 @@ class AppController {
     final requested = packages.isNotEmpty ? packages : settledPackages;
     if (requested.isNotEmpty) {
       await loadPackages(requested, refresh: true);
+      return;
     }
+    loading = false;
+    notify();
   }
 
   String? randomPackage() {

@@ -183,6 +183,7 @@ class Tools extends StatefulComponent {
 class _ToolsState extends State<Tools> {
   var _query = '';
   var _open = false;
+  var _active = 0;
 
   @override
   Component build(BuildContext context) {
@@ -195,6 +196,7 @@ class _ToolsState extends State<Tools> {
             for (final name in controller.complete(typed))
               if (name != typed) name,
           ];
+    final active = suggestions.isEmpty ? 0 : _active.clamp(0, suggestions.length - 1);
     return div(
       classes: component.stuck ? 'tools stuck' : 'tools',
       [
@@ -224,6 +226,7 @@ class _ToolsState extends State<Tools> {
                       onInput: (String value) => setState(() {
                         _query = value;
                         _open = true;
+                        _active = 0;
                       }),
                       events: {
                         'focus': (_) => setState(() => _open = true),
@@ -233,7 +236,29 @@ class _ToolsState extends State<Tools> {
                           });
                         },
                         'keydown': (event) {
-                          if ((event as web.KeyboardEvent).key == 'Escape') setState(() => _open = false);
+                          final key = event as web.KeyboardEvent;
+                          switch (key.key) {
+                            case 'ArrowDown':
+                              key.preventDefault();
+                              if (suggestions.isEmpty) return;
+                              setState(() {
+                                _open = true;
+                                _active = (active + 1) % suggestions.length;
+                              });
+                            case 'ArrowUp':
+                              key.preventDefault();
+                              if (suggestions.isEmpty) return;
+                              setState(() {
+                                _open = true;
+                                _active = (active - 1 + suggestions.length) % suggestions.length;
+                              });
+                            case 'Enter':
+                              if (!_open || suggestions.isEmpty) return;
+                              key.preventDefault();
+                              _openPackage(suggestions[active]);
+                            case 'Escape':
+                              setState(() => _open = false);
+                          }
                         },
                       },
                     ),
@@ -254,23 +279,25 @@ class _ToolsState extends State<Tools> {
             if (_open && suggestions.isNotEmpty)
               div(
                 classes: 'suggestions',
+                attributes: {'role': 'listbox'},
                 [
-                  for (final suggestion in suggestions)
+                  for (var i = 0; i < suggestions.length; i++)
                     div(
-                      classes: 'suggestion',
+                      classes: i == active ? 'suggestion active' : 'suggestion',
+                      attributes: {'role': 'option', 'aria-selected': '${i == active}'},
                       [
                         button(
                           type: ButtonType.button,
                           events: {'mousedown': (event) => event.preventDefault()},
-                          onClick: () => _openPackage(suggestion),
-                          [.text(suggestion)],
+                          onClick: () => _openPackage(suggestions[i]),
+                          [.text(suggestions[i])],
                         ),
                         if (_currentPackages(context).isNotEmpty)
                           button(
                             classes: 'compare',
                             type: ButtonType.button,
                             events: {'mousedown': (event) => event.preventDefault()},
-                            onClick: () => _openPackage(suggestion, compare: true),
+                            onClick: () => _openPackage(suggestions[i], compare: true),
                             [.text('Compare')],
                           ),
                       ],

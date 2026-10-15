@@ -26,8 +26,9 @@ Map<String, String> _palette({required bool dark}) => {
 
 @css
 List<StyleRule> get styles => [
+  css.import('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap'),
   css.import(
-    'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap',
+    'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=block',
   ),
   css.keyframes('spin', {
     'to': Styles(transform: .rotate(360.deg)),
@@ -77,13 +78,12 @@ List<StyleRule> get styles => [
   css('.top-bar').styles(
     display: .flex,
     position: .relative(),
-    minHeight: 200.px,
     justifyContent: .center,
     alignItems: .center,
   ),
   css('.brand').styles(
     display: .flex,
-    padding: .all(20.px),
+    padding: .symmetric(vertical: 8.px, horizontal: 12.px),
     radius: .circular(999.px),
     alignItems: .center,
     gap: .all(20.px),
@@ -175,7 +175,7 @@ List<StyleRule> get styles => [
     display: .flex,
     position: .sticky(top: 0.px),
     zIndex: ZIndex(5),
-    padding: .only(top: 40.px, right: 16.px, bottom: 8.px, left: 16.px),
+    padding: .only(top: 8.px, right: 16.px, bottom: 8.px, left: 16.px),
     flexDirection: .column,
     alignItems: .center,
     gap: .all(8.px),
@@ -224,7 +224,9 @@ List<StyleRule> get styles => [
     gap: .all(12.px),
     textAlign: .left,
   ),
-  css('.suggestion:hover, .menu button:hover, .check-row:hover').styles(backgroundColor: .variable('--surface-high')),
+  css('.suggestion:hover, .suggestion.active, .menu button:hover, .check-row:hover').styles(
+    backgroundColor: .variable('--surface-high'),
+  ),
   css('.compare').styles(
     color: .variable('--primary'),
     fontWeight: .w500,
@@ -257,7 +259,7 @@ List<StyleRule> get styles => [
     flex: .grow(1),
     raw: {'margin': 'auto'},
   ),
-  css('.page.is-loading').styles(opacity: 0.62),
+  css('.chart-grid.is-loading, .chart-slot.is-loading').styles(opacity: 0.62),
   css('.center-col, .package-head, .global, .history, .footer, .loading, .alert-note').styles(
     display: .flex,
     flexDirection: .column,
@@ -271,8 +273,14 @@ List<StyleRule> get styles => [
     gap: .all(8.px),
   ),
   css('.chart-grid').styles(
+    width: 100.percent,
     gap: .all(4.px),
     raw: {'margin-top': '32px'},
+  ),
+  css('.chart-slot').styles(
+    display: .flex,
+    width: 100.percent,
+    justifyContent: .center,
   ),
   css('.badge-row').styles(gap: .all(8.px)),
   css('.package-head .badge-row').styles(raw: {'margin-top': '12px'}),
@@ -313,6 +321,7 @@ List<StyleRule> get styles => [
     width: 400.px,
     height: 300.px,
     maxWidth: 100.percent,
+    raw: {'min-width': '0'},
     padding: .all(32.px),
     flexDirection: .column,
     alignItems: .stretch,
@@ -718,10 +727,10 @@ List<StyleRule> get styles => [
     css('.wide-only').styles(display: .none),
     css('.narrow-only').styles(display: .inlineFlex),
     css('.top-bar').styles(
-      minHeight: .zero,
       flexDirection: .column,
       gap: .all(8.px),
     ),
+    css('.chart-card').styles(width: 100.percent),
     css('.actions').styles(
       position: .static,
       alignSelf: .end,

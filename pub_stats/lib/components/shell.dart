@@ -336,44 +336,49 @@ class FooterBar extends StatelessComponent {
       classes: 'footer',
       [
         div(
-          classes: 'footer-links',
+          classes: 'footer-bar',
           [
-            a(
-              href: 'https://github.com/Rexios80/pub_stats',
-              classes: 'icon-btn social',
-              target: Target.blank,
-              attributes: {'aria-label': 'GitHub', 'rel': 'noopener noreferrer'},
-              [const GithubIcon()],
+            div(
+              classes: 'footer-links',
+              [
+                a(
+                  href: 'https://github.com/Rexios80/pub_stats',
+                  classes: 'icon-btn social',
+                  target: Target.blank,
+                  attributes: {'aria-label': 'GitHub', 'rel': 'noopener noreferrer'},
+                  [const GithubIcon()],
+                ),
+                a(
+                  href: 'https://discord.gg/v5yAdrucdG',
+                  classes: 'icon-btn social',
+                  target: Target.blank,
+                  attributes: {'aria-label': 'Discord', 'rel': 'noopener noreferrer'},
+                  [const DiscordIcon()],
+                ),
+                button(
+                  classes: 'footer-link',
+                  type: ButtonType.button,
+                  onClick: AppScope.of(context).showLicenses,
+                  [.text('Licenses')],
+                ),
+              ],
             ),
             a(
-              href: 'https://discord.gg/v5yAdrucdG',
-              classes: 'icon-btn social',
+              href: 'https://jaspr.site',
+              classes: 'jaspr-badge',
               target: Target.blank,
-              attributes: {'aria-label': 'Discord', 'rel': 'noopener noreferrer'},
-              [const DiscordIcon()],
+              attributes: {'rel': 'noopener noreferrer'},
+              [
+                switch (AppScope.of(context).theme) {
+                  ThemePreference.dark => const JasprBadge.darkTwoTone(),
+                  ThemePreference.light => const JasprBadge.lightTwoTone(),
+                  ThemePreference.system =>
+                    web.window.matchMedia('(prefers-color-scheme: dark)').matches
+                        ? const JasprBadge.darkTwoTone()
+                        : const JasprBadge.lightTwoTone(),
+                },
+              ],
             ),
-          ],
-        ),
-        button(
-          classes: 'footer-link',
-          type: ButtonType.button,
-          onClick: AppScope.of(context).showLicenses,
-          [.text('Licenses')],
-        ),
-        a(
-          href: 'https://jaspr.site',
-          classes: 'jaspr-badge',
-          target: Target.blank,
-          attributes: {'rel': 'noopener noreferrer'},
-          [
-            switch (AppScope.of(context).theme) {
-              ThemePreference.dark => const JasprBadge.dark(),
-              ThemePreference.light => const JasprBadge.light(),
-              ThemePreference.system =>
-                web.window.matchMedia('(prefers-color-scheme: dark)').matches
-                    ? const JasprBadge.dark()
-                    : const JasprBadge.light(),
-            },
           ],
         ),
       ],

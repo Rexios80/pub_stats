@@ -146,9 +146,18 @@ List<StyleRule> get styles => [
     radius: .circular(20.px),
   ),
   css('.footer-link').styles(
-    padding: .symmetric(vertical: 8.px, horizontal: 16.px),
+    display: .inlineFlex,
+    height: 40.px,
+    padding: .symmetric(horizontal: 12.px),
+    radius: .circular(999.px),
+    alignItems: .center,
     color: .variable('--muted'),
-    fontSize: 12.px,
+    fontSize: 14.px,
+    fontWeight: .w500,
+  ),
+  css('.footer-link:hover, .footer .social:hover').styles(
+    color: .variable('--on-surface'),
+    backgroundColor: .variable('--surface-high'),
   ),
   css('.avatar').styles(
     width: 40.px,
@@ -287,7 +296,7 @@ List<StyleRule> get styles => [
     fontWeight: .w400,
   ),
   css('.stat-card span').styles(fontSize: 12.px),
-  css('.muted, .stat-card span, .footer, .hint').styles(
+  css('.muted, .stat-card span, .hint').styles(
     color: .variable('--muted'),
     fontSize: 12.px,
   ),
@@ -498,16 +507,31 @@ List<StyleRule> get styles => [
     fontSize: 14.px,
   ),
   css('.footer').styles(
-    padding: .only(top: 24.px, bottom: 28.px),
-    gap: .all(8.px),
+    width: 100.percent,
+    margin: .only(top: 24.px),
+    padding: .symmetric(vertical: 16.px, horizontal: 24.px),
+    raw: {'border-top': '1px solid var(--outline-variant)'},
+  ),
+  css('.footer-bar').styles(
+    display: .flex,
+    width: 100.percent,
+    maxWidth: 1280.px,
+    justifyContent: .spaceBetween,
+    raw: {'margin': 'auto'},
+    alignItems: .center,
+    gap: .all(16.px),
   ),
   css('.footer-links').styles(
     display: .flex,
     alignItems: .center,
-    gap: .all(8.px),
+    gap: .all(4.px),
   ),
+  css('.footer .social').styles(color: .variable('--on-surface')),
   css('.jaspr-badge').styles(
     display: .inlineFlex,
+    flex: .none,
+    radius: .circular(10.px),
+    overflow: .hidden,
     lineHeight: .zero,
   ),
   css('.social svg').styles(
@@ -710,6 +734,10 @@ List<StyleRule> get styles => [
     ),
     css('.history-row').styles(raw: {'grid-template-columns': '90px 1fr'}),
     css('.history-row .when').styles(raw: {'grid-column': '1 / -1'}),
+    css('.footer-bar').styles(
+      flexDirection: .column,
+      justifyContent: .center,
+    ),
   ]),
 ];
 

@@ -1,9 +1,9 @@
 const fs = require('node:fs');
 const { chain } = require('stream-chain');
 const { parser } = require('stream-json');
-const { pick } = require('stream-json/filters/Pick');
-const { streamObject } = require('stream-json/streamers/StreamObject');
-const Assembler = require('stream-json/Assembler');
+const { pick } = require('stream-json/filters/pick.js');
+const { streamObject } = require('stream-json/streamers/stream-object.js');
+const { Assembler } = require('stream-json/assembler.js');
 
 // Stream each entry under a top-level object key with bounded concurrency.
 // `fn` receives (key, value) and may return a Promise.
@@ -39,7 +39,7 @@ function readPath(file, path) {
       pick({ filter: path }),
     ]);
     const asm = Assembler.connectTo(pipeline);
-    asm.on('done', (assembler) => resolve(assembler.current));
+    asm.onDone((assembler) => resolve(assembler.current));
     pipeline.on('error', reject);
   });
 }

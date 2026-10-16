@@ -154,7 +154,11 @@ class _AlertsPageState extends State<AlertsPage> {
               p(classes: 'hint', [.text('When a scan finishes, and when a scan fails.')])
             else ...[
               _nameField(label, matches, active),
-              if (_watch == _Watch.publisher) p(classes: 'hint', [.text('Every package from this publisher.')]),
+              if (_watch == _Watch.publisher)
+                p(
+                  classes: _nameError == null ? 'hint' : 'hint error',
+                  [.text(_nameError ?? 'Every package from this publisher.')],
+                ),
             ],
           ],
         ),
@@ -257,7 +261,7 @@ class _AlertsPageState extends State<AlertsPage> {
           type: InputType.text,
           value: _name,
           attributes: {
-            'placeholder': label,
+            'placeholder': _watch == _Watch.publisher ? 'dart.dev' : label,
             'aria-label': label,
             'autocomplete': 'off',
             'autocapitalize': 'off',
@@ -430,9 +434,17 @@ class _AlertsPageState extends State<AlertsPage> {
     };
   }
 
+  String? get _nameError {
+    if (_watch != _Watch.publisher) return null;
+    final name = _slugName;
+    if (name.isEmpty || isPublisherId(name)) return null;
+    return 'Enter a publisher, like dart.dev';
+  }
+
   bool get _canSave {
     if (_saving) return false;
     if (_watch != _Watch.system && _slugName.isEmpty) return false;
+    if (_nameError != null) return false;
     if (_extra.trim().isEmpty || _extraError != null) return false;
     if (_watch != _Watch.system && _ignored.length >= packageFields.length) return false;
     return true;
@@ -442,21 +454,25 @@ class _AlertsPageState extends State<AlertsPage> {
     final controller = AppScope.of(context);
     if (!_canSave || !controller.alertsLoaded || controller.alertsFailed) return;
     setState(() => _saving = true);
-    final added = await controller.addAlert(
-      slug: _slug,
-      type: _channel.name,
-      extra: _extra,
-      ignore: _watch == _Watch.system ? const {} : Set.of(_ignored),
-    );
-    if (!mounted) return;
-    setState(() {
-      _saving = false;
-      if (!added) return;
-      _name = '';
-      _extra = '';
-      _suggestOpen = false;
-      _active = 0;
-    });
+    var added = false;
+    try {
+      added = await controller.addAlert(
+        slug: _slug,
+        type: _channel.name,
+        extra: _extra,
+        ignore: _watch == _Watch.system ? const {} : Set.of(_ignored),
+      );
+    } finally {
+      if (!mounted) return;
+      setState(() {
+        _saving = false;
+        if (!added) return;
+        _name = '';
+        _extra = '';
+        _suggestOpen = false;
+        _active = 0;
+      });
+    }
   }
 }
 

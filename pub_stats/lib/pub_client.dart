@@ -18,14 +18,4 @@ class PubClient {
     final response = await http.get(Uri.parse('$_pub/packages/$name'));
     return response.statusCode == 200;
   }
-
-  Future<bool> publisherExists(String name) async {
-    final response = await http.get(
-      Uri.parse('$_pub/search').replace(queryParameters: {'q': 'publisher:$name'}),
-    );
-    if (response.statusCode != 200) return false;
-    final json = jsonDecode(response.body) as Map<String, dynamic>;
-    final packages = json['packages'] as List? ?? const [];
-    return packages.isNotEmpty;
-  }
 }

@@ -15,6 +15,13 @@ bool isDiscordWebhook(String value) => _discordWebhook.hasMatch(value.trim());
 
 bool isTelegramChatId(String value) => int.tryParse(value.trim()) != null;
 
+final _publisherId = RegExp(r'^([a-z0-9-]{1,63}\.)+[a-z0-9-]{1,63}$');
+
+bool isPublisherId(String value) {
+  final name = value.trim().toLowerCase();
+  return name.length <= 64 && _publisherId.hasMatch(name);
+}
+
 class AppController {
   AppController({StatsDatabase? database, PubClient? pub})
     : _database = database ?? StatsDatabase(),
@@ -408,9 +415,10 @@ class AppController {
       return exists;
     }
     if (parts.length == 2 && parts[1].isNotEmpty) {
-      final exists = await _pub.publisherExists(parts[1]);
-      if (!exists) snack('Publisher does not exist');
-      return exists;
+      // pub.dev's publisher lookup sends no CORS headers, so the browser cannot read it.
+      if (isPublisherId(parts[1])) return true;
+      snack('Enter a publisher, like dart.dev');
+      return false;
     }
     snack('Enter a package or publisher');
     return false;

@@ -56,16 +56,6 @@ class PubRepo {
       final score = result[0] as PackageScore;
       final latest = result[1] as _LatestPackage;
 
-      // `is:unlisted` is also applied to discontinued packages. When either
-      // tag is present, /options is the source of truth for the two flags.
-      final needsOptions =
-          score.tags.contains('is:discontinued') ||
-          score.tags.contains('is:unlisted');
-      final packageOptions = needsOptions
-          ? await pubQueue.add(() => _client.packageOptions(package))
-                as PackageOptions
-          : const PackageOptions();
-
       final popularityScore = score.popularityScore;
       final int? popularityPercent;
       if (popularityScore != null) {
@@ -93,6 +83,10 @@ class PubRepo {
       final isFlutterFavorite = score.tags.contains(
         PackageTag.isFlutterFavorite,
       );
+      final isDiscontinued = score.tags.contains(
+        PackageTag.isTag('discontinued'),
+      );
+      final isUnlisted = score.tags.contains(PackageTag.isTag('unlisted'));
 
       final dependencies = latest.dependencies;
       for (final dependency in dependencies) {
@@ -113,9 +107,9 @@ class PubRepo {
             likeCount: likeCount,
             legacyPopularityScore: popularityPercent,
             downloadCount: score.downloadCount30Days,
-            isDiscontinued: packageOptions.isDiscontinued,
+            isDiscontinued: isDiscontinued,
             isFlutterFavorite: isFlutterFavorite,
-            isUnlisted: packageOptions.isUnlisted,
+            isUnlisted: isUnlisted,
           ),
         ),
       );

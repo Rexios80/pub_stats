@@ -8,7 +8,7 @@ import 'package:pub_stats_collector/repo/alert_handler.dart';
 import 'package:pub_stats_collector/repo/database_repo.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 
-const timeout = Duration(minutes: 15);
+const timeout = Duration(minutes: 9);
 
 var running = false;
 

@@ -139,14 +139,16 @@ async function main() {
 
   const nodes = fields(fs.readFileSync(file));
   const stats = nodes.find(([key]) => key === 'stats')?.[1];
-  await Promise.all(
-    nodes.filter(([key]) => key !== 'stats').map(([key, body]) => send('PUT', key, body)),
-  );
-  if (!stats) return;
-  await send('DELETE', 'stats');
-  const chunks = statChunks(stats);
-  console.log(`stats ${chunks.length}`);
-  await pool(chunks, (body) => send('PATCH', 'stats', body));
+  const chunks = stats ? statChunks(stats) : [];
+  await Promise.all([
+    ...nodes.filter(([key]) => key !== 'stats').map(([key, body]) => send('PUT', key, body)),
+    (async () => {
+      if (!stats) return;
+      await send('DELETE', 'stats');
+      console.log(`stats ${chunks.length}`);
+      await pool(chunks, (body) => send('PATCH', 'stats', body));
+    })(),
+  ]);
   console.log('IMPORT_DONE');
 }
 

@@ -547,15 +547,17 @@ List<StyleRule> get styles => [
     fontSize: 0.7.rem,
     lineHeight: 1.2.em,
     whiteSpace: .noWrap,
+    textAlign: .left,
     textDecoration: TextDecoration(line: .none),
   ),
   css('.footer-card:hover').styles(backgroundColor: .variable('--surface-high')),
-  css('.footer-card > svg').styles(
+  css('.footer-card > svg, .footer-card > .icon').styles(
     display: .block,
     width: 1.2.rem,
     height: 1.2.rem,
     flex: .none,
     opacity: 0.9,
+    fontSize: 1.2.rem,
   ),
   css('.footer-card .repo').styles(
     display: .flex,
@@ -646,14 +648,20 @@ List<StyleRule> get styles => [
     flexDirection: .column,
     overflow: .auto,
   ),
-  css('.package-list button').styles(
+  css('.package-list button, .package-list a').styles(
     display: .flex,
     width: 100.percent,
     padding: .symmetric(vertical: 10.px, horizontal: 12.px),
     radius: .circular(12.px),
+    justifyContent: .spaceBetween,
+    alignItems: .center,
+    gap: .all(16.px),
     textAlign: .left,
+    cursor: Cursor.pointer,
+    fontSize: 1.rem,
   ),
-  css('.package-list button:hover').styles(backgroundColor: .variable('--surface-high')),
+  css('.package-list a span:last-child').styles(flex: .none),
+  css('.package-list button:hover, .package-list a:hover').styles(backgroundColor: .variable('--surface-high')),
   css('.dialog h2').styles(
     margin: .only(bottom: 12.px),
     fontSize: 22.px,

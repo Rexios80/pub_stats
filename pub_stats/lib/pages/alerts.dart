@@ -7,7 +7,9 @@ import 'package:web/web.dart' as web;
 
 import '../app_controller.dart';
 import '../app_scope.dart';
+import '../components/discord_webhook_details.dart';
 import '../components/widgets.dart';
+import '../discord_webhook.dart';
 import '../format.dart';
 import '../models.dart';
 
@@ -121,6 +123,7 @@ class _AlertsPageState extends State<AlertsPage> {
     final extraError = _extraError;
     final fieldsMissing = _watch != _Watch.system && _ignored.length >= packageFields.length;
     final label = _watch == _Watch.publisher ? 'Publisher name' : 'Package name';
+    final webhook = _channel == _Channel.discord ? parseDiscordWebhook(_extra) : null;
 
     return form(
       classes: 'composer panel',
@@ -197,6 +200,7 @@ class _AlertsPageState extends State<AlertsPage> {
               classes: extraError == null ? 'hint' : 'hint error',
               [.text(extraError ?? _channel.hint)],
             ),
+            if (webhook != null) DiscordWebhookDetails(id: webhook.id, token: webhook.token),
           ],
         ),
         if (_watch != _Watch.system)
@@ -361,11 +365,7 @@ class _AlertsPageState extends State<AlertsPage> {
                 span(classes: 'pill', [.text(target.kind)]),
               ],
             ),
-            span(
-              classes: 'alert-meta',
-              attributes: {'title': destination},
-              [.text(destination)],
-            ),
+            destination,
             span(classes: 'alert-meta', [.text(detail)]),
           ],
         ),
@@ -517,9 +517,13 @@ enum _Channel {
   return (kind: 'Package', name: slug, linked: true);
 }
 
-String _destination(AlertConfig alert) => switch (alert) {
-  DiscordAlert(:final id) => 'Discord webhook · $id',
-  TelegramAlert(:final chatId) => 'Telegram chat · $chatId',
+Component _destination(AlertConfig alert) => switch (alert) {
+  DiscordAlert(:final id, :final token) => DiscordWebhookDetails(id: id, token: token),
+  TelegramAlert(:final chatId) => span(
+    classes: 'alert-meta',
+    attributes: {'title': 'Telegram chat · $chatId'},
+    [.text('Telegram chat · $chatId')],
+  ),
 };
 
 String _fieldLabel(String field) => switch (field) {

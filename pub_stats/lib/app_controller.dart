@@ -5,13 +5,10 @@ import 'dart:math';
 import 'package:web/web.dart' as web;
 
 import 'database.dart';
+import 'discord_webhook.dart';
 import 'firebase.dart';
 import 'models.dart';
 import 'pub_client.dart';
-
-final _discordWebhook = RegExp(r'https:\/\/discord\.com\/api\/webhooks\/(.+)\/(.+)');
-
-bool isDiscordWebhook(String value) => _discordWebhook.hasMatch(value.trim());
 
 bool isTelegramChatId(String value) => int.tryParse(value.trim()) != null;
 
@@ -347,12 +344,12 @@ class AppController {
       }
       config = TelegramAlert(slug: trimmed, ignore: ignore, chatId: chatId);
     } else {
-      final match = _discordWebhook.firstMatch(extra.trim());
-      if (match == null) {
+      final webhook = parseDiscordWebhook(extra);
+      if (webhook == null) {
         snack('Paste a discord.com/api/webhooks URL');
         return false;
       }
-      config = DiscordAlert(slug: trimmed, ignore: ignore, id: match.group(1)!, token: match.group(2)!);
+      config = DiscordAlert(slug: trimmed, ignore: ignore, id: webhook.id, token: webhook.token);
     }
 
     if (alerts.contains(config)) {

@@ -29,6 +29,11 @@ jobs:
           dart pub get
           npm ci --prefix functions
 
+      - name: Write credentials
+        env:
+          CREDENTIALS_OPS: ${{ secrets.CREDENTIALS_OPS }}
+        run: printf '%s\n' "$CREDENTIALS_OPS" > pub_stats_collector/lib/credential/credentials.ops.dart
+
       - name: Build functions
         working-directory: functions
         run: dart run tool/build.dart

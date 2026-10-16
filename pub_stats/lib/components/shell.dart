@@ -368,20 +368,8 @@ class FooterBar extends StatelessComponent {
             div(
               classes: 'footer-links',
               [
-                a(
-                  href: 'https://github.com/Rexios80/pub_stats',
-                  classes: 'icon-btn social',
-                  target: Target.blank,
-                  attributes: {'aria-label': 'GitHub', 'rel': 'noopener noreferrer'},
-                  [const GithubIcon()],
-                ),
-                a(
-                  href: 'https://discord.gg/v5yAdrucdG',
-                  classes: 'icon-btn social',
-                  target: Target.blank,
-                  attributes: {'aria-label': 'Discord', 'rel': 'noopener noreferrer'},
-                  [const DiscordIcon()],
-                ),
+                const GitHubButton(repo: 'Rexios80/pub_stats'),
+                const DiscordButton(invite: 'v5yAdrucdG'),
                 button(
                   classes: 'footer-link',
                   type: ButtonType.button,
@@ -483,6 +471,7 @@ class DialogLayer extends StatelessComponent {
                 ]),
                 li([.text('Firebase JavaScript SDK (Apache-2.0)')]),
                 li([.text('Roboto and Material Symbols (Apache-2.0)')]),
+                li([.text('Lucide (ISC)')]),
               ]),
             ],
             if (controller.packageDialog case final packages?) ...[

@@ -198,6 +198,11 @@ List<StyleRule> get styles => [
     raw: {'box-shadow': _elevation2},
     backgroundColor: .variable('--surface-high'),
   ),
+  css('.search-bar > .icon, .search-bar > .spinner').styles(
+    width: 24.px,
+    height: 24.px,
+    flex: .none,
+  ),
   css('.search-bar input').styles(
     height: 100.percent,
     padding: .symmetric(vertical: 0.px, horizontal: 16.px),

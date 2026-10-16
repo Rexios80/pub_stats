@@ -368,26 +368,9 @@ class FooterBar extends StatelessComponent {
             div(
               classes: 'footer-links',
               [
-                a(
-                  href: 'https://github.com/Rexios80/pub_stats',
-                  classes: 'icon-btn social',
-                  target: Target.blank,
-                  attributes: {'aria-label': 'GitHub', 'rel': 'noopener noreferrer'},
-                  [const GithubIcon()],
-                ),
-                a(
-                  href: 'https://discord.gg/v5yAdrucdG',
-                  classes: 'icon-btn social',
-                  target: Target.blank,
-                  attributes: {'aria-label': 'Discord', 'rel': 'noopener noreferrer'},
-                  [const DiscordIcon()],
-                ),
-                button(
-                  classes: 'footer-link',
-                  type: ButtonType.button,
-                  onClick: AppScope.of(context).showLicenses,
-                  [.text('Licenses')],
-                ),
+                const GitHubButton(repo: 'Rexios80/pub_stats'),
+                const DiscordButton(invite: 'v5yAdrucdG'),
+                const LicensesButton(),
               ],
             ),
             a(
@@ -470,20 +453,21 @@ class DialogLayer extends StatelessComponent {
             if (controller.licensesOpen) ...[
               h2([.text('Licenses')]),
               p([.text('pubstats is open source. The libraries used to build this site include:')]),
-              ul([
-                li([
-                  a(
-                    href: 'https://github.com/schultek/jaspr',
-                    target: Target.blank,
-                    [
-                      span([.text('Jaspr')]),
-                      .text(' (MIT)'),
-                    ],
-                  ),
-                ]),
-                li([.text('Firebase JavaScript SDK (Apache-2.0)')]),
-                li([.text('Roboto and Material Symbols (Apache-2.0)')]),
-              ]),
+              div(
+                classes: 'package-list',
+                [
+                  for (final entry in libraryLicenses)
+                    a(
+                      href: entry.href,
+                      target: Target.blank,
+                      attributes: {'rel': 'noopener noreferrer'},
+                      [
+                        span([.text(entry.name)]),
+                        span([.text(entry.license)]),
+                      ],
+                    ),
+                ],
+              ),
             ],
             if (controller.packageDialog case final packages?) ...[
               h2([.text(controller.packageDialogTitle ?? 'Packages')]),

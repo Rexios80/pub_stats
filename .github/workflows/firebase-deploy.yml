@@ -1,9 +1,9 @@
 name: Deploy to Firebase
 on:
-  workflow_dispatch: # TODO: Fix this workflow
-  # push:
-  #   branches:
-  #     - master
+  push:
+    branches:
+      - master
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -12,28 +12,39 @@ concurrency:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
+
+      - uses: dart-lang/setup-dart@v1
+
+      - uses: actions/setup-node@v4
         with:
-          cache: true
-      - name: Pub cache
-        uses: actions/cache@v4
-        env:
-          CACHE_NAME: pub_stats
-        with:
-          path: ${{ env.PUB_CACHE }}
-          key: pub-cache-${{ env.CACHE_NAME }}-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: pub-cache-${{ env.CACHE_NAME }}-
+          node-version: 22
+          cache: npm
+          cache-dependency-path: functions/package-lock.json
+
       - name: Install dependencies
         run: |
-          cd functions
-          npm ci
           dart pub get
-      - name: Deploy
-        uses: w9jds/firebase-action@v13.15.0
-        with:
-          args: deploy
+          npm ci --prefix functions
+
+      - name: Write credentials
         env:
-          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PUB_STATS_COLLECTOR }}
+          CREDENTIALS_OPS: ${{ secrets.CREDENTIALS_OPS }}
+        run: printf '%s\n' "$CREDENTIALS_OPS" > pub_stats_collector/lib/credential/credentials.ops.dart
+
+      - name: Build functions
+        working-directory: functions
+        run: dart run tool/build.dart
+
+      - uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: projects/602612349235/locations/global/workloadIdentityPools/github/providers/pub-stats
+          service_account: github-action-441530706@pub-stats-collector.iam.gserviceaccount.com
+
+      - name: Deploy functions
+        run: npx --yes firebase-tools@15.34.0 deploy --only functions --project pub-stats-collector --non-interactive

@@ -14,7 +14,7 @@ class AlertHandler {
     required String package,
     required covariant AlertConfig config,
     required Map<PackageDataField, Diff> changes,
-    required List<String> warnings,
+    required Map<PackageDataField, String> warnings,
   }) {
     return switch (config) {
       final DiscordAlertConfig config => _discord.sendPackageAlert(

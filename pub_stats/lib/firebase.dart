@@ -105,6 +105,10 @@ Future<void> initializeFirebase() async {
     try {
       firebase.appCheck().activate(ReCaptchaV3Provider(recaptchaSiteKey), true);
     } catch (_) {}
+    try {
+      // First call starts automatic page and session collection.
+      firebase.analytics().logEvent('app_open', {}.jsify());
+    } catch (_) {}
   }
 
   final auth = firebase.auth();

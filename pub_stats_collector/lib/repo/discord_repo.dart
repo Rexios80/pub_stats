@@ -6,6 +6,7 @@ import 'package:recase/recase.dart';
 
 class DiscordRepo implements AlertHandler {
   static const _webhookUsername = 'Bartender';
+  static const _iconUrl = 'https://pubstats.dev/images/icon.png';
 
   final _discord = DiscordApi(
     applicationId: '',
@@ -21,7 +22,7 @@ class DiscordRepo implements AlertHandler {
     required String package,
     required DiscordAlertConfig config,
     required Map<PackageDataField, Diff> changes,
-    required List<String> warnings,
+    required Map<PackageDataField, String> warnings,
   }) {
     final int color;
     if (warnings.isNotEmpty) {
@@ -40,9 +41,31 @@ class DiscordRepo implements AlertHandler {
           url: 'https://pubstats.dev/packages/$package',
           fields: [
             for (final MapEntry(key: field, value: diff) in changes.entries)
-              EmbedField(name: field.name.titleCase, value: diff.text),
+              if (field == PackageDataField.dependents && diff is SetDiff) ...[
+                if (diff.added.isNotEmpty)
+                  EmbedField(
+                    name: 'Added Dependents',
+                    value: _packageLinks(diff.added),
+                  ),
+                if (diff.removed.isNotEmpty)
+                  EmbedField(
+                    name: 'Removed Dependents',
+                    value: _packageLinks(diff.removed),
+                  ),
+              ] else
+                EmbedField(name: field.name.titleCase, value: diff.text),
             if (warnings.isNotEmpty)
-              EmbedField(name: 'Warnings', value: warnings.join('\n')),
+              EmbedField(
+                name: 'Warnings',
+                value: [
+                  for (final MapEntry(key: field, value: warning)
+                      in warnings.entries)
+                    if (field == PackageDataField.pubPoints)
+                      '[$warning](https://pub.dev/packages/$package/score)'
+                    else
+                      warning,
+                ].join('\n'),
+              ),
           ],
         ),
       ],
@@ -105,7 +128,7 @@ class DiscordRepo implements AlertHandler {
           ],
           footer: EmbedFooter(
             text: 'See historical package stats on pubstats.dev',
-            iconUrl: 'https://pubstats.dev/splash/img/dark-2x.png',
+            iconUrl: _iconUrl,
           ),
         ),
       ],
@@ -121,7 +144,16 @@ class DiscordRepo implements AlertHandler {
       id,
       token: token,
       username: _webhookUsername,
+      avatarUrl: _iconUrl,
       embeds: embeds,
     );
   }
+}
+
+String _packageLinks(Set<Object> packages) {
+  final shown = packages
+      .take(10)
+      .map((name) => '[$name](https://pubstats.dev/packages/$name)');
+  final extra = packages.length - shown.length;
+  return [shown.join(', '), if (extra > 0) '$extra more'].join(' and ');
 }

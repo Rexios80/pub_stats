@@ -169,6 +169,21 @@ async function importDatabase(file, send, options = {}) {
   ]);
 }
 
+async function waitForDatabase(base, ns) {
+  const url = `${base}/.json?ns=${ns}`;
+  const deadline = Date.now() + 90_000;
+  while (Date.now() < deadline) {
+    try {
+      const response = await fetch(url, { headers: { Authorization: 'Bearer owner' } });
+      if (response.ok) return;
+    } catch {
+      // Emulator is still starting.
+    }
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
+  throw new Error('Database emulator did not start');
+}
+
 async function main() {
   const file = process.argv[2];
   if (!file) {
@@ -204,6 +219,7 @@ async function main() {
   }
 
   const started = Date.now();
+  await waitForDatabase(base, ns);
   await importDatabase(file, send);
   console.log(`IMPORT_DONE ${((Date.now() - started) / 1000).toFixed(1)}s`);
 }

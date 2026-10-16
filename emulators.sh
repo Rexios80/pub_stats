@@ -15,7 +15,7 @@ if [[ ! -f emcache/rtdb.json ]]; then
 fi
 
 # rtdb.json is too big for --import, and --export-on-exit replaces it with an error.
-firebase emulators:start --inspect-functions --import=emcache &
+firebase emulators:start --inspect-functions &
 pid=$!
 node tool/import_rtdb.js emcache/rtdb.json || kill $pid
 wait $pid

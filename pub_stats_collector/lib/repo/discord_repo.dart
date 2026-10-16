@@ -22,7 +22,7 @@ class DiscordRepo implements AlertHandler {
     required String package,
     required DiscordAlertConfig config,
     required Map<PackageDataField, Diff> changes,
-    required List<String> warnings,
+    required Map<PackageDataField, String> warnings,
   }) {
     final int color;
     if (warnings.isNotEmpty) {
@@ -55,7 +55,17 @@ class DiscordRepo implements AlertHandler {
               ] else
                 EmbedField(name: field.name.titleCase, value: diff.text),
             if (warnings.isNotEmpty)
-              EmbedField(name: 'Warnings', value: warnings.join('\n')),
+              EmbedField(
+                name: 'Warnings',
+                value: [
+                  for (final MapEntry(key: field, value: warning)
+                      in warnings.entries)
+                    if (field == PackageDataField.pubPoints)
+                      '[$warning](https://pub.dev/packages/$package/score)'
+                    else
+                      warning,
+                ].join('\n'),
+              ),
           ],
         ),
       ],

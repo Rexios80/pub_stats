@@ -135,7 +135,7 @@ class ScoreFetchController {
         package: package,
         config: config,
         changes: filteredChanges,
-        warnings: filteredWarnings.values.toList(),
+        warnings: filteredWarnings,
       );
     }
   }

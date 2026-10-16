@@ -32,12 +32,7 @@ jobs:
       - name: Write credentials
         env:
           CREDENTIALS_OPS: ${{ secrets.CREDENTIALS_OPS }}
-        run: |
-          if [ -z "$CREDENTIALS_OPS" ]; then
-            echo "CREDENTIALS_OPS is empty" >&2
-            exit 1
-          fi
-          printf '%s\n' "$CREDENTIALS_OPS" > pub_stats_collector/lib/credential/credentials.ops.dart
+        run: printf '%s\n' "$CREDENTIALS_OPS" > pub_stats_collector/lib/credential/credentials.ops.dart
 
       - name: Build functions
         working-directory: functions

@@ -501,6 +501,7 @@ List<StyleRule> get styles => [
       'scroll-snap-type': 'x proximity',
       'overscroll-behavior-x': 'contain',
       'scrollbar-width': 'none',
+      'justify-content': 'safe center',
     },
   ),
   css('.history-scroll::-webkit-scrollbar').styles(display: .none),

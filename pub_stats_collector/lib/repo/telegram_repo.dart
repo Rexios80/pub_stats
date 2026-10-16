@@ -19,7 +19,7 @@ class TelegramRepo implements AlertHandler {
     required String package,
     required TelegramAlertConfig config,
     required Map<PackageDataField, Diff> changes,
-    required List<String> warnings,
+    required Map<PackageDataField, String> warnings,
   }) {
     var text =
         '*[${_telegramEscape(package)}](https://pubstats.dev/packages/$package)*';
@@ -33,7 +33,7 @@ class TelegramRepo implements AlertHandler {
 
     if (warnings.isNotEmpty) {
       text += '\n\n*Warnings*';
-      for (final warning in warnings) {
+      for (final warning in warnings.values) {
         text += '\n${_telegramEscape(warning)}';
       }
     }

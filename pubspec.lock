@@ -538,14 +538,13 @@ packages:
     source: hosted
     version: "6.1.0"
   pub_api_client:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "."
-      ref: c0d070b762ec8f17909b102c14e6751d3e559127
-      resolved-ref: c0d070b762ec8f17909b102c14e6751d3e559127
-      url: "https://github.com/Rexios80/pub_api_client"
-    source: git
-    version: "3.1.1"
+      name: pub_api_client
+      sha256: bb0338393897235fdf689551e2b49b13e24b432b2da559b00229e784d9a5e680
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.0"
   pub_semver:
     dependency: transitive
     description:
@@ -835,4 +834,4 @@ packages:
     source: hosted
     version: "2.2.4"
 sdks:
-  dart: ">=3.13.0-107.0.dev <3.14.0-z"
+  dart: ">=3.13.0 <3.14.0-z"

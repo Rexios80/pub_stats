@@ -12,6 +12,9 @@ concurrency:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,7 +43,8 @@ jobs:
 
       - uses: google-github-actions/auth@v3
         with:
-          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PUB_STATS_COLLECTOR }}
+          workload_identity_provider: projects/602612349235/locations/global/workloadIdentityPools/github/providers/pub-stats
+          service_account: github-action-441530706@pub-stats-collector.iam.gserviceaccount.com
 
       - name: Deploy functions
         run: npx --yes firebase-tools@15.34.0 deploy --only functions --project pub-stats-collector --non-interactive

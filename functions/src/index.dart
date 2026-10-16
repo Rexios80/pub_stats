@@ -15,6 +15,9 @@ import 'assets/logo.dart';
 import 'interop/badge_maker.dart';
 import 'interop/source_map_support.dart';
 
+const runtimeServiceAccount =
+    'functions-runtime@pub-stats-collector.iam.gserviceaccount.com';
+
 final packageBadgeRegex = RegExp(
   r'^\/badges\/packages\/([^\/]+)\/([^\/]+)\.svg$',
 );
@@ -32,6 +35,7 @@ void main() {
       cpu: 4.toJS,
       ingressSettings: 'ALLOW_INTERNAL_ONLY'.toJS,
       maxInstances: 1.toJS,
+      serviceAccount: runtimeServiceAccount.toJS,
     ),
     (Request request, express.Response response) {
       return promise(() => fetchPackageData(response));
@@ -39,7 +43,7 @@ void main() {
   );
 
   exports['badges'] = FirebaseFunctions.https.onRequest(
-    HttpsOptions(cors: true.toJS),
+    HttpsOptions(cors: true.toJS, serviceAccount: runtimeServiceAccount.toJS),
     (Request request, express.Response response) {
       final match = packageBadgeRegex.firstMatch(request.path);
       final packageName = match?[1];

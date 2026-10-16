@@ -9,4 +9,14 @@ cd functions
 dart run tool/build.dart
 cd ..
 
-firebase emulators:start --inspect-functions --export-on-exit=emcache --import=emcache
+if [[ ! -f emcache/rtdb.json ]]; then
+  echo 'emcache/rtdb.json is missing'
+  exit 1
+fi
+
+# --import restores the saved auth users. The database export is too big for
+# that, and --export-on-exit would replace it with an error.
+firebase emulators:start --inspect-functions --import=emcache &
+pid=$!
+node tool/import_rtdb.js emcache/rtdb.json || kill $pid
+wait $pid

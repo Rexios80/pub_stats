@@ -9,6 +9,19 @@ import 'firebase.dart';
 import 'models.dart';
 import 'pub_client.dart';
 
+final _discordWebhook = RegExp(r'https:\/\/discord\.com\/api\/webhooks\/(.+)\/(.+)');
+
+bool isDiscordWebhook(String value) => _discordWebhook.hasMatch(value.trim());
+
+bool isTelegramChatId(String value) => int.tryParse(value.trim()) != null;
+
+final _publisherId = RegExp(r'^([a-z0-9-]{1,63}\.)+[a-z0-9-]{1,63}$');
+
+bool isPublisherId(String value) {
+  final name = value.trim().toLowerCase();
+  return name.length <= 64 && _publisherId.hasMatch(name);
+}
+
 class AppController {
   AppController({StatsDatabase? database, PubClient? pub})
     : _database = database ?? StatsDatabase(),
@@ -33,6 +46,8 @@ class AppController {
   List<String> settledPackages = [];
   Account? account;
   List<AlertConfig> alerts = [];
+  var alertsLoaded = false;
+  var alertsFailed = false;
   SnackMessage? snackbar;
   var popularityInfo = false;
   var licensesOpen = false;
@@ -40,6 +55,8 @@ class AppController {
   String? packageDialogTitle;
 
   var _request = 0;
+  var _alertsRequest = 0;
+  var _loadingAlerts = false;
   List<String>? _pendingPackages;
   var _refreshPending = false;
   Timer? _snackTimer;
@@ -226,26 +243,64 @@ class AppController {
 
   Future<void> _onAuth(JSAny? user) async {
     if (user == null) {
-      account = null;
-      alerts = [];
-      notify();
+      _resetAccount();
       return;
     }
     final current = FirebaseUser(user as JSObject);
     if (current.isAnonymous) {
-      account = null;
-      alerts = [];
+      _resetAccount();
+      return;
+    }
+    await _adopt(Account(uid: current.uid, name: current.displayName, photoUrl: current.photoURL));
+  }
+
+  void _resetAccount() {
+    _alertsRequest++;
+    _loadingAlerts = false;
+    account = null;
+    alerts = [];
+    alertsLoaded = false;
+    alertsFailed = false;
+    notify();
+  }
+
+  Future<void> _adopt(Account next) async {
+    final sameUser = account?.uid == next.uid;
+    account = next;
+    if (sameUser && (alertsLoaded || _loadingAlerts)) {
       notify();
       return;
     }
-    account = Account(uid: current.uid, name: current.displayName, photoUrl: current.photoURL);
+    final request = ++_alertsRequest;
+    _loadingAlerts = true;
+    alerts = [];
+    alertsLoaded = false;
     notify();
     try {
-      alerts = await _database.alerts(current.uid);
-      notify();
+      final loaded = await _database.alerts(next.uid);
+      if (request != _alertsRequest) return;
+      alerts = loaded;
+      alertsLoaded = true;
+      alertsFailed = false;
     } catch (error) {
+      if (request != _alertsRequest) return;
+      alertsLoaded = true;
+      alertsFailed = true;
       snack('Unable to load alerts');
+      return;
+    } finally {
+      if (request == _alertsRequest) _loadingAlerts = false;
     }
+    notify();
+  }
+
+  void _commitAlerts(List<AlertConfig> next) {
+    _alertsRequest++;
+    _loadingAlerts = false;
+    alerts = next;
+    alertsLoaded = true;
+    alertsFailed = false;
+    notify();
   }
 
   Future<bool> signIn() async {
@@ -253,10 +308,8 @@ class AppController {
       await firebase.auth().signInWithPopup(GoogleAuthProvider()).toDart;
       final user = firebase.auth().currentUser;
       if (user == null || user.isAnonymous) return false;
-      account = Account(uid: user.uid, name: user.displayName, photoUrl: user.photoURL);
-      alerts = await _database.alerts(user.uid);
-      notify();
-      return true;
+      await _adopt(Account(uid: user.uid, name: user.displayName, photoUrl: user.photoURL));
+      return account != null;
     } catch (error) {
       final message = error.toString();
       if (message.contains('popup-closed') || message.contains('cancelled')) return false;
@@ -277,24 +330,34 @@ class AppController {
     required Set<String> ignore,
   }) async {
     final uid = account?.uid;
-    if (uid == null) return false;
-    final trimmed = slug.trim();
-    if (ignore.length == packageFields.length || !await _validSlug(trimmed)) return false;
+    if (uid == null || !alertsLoaded || alertsFailed) return false;
+    final trimmed = slug.trim().toLowerCase();
+    if (trimmed != '.system' && ignore.length >= packageFields.length) {
+      snack('Choose at least one change');
+      return false;
+    }
+    if (!await _validSlug(trimmed)) return false;
 
     final AlertConfig config;
     if (type == 'telegram') {
-      if (extra.trim().isEmpty) {
-        snack('Enter a Telegram chat ID');
+      final chatId = extra.trim();
+      if (!isTelegramChatId(chatId)) {
+        snack('Enter a numeric Telegram chat ID');
         return false;
       }
-      config = TelegramAlert(slug: trimmed, ignore: ignore, chatId: extra.trim());
+      config = TelegramAlert(slug: trimmed, ignore: ignore, chatId: chatId);
     } else {
-      final match = RegExp(r'https:\/\/discord\.com\/api\/webhooks\/(.+)\/(.+)').firstMatch(extra.trim());
+      final match = _discordWebhook.firstMatch(extra.trim());
       if (match == null) {
-        snack('Invalid Discord webhook URL');
+        snack('Paste a discord.com/api/webhooks URL');
         return false;
       }
       config = DiscordAlert(slug: trimmed, ignore: ignore, id: match.group(1)!, token: match.group(2)!);
+    }
+
+    if (alerts.contains(config)) {
+      snack('That alert already exists');
+      return false;
     }
 
     final next = [...alerts, config];
@@ -304,14 +367,14 @@ class AppController {
       snack('Unable to save alert');
       return false;
     }
-    alerts = next;
-    notify();
+    _commitAlerts(next);
     return true;
   }
 
   Future<void> removeAlert(int index) async {
     final uid = account?.uid;
     if (uid == null || index < 0 || index >= alerts.length) return;
+    final removed = alerts[index];
     final next = [...alerts]..removeAt(index);
     try {
       await _database.writeAlerts(uid, next);
@@ -319,12 +382,36 @@ class AppController {
       snack('Unable to delete alert');
       return;
     }
-    alerts = next;
-    notify();
+    _commitAlerts(next);
+    snack(
+      'Alert removed',
+      actionLabel: 'Undo',
+      action: () {
+        dismissSnack();
+        unawaited(_restoreAlert(removed, index));
+      },
+    );
+  }
+
+  Future<void> _restoreAlert(AlertConfig config, int index) async {
+    final uid = account?.uid;
+    if (uid == null) return;
+    final next = [...alerts];
+    next.insert(index.clamp(0, next.length), config);
+    try {
+      await _database.writeAlerts(uid, next);
+    } catch (error) {
+      snack('Unable to restore alert');
+      return;
+    }
+    _commitAlerts(next);
   }
 
   Future<bool> _validSlug(String slug) async {
-    if (slug.isEmpty) return false;
+    if (slug.isEmpty) {
+      snack('Enter a package or publisher');
+      return false;
+    }
     if (slug == '.system') return true;
     final parts = slug.split(':');
     if (parts.length == 1) {
@@ -332,11 +419,13 @@ class AppController {
       if (!exists) snack('Package does not exist');
       return exists;
     }
-    if (parts.length == 2) {
-      final exists = await _pub.publisherExists(parts[1]);
-      if (!exists) snack('Publisher does not exist');
-      return exists;
+    if (parts.length == 2 && parts[1].isNotEmpty) {
+      // pub.dev's publisher lookup sends no CORS headers, so the browser cannot read it.
+      if (isPublisherId(parts[1])) return true;
+      snack('Enter a publisher, like dart.dev');
+      return false;
     }
+    snack('Enter a package or publisher');
     return false;
   }
 

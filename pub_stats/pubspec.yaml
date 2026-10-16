@@ -9,6 +9,7 @@ environment:
 resolution: workspace
 
 dependencies:
+  equatable: ^2.0.5
   http: ^1.5.0
   jaspr: ^0.23.5
   jaspr_lucide: ^0.55.0

@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 import 'format.dart';
 
 const chartColors = [
@@ -249,7 +251,7 @@ class Account {
   final String? photoUrl;
 }
 
-sealed class AlertConfig {
+sealed class AlertConfig extends Equatable {
   const AlertConfig({required this.slug, required this.ignore});
 
   final String slug;
@@ -259,6 +261,9 @@ sealed class AlertConfig {
   String get extra;
 
   Map<String, dynamic> toJson();
+
+  @override
+  List<Object?> get props => [slug, ignore];
 
   factory AlertConfig.fromJson(Map<String, dynamic> json) {
     final ignore = (json['ignore'] as List?)?.map((item) => item.toString()).toSet() ?? {};
@@ -291,6 +296,9 @@ class DiscordAlert extends AlertConfig {
   String get extra => id;
 
   @override
+  List<Object?> get props => [...super.props, id, token];
+
+  @override
   Map<String, dynamic> toJson() => {
     'slug': slug,
     'ignore': ignore.toList(),
@@ -310,6 +318,9 @@ class TelegramAlert extends AlertConfig {
 
   @override
   String get extra => chatId;
+
+  @override
+  List<Object?> get props => [...super.props, chatId];
 
   @override
   Map<String, dynamic> toJson() => {'slug': slug, 'ignore': ignore.toList(), 'type': type, 'chatId': chatId};

@@ -355,6 +355,11 @@ class AppController {
       config = DiscordAlert(slug: trimmed, ignore: ignore, id: match.group(1)!, token: match.group(2)!);
     }
 
+    if (alerts.contains(config)) {
+      snack('That alert already exists');
+      return false;
+    }
+
     final next = [...alerts, config];
     try {
       await _database.writeAlerts(uid, next);

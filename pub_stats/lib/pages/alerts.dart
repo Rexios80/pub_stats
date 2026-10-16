@@ -468,7 +468,6 @@ class _AlertsPageState extends State<AlertsPage> {
         _saving = false;
         if (!added) return;
         _name = '';
-        _extra = '';
         _suggestOpen = false;
         _active = 0;
       });

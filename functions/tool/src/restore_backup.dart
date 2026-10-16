@@ -1,15 +1,10 @@
-// Too annoying
-// ignore_for_file: unawaited_futures
-
 import 'dart:js_interop';
 
 import 'package:firebase_js_interop/admin.dart';
 import 'package:firebase_js_interop/admin/app.dart';
-import 'package:firebase_js_interop/extensions.dart';
 import 'package:firebase_js_interop/js.dart';
 import 'package:firebase_js_interop/node.dart';
 
-import '../../secret/service_account.dart';
 import '../../src/interop/source_map_support.dart';
 
 /// Streams entries from a large Firebase RTDB backup without loading it as one
@@ -35,7 +30,7 @@ void main() async {
   final app = FirebaseAdmin.app;
   app.initializeApp(
     AppOptions(
-      credential: app.cert(serviceAccount.toJS),
+      credential: app.cert('secret/service_account.json'.toJS),
       databaseURL: 'https://pub-stats-collector-default-rtdb.firebaseio.com',
     ),
   );

@@ -212,7 +212,7 @@ class _GitHubButtonState extends State<GitHubButton> {
     final hidden = Styles(opacity: _loaded ? 1 : 0);
     return a(
       href: 'https://github.com/${component.repo}',
-      classes: 'github-button',
+      classes: 'footer-card',
       target: Target.blank,
       attributes: {
         'rel': 'noopener noreferrer',
@@ -243,6 +243,83 @@ class _GitHubButtonState extends State<GitHubButton> {
                   attributes: const {'aria-hidden': 'true'},
                 ),
                 span(classes: 'count', styles: hidden, [.text(_loaded ? '$_forks' : '0')]),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class DiscordButton extends StatefulComponent {
+  const DiscordButton({required this.invite, super.key});
+
+  final String invite;
+
+  @override
+  State<DiscordButton> createState() => _DiscordButtonState();
+}
+
+class _DiscordButtonState extends State<DiscordButton> {
+  var _loaded = false;
+  var _name = '';
+  var _online = 0;
+  var _members = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_load());
+  }
+
+  Future<void> _load() async {
+    try {
+      final response = await http.get(
+        Uri.https('discord.com', '/api/v10/invites/${component.invite}', {'with_counts': 'true'}),
+      );
+      if (response.statusCode != 200 || !mounted) return;
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      final guild = data['guild'];
+      final name = guild is Map<String, dynamic> ? guild['name'] : null;
+      final online = data['approximate_presence_count'];
+      final members = data['approximate_member_count'];
+      if (name is! String || online is! int || members is! int || !mounted) return;
+      setState(() {
+        _name = name;
+        _online = online;
+        _members = members;
+        _loaded = true;
+      });
+    } on Object {
+      // Live counts are optional. The invite link still works.
+    }
+  }
+
+  @override
+  Component build(BuildContext context) {
+    final hidden = Styles(opacity: _loaded ? 1 : 0);
+    return a(
+      href: 'https://discord.gg/${component.invite}',
+      classes: 'footer-card',
+      target: Target.blank,
+      attributes: {
+        'rel': 'noopener noreferrer',
+        'aria-label': _loaded ? '$_name, $_online online, $_members ${_members == 1 ? 'member' : 'members'}' : 'Discord',
+      },
+      [
+        const DiscordIcon(),
+        div(
+          classes: 'repo',
+          [
+            span(classes: _loaded ? 'repo-name' : 'repo-name is-hidden', [.text(_loaded ? _name : 'Server')]),
+            span(
+              classes: 'repo-stats',
+              [
+                span(classes: 'presence', attributes: const {'aria-hidden': 'true'}, []),
+                span(classes: 'count', styles: hidden, [.text(_loaded ? '$_online' : '0')]),
+                span(classes: 'presence members', attributes: const {'aria-hidden': 'true'}, []),
+                span(classes: 'count', styles: hidden, [.text(_loaded ? '$_members' : '00')]),
               ],
             ),
           ],

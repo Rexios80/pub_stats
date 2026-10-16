@@ -369,13 +369,7 @@ class FooterBar extends StatelessComponent {
               classes: 'footer-links',
               [
                 const GitHubButton(repo: 'Rexios80/pub_stats'),
-                a(
-                  href: 'https://discord.gg/v5yAdrucdG',
-                  classes: 'icon-btn social',
-                  target: Target.blank,
-                  attributes: {'aria-label': 'Discord', 'rel': 'noopener noreferrer'},
-                  [const DiscordIcon()],
-                ),
+                const DiscordButton(invite: 'v5yAdrucdG'),
                 button(
                   classes: 'footer-link',
                   type: ButtonType.button,

@@ -536,7 +536,7 @@ List<StyleRule> get styles => [
     gap: .all(4.px),
     flexWrap: .wrap,
   ),
-  css('.github-button').styles(
+  css('.footer-card').styles(
     display: .flex,
     padding: .symmetric(horizontal: 0.7.rem, vertical: 0.4.rem),
     radius: .circular(8.px),
@@ -549,24 +549,24 @@ List<StyleRule> get styles => [
     whiteSpace: .noWrap,
     textDecoration: TextDecoration(line: .none),
   ),
-  css('.github-button:hover').styles(backgroundColor: .variable('--surface-high')),
-  css('.github-button > svg').styles(
+  css('.footer-card:hover').styles(backgroundColor: .variable('--surface-high')),
+  css('.footer-card > svg').styles(
     display: .block,
     width: 1.2.rem,
     height: 1.2.rem,
     flex: .none,
     opacity: 0.9,
   ),
-  css('.github-button .repo').styles(
+  css('.footer-card .repo').styles(
     display: .flex,
     flexDirection: .column,
   ),
-  css('.github-button .repo-name').styles(
+  css('.footer-card .repo-name').styles(
     margin: .only(bottom: 2.px),
     opacity: 0.8,
     fontFamily: const .list([FontFamilies.monospace]),
   ),
-  css('.github-button .repo-stats').styles(
+  css('.footer-card .repo-stats').styles(
     display: .flex,
     opacity: 0.6,
     alignItems: .center,
@@ -574,16 +574,25 @@ List<StyleRule> get styles => [
     fontSize: 0.9.em,
     fontWeight: .w500,
   ),
-  css('.github-button .repo-stats svg').styles(
+  css('.footer-card .repo-stats svg').styles(
     display: .block,
     width: 1.em,
     height: 1.em,
     flex: .none,
   ),
-  css('.github-button .fork').styles(margin: .only(left: 0.35.em)),
-  css('.github-button .count').styles(
+  css('.footer-card .fork, .footer-card .members').styles(margin: .only(left: 0.35.em)),
+  css('.footer-card .presence').styles(
+    width: 0.55.em,
+    height: 0.55.em,
+    radius: .circular(999.px),
+    flex: .none,
+    backgroundColor: .variable('--positive'),
+  ),
+  css('.footer-card .presence.members').styles(backgroundColor: Color('#80848e')),
+  css('.footer-card .count, .footer-card .repo-name').styles(
     transition: Transition('opacity', duration: 200.ms, curve: Curve.easeInOut),
   ),
+  css('.footer-card .repo-name.is-hidden').styles(opacity: 0),
   css('.footer .social').styles(color: .variable('--on-surface')),
   css('.jaspr-badge').styles(
     display: .inlineFlex,

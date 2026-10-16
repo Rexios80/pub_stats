@@ -41,7 +41,19 @@ class DiscordRepo implements AlertHandler {
           url: 'https://pubstats.dev/packages/$package',
           fields: [
             for (final MapEntry(key: field, value: diff) in changes.entries)
-              EmbedField(name: field.name.titleCase, value: diff.text),
+              if (field == PackageDataField.dependents && diff is SetDiff) ...[
+                if (diff.added.isNotEmpty)
+                  EmbedField(
+                    name: 'Added Dependents',
+                    value: _packageLinks(diff.added),
+                  ),
+                if (diff.removed.isNotEmpty)
+                  EmbedField(
+                    name: 'Removed Dependents',
+                    value: _packageLinks(diff.removed),
+                  ),
+              ] else
+                EmbedField(name: field.name.titleCase, value: diff.text),
             if (warnings.isNotEmpty)
               EmbedField(name: 'Warnings', value: warnings.join('\n')),
           ],
@@ -126,4 +138,12 @@ class DiscordRepo implements AlertHandler {
       embeds: embeds,
     );
   }
+}
+
+String _packageLinks(Set<Object> packages) {
+  final shown = packages
+      .take(10)
+      .map((name) => '[$name](https://pubstats.dev/packages/$name)');
+  final extra = packages.length - shown.length;
+  return [shown.join(', '), if (extra > 0) '$extra more'].join(' and ');
 }

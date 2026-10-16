@@ -9,7 +9,10 @@ import 'package:pub_stats_collector/model/package_data_wrapper.dart';
 import 'package:pub_stats_collector/service/undici_client.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 
-typedef _LatestPackage = ({String version, Set<String> dependencies});
+class _LatestPackage({
+  required final String version,
+  required final Set<String> dependencies,
+});
 
 class PubRepo {
   static const _printInterval = 100;
@@ -263,7 +266,7 @@ class PubRepo {
     final json = jsonDecode(response.body) as Map<String, dynamic>;
     final latest = json['latest'] as Map<String, dynamic>;
     final pubspec = latest['pubspec'] as Map<String, dynamic>;
-    return (
+    return _LatestPackage(
       version: latest['version'] as String,
       dependencies: {
         for (final key in ['dependencies', 'dev_dependencies'])

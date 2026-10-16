@@ -479,8 +479,7 @@ List<StyleRule> get styles => [
   ),
   css('.history').styles(
     width: 100.percent,
-    maxWidth: 800.px,
-    gap: .all(8.px),
+    gap: .all(12.px),
     raw: {'margin': '32px auto 0'},
   ),
   css('.history h2, .alerts h1').styles(
@@ -489,27 +488,74 @@ List<StyleRule> get styles => [
     fontWeight: .w400,
     textAlign: .center,
   ),
-  css('.history-card').styles(
+  css('.history-scroll').styles(
+    display: .flex,
     width: 100.percent,
+    padding: .symmetric(vertical: 8.px, horizontal: 2.px),
+    alignItems: .start,
+    gap: .all(12.px),
+    raw: {
+      'min-width': '0',
+      'overflow-x': 'auto',
+      'overflow-y': 'hidden',
+      'scroll-snap-type': 'x proximity',
+      'overscroll-behavior-x': 'contain',
+      'scrollbar-width': 'none',
+    },
   ),
-  css('.history-row').styles(
-    display: .grid,
-    minHeight: 56.px,
-    padding: .symmetric(vertical: 8.px, horizontal: 16.px),
+  css('.history-scroll::-webkit-scrollbar').styles(display: .none),
+  css('.history-card').styles(
+    display: .flex,
+    width: 260.px,
+    minHeight: 132.px,
+    padding: .all(16.px),
+    radius: .circular(20.px),
+    flexDirection: .column,
+    gap: .all(8.px),
+    flex: .none,
+    raw: {'scroll-snap-align': 'start'},
+  ),
+  css('.history-card.is-pending').styles(
+    justifyContent: .center,
     alignItems: .center,
-    gap: .all(16.px),
-    raw: {'grid-template-columns': '100px 1fr auto'},
   ),
-  css('.history-changes').styles(
+  css('.history-card .when').styles(
+    padding: .zero,
+    fontSize: 12.px,
+  ),
+  css('.history-body').styles(
+    display: .flex,
+    flexDirection: .column,
+    alignItems: .start,
+    gap: .all(10.px),
+  ),
+  css('.history-names').styles(
     display: .flex,
     flexDirection: .column,
     alignItems: .start,
     gap: .all(2.px),
   ),
-  css('.history-changes .linkish').styles(
+  css('.history-field, .history-old').styles(color: .variable('--muted')),
+  css('.history-field').styles(fontSize: 12.px),
+  css('.history-card a').styles(
     height: .auto,
     padding: .zero,
-    lineHeight: 1.2.em,
+    color: .variable('--primary'),
+    fontSize: 1.rem,
+    lineHeight: 1.3.em,
+  ),
+  css('.history-card .linkish').styles(
+    height: .auto,
+    padding: .zero,
+    fontSize: 1.rem,
+    lineHeight: 1.3.em,
+  ),
+  css('.history-card a, .history-names').styles(
+    raw: {'overflow-wrap': 'anywhere'},
+  ),
+  css('.history-more').styles(
+    width: 1.px,
+    flex: .none,
   ),
   css('.when').styles(
     color: .variable('--muted'),
@@ -797,6 +843,7 @@ List<StyleRule> get styles => [
       gap: .all(8.px),
     ),
     css('.chart-card').styles(width: 100.percent),
+    css('.history-card').styles(raw: {'width': 'min(260px, 72vw)'}),
     css('.actions').styles(
       position: .static,
       alignSelf: .end,
@@ -807,8 +854,6 @@ List<StyleRule> get styles => [
       minWidth: 58.px,
       padding: .symmetric(vertical: 6.px, horizontal: 8.px),
     ),
-    css('.history-row').styles(raw: {'grid-template-columns': '90px 1fr'}),
-    css('.history-row .when').styles(raw: {'grid-column': '1 / -1'}),
     css('.footer-bar').styles(
       flexDirection: .column,
       justifyContent: .center,

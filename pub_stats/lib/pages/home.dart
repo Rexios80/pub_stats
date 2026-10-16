@@ -366,6 +366,7 @@ class HistoryList extends StatefulComponent {
 class _HistoryListState extends State<HistoryList> {
   final _entries = <HistoryEntry>[];
   StreamSubscription<web.Event>? _scroll;
+  web.Element? _scroller;
   var _loading = true;
   var _busy = false;
   var _hasMore = false;
@@ -373,7 +374,6 @@ class _HistoryListState extends State<HistoryList> {
   @override
   void initState() {
     super.initState();
-    _scroll = web.EventStreamProviders.scrollEvent.forTarget(web.window).listen((_) => _maybeLoadMore());
     Future.microtask(() {
       if (mounted) unawaited(_load());
     });
@@ -385,11 +385,21 @@ class _HistoryListState extends State<HistoryList> {
     super.dispose();
   }
 
+  void _bindScroll() {
+    final element = web.document.getElementById('history-scroll');
+    if (element == null || identical(element, _scroller)) return;
+    unawaited(_scroll?.cancel());
+    _scroller = element;
+    _scroll = web.EventStreamProviders.scrollEvent.forTarget(element).listen((_) => _maybeLoadMore());
+  }
+
   void _maybeLoadMore() {
     if (!_hasMore || _busy) return;
+    final scroller = _scroller;
     final sentinel = web.document.getElementById('history-more');
-    if (sentinel == null) return;
-    if (sentinel.getBoundingClientRect().top < web.window.innerHeight + 240) {
+    if (scroller == null || sentinel == null) return;
+    final edge = scroller.getBoundingClientRect().right;
+    if (sentinel.getBoundingClientRect().left < edge + 240) {
       unawaited(_load(more: true));
     }
   }
@@ -397,6 +407,7 @@ class _HistoryListState extends State<HistoryList> {
   Future<void> _load({bool more = false}) async {
     if (_busy) return;
     _busy = true;
+    if (more && mounted) setState(() {});
     final controller = AppScope.of(context);
     final endBefore = more && _entries.isNotEmpty
         ? (_entries.last.timestamp.millisecondsSinceEpoch / 1000).round().toString()
@@ -411,11 +422,18 @@ class _HistoryListState extends State<HistoryList> {
         _entries.addAll(fresh);
         _hasMore = fresh.isNotEmpty && page.length >= 20;
         _loading = false;
+        _busy = false;
       });
-      Future.microtask(_maybeLoadMore);
-    } catch (error) {
+      Future.microtask(() {
+        _bindScroll();
+        _maybeLoadMore();
+      });
+    } catch (_) {
       if (!mounted) return;
-      setState(() => _loading = false);
+      setState(() {
+        _loading = false;
+        _busy = false;
+      });
       controller.snack('Unable to load history');
     } finally {
       _busy = false;
@@ -431,74 +449,126 @@ class _HistoryListState extends State<HistoryList> {
         if (_loading && _entries.isEmpty)
           const LoadingView(label: 'Loading history')
         else
-          for (final entry in _entries)
-            div(
-              classes: 'history-card',
-              [
-                for (final change in entry.changes)
-                  div(
-                    classes: 'history-row',
-                    [
-                      strong([.text(titleCase(change.field))]),
-                      if (change.isSet)
-                        div(
-                          classes: 'history-changes',
-                          [
-                            if (change.added.isNotEmpty) _PackageCount(label: 'Added', packages: change.added),
-                            if (change.removed.isNotEmpty) _PackageCount(label: 'Removed', packages: change.removed),
-                          ],
-                        )
-                      else
-                        span([.text(change.text)]),
-                      span(
-                        classes: 'when',
-                        [.text(shortDate(entry.timestamp))],
-                      ),
-                    ],
-                  ),
-              ],
-            ),
-        if (_hasMore) div(id: 'history-more', []),
-        div(
-          classes: 'history-card',
-          [
-            div(
-              classes: 'history-row',
-              [
-                strong([.text('Meta')]),
-                span([.text('First scan')]),
-                span(
-                  classes: 'when',
-                  [.text(shortDate(component.firstScan))],
+          div(
+            id: 'history-scroll',
+            classes: 'history-scroll',
+            [
+              for (final entry in _entries)
+                div(
+                  classes: 'history-card',
+                  [
+                    span(classes: 'when', [.text(shortDate(entry.timestamp))]),
+                    for (final change in entry.changes) _changeBlock(context, change),
+                  ],
                 ),
-              ],
-            ),
-          ],
-        ),
+              if (_hasMore) div(id: 'history-more', classes: 'history-more', []),
+              if (_busy && _entries.isNotEmpty)
+                div(
+                  classes: 'history-card is-pending',
+                  attributes: {'role': 'status'},
+                  [const Spinner()],
+                ),
+              if (!_loading && !_hasMore)
+                div(
+                  classes: 'history-card',
+                  [
+                    span(classes: 'when', [.text(shortDate(component.firstScan))]),
+                    span([.text('First scan')]),
+                  ],
+                ),
+            ],
+          ),
       ],
     );
   }
 }
 
-class _PackageCount extends StatelessComponent {
-  const _PackageCount({required this.label, required this.packages});
-
-  final String label;
-  final Set<String> packages;
-
-  @override
-  Component build(BuildContext context) {
-    return button(
-      classes: 'linkish',
-      type: ButtonType.button,
-      onClick: () {
-        final names = packages.toList()..sort();
-        AppScope.of(context).showPackages('$label packages', names);
-      },
-      [.text('$label: ${packages.length}')],
+Component _changeBlock(BuildContext context, FieldChange change) {
+  if (change.isSet) {
+    return div(
+      classes: 'history-body',
+      [
+        if (change.added.isNotEmpty) _packageLine(context, 'Dependents added', change.added),
+        if (change.removed.isNotEmpty) _packageLine(context, 'Dependents removed', change.removed),
+      ],
     );
   }
+
+  final phrase = _statusPhrase(change);
+  if (phrase != null) return span([.text(phrase)]);
+
+  final pair = _pair(change.text);
+  return div(
+    classes: 'history-body',
+    [
+      span(classes: 'history-field', [.text(_fieldLabel(change.field))]),
+      if (pair == null)
+        span([.text(change.text)])
+      else
+        span([
+          span(classes: 'history-old', [.text(_shown(pair.$1))]),
+          .text(' → '),
+          .text(_shown(pair.$2)),
+        ]),
+    ],
+  );
 }
+
+Component _packageLine(BuildContext context, String label, Set<String> packages) {
+  final names = packages.toList()..sort();
+  return div(
+    classes: 'history-body',
+    [
+      span(classes: 'history-field', [.text(label)]),
+      if (names.length > 2)
+        button(
+          classes: 'linkish',
+          type: ButtonType.button,
+          onClick: () => AppScope.of(context).showPackages(label, names),
+          [.text('${names.length} packages')],
+        )
+      else
+        div(
+          classes: 'history-names',
+          [for (final name in names) Link(to: '/packages/$name', child: .text(name))],
+        ),
+    ],
+  );
+}
+
+String? _statusPhrase(FieldChange change) {
+  final pair = _pair(change.text);
+  if (pair == null) return null;
+  final after = switch (pair.$2) {
+    'true' => true,
+    'false' => false,
+    _ => null,
+  };
+  if (after == null) return null;
+  return switch (change.field) {
+    'isDiscontinued' => after ? 'Discontinued' : 'No longer discontinued',
+    'isUnlisted' => after ? 'Unlisted' : 'No longer unlisted',
+    'isFlutterFavorite' => after ? 'Flutter Favorite' : 'No longer a Flutter Favorite',
+    _ => null,
+  };
+}
+
+String _fieldLabel(String field) => switch (field) {
+  'likeCount' => 'Likes',
+  'popularityScore' => 'Popularity',
+  'downloadCount' => 'Downloads',
+  'pubPoints' => 'Pub points',
+  _ => titleCase(field),
+};
+
+(String, String)? _pair(String text) {
+  const separator = ' -> ';
+  final index = text.indexOf(separator);
+  if (index == -1) return null;
+  return (text.substring(0, index), text.substring(index + separator.length));
+}
+
+String _shown(String value) => value == 'null' || value.isEmpty ? 'none' : value;
 
 List<ChartPoint> _points(PackageStats stats, AppController controller, num? Function(ScoreSnapshot snapshot) read) {
   return [

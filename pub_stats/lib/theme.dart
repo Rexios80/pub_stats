@@ -949,27 +949,6 @@ List<StyleRule> get styles => [
     textOverflow: .ellipsis,
     whiteSpace: .noWrap,
   ),
-  css('.webhook').styles(
-    display: .flex,
-    minWidth: 0.px,
-    flexDirection: .column,
-    gap: .all(2.px),
-  ),
-  css('.webhook-name').styles(
-    display: .flex,
-    minWidth: 0.px,
-    alignItems: .center,
-    gap: .all(6.px),
-  ),
-  css('.webhook-name .alert-meta').styles(minWidth: 0.px),
-  css('.webhook-avatar').styles(
-    width: 20.px,
-    height: 20.px,
-    radius: .circular(999.px),
-    flex: .none,
-    raw: {'object-fit': 'cover'},
-  ),
-  css('.webhook a').styles(color: .variable('--primary')),
   css('.alert-empty').styles(
     display: .flex,
     padding: .symmetric(vertical: 32.px, horizontal: 24.px),

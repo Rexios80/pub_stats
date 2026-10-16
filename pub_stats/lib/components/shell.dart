@@ -370,12 +370,7 @@ class FooterBar extends StatelessComponent {
               [
                 const GitHubButton(repo: 'Rexios80/pub_stats'),
                 const DiscordButton(invite: 'v5yAdrucdG'),
-                button(
-                  classes: 'footer-link',
-                  type: ButtonType.button,
-                  onClick: AppScope.of(context).showLicenses,
-                  [.text('Licenses')],
-                ),
+                const LicensesButton(),
               ],
             ),
             a(
@@ -458,21 +453,21 @@ class DialogLayer extends StatelessComponent {
             if (controller.licensesOpen) ...[
               h2([.text('Licenses')]),
               p([.text('pubstats is open source. The libraries used to build this site include:')]),
-              ul([
-                li([
-                  a(
-                    href: 'https://github.com/schultek/jaspr',
-                    target: Target.blank,
-                    [
-                      span([.text('Jaspr')]),
-                      .text(' (MIT)'),
-                    ],
-                  ),
-                ]),
-                li([.text('Firebase JavaScript SDK (Apache-2.0)')]),
-                li([.text('Roboto and Material Symbols (Apache-2.0)')]),
-                li([.text('Lucide (ISC)')]),
-              ]),
+              div(
+                classes: 'package-list',
+                [
+                  for (final entry in libraryLicenses)
+                    a(
+                      href: entry.href,
+                      target: Target.blank,
+                      attributes: {'rel': 'noopener noreferrer'},
+                      [
+                        span([.text(entry.name)]),
+                        span([.text(entry.license)]),
+                      ],
+                    ),
+                ],
+              ),
             ],
             if (controller.packageDialog case final packages?) ...[
               h2([.text(controller.packageDialogTitle ?? 'Packages')]),

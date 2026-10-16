@@ -169,6 +169,56 @@ class GithubIcon extends StatelessComponent {
   }
 }
 
+class LibraryLicense {
+  const LibraryLicense({required this.name, required this.license, required this.href});
+
+  final String name;
+  final String license;
+  final String href;
+}
+
+const libraryLicenses = [
+  LibraryLicense(
+    name: 'Firebase JavaScript SDK',
+    license: 'Apache-2.0',
+    href: 'https://github.com/firebase/firebase-js-sdk',
+  ),
+  LibraryLicense(name: 'Jaspr', license: 'MIT', href: 'https://github.com/schultek/jaspr'),
+  LibraryLicense(name: 'Lucide', license: 'ISC', href: 'https://github.com/lucide-icons/lucide'),
+  LibraryLicense(
+    name: 'Material Symbols',
+    license: 'Apache-2.0',
+    href: 'https://github.com/google/material-design-icons',
+  ),
+  LibraryLicense(name: 'Roboto', license: 'Apache-2.0', href: 'https://github.com/googlefonts/roboto'),
+];
+
+class LicensesButton extends StatelessComponent {
+  const LicensesButton({super.key});
+
+  @override
+  Component build(BuildContext context) {
+    final count = libraryLicenses.length;
+    final label = '$count ${count == 1 ? 'library' : 'libraries'}';
+    return button(
+      classes: 'footer-card',
+      type: ButtonType.button,
+      attributes: {'aria-label': 'Licenses, $label'},
+      onClick: AppScope.of(context).showLicenses,
+      [
+        const Icon('balance'),
+        div(
+          classes: 'repo',
+          [
+            span(classes: 'repo-name', [.text('Licenses')]),
+            span(classes: 'repo-stats', [span([.text(label)])]),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
 class GitHubButton extends StatefulComponent {
   const GitHubButton({required this.repo, super.key});
 

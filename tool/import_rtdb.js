@@ -126,7 +126,7 @@ async function main() {
   const deadline = Date.now() + 90_000;
   for (;;) {
     try {
-      const response = await fetch(`${base}/.json?ns=${ns}`, {
+      const response = await fetch(`${base}/.json?ns=${ns}&shallow=true`, {
         headers: { Authorization: 'Bearer owner' },
       });
       if (response.ok) break;

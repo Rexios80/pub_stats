@@ -14,8 +14,9 @@ if [[ ! -f emcache/rtdb.json ]]; then
   exit 1
 fi
 
-# rtdb.json is too big for --import, and --export-on-exit replaces it with an error.
-firebase emulators:start --inspect-functions &
+# --import restores the saved auth users. The database export is too big for
+# that, and --export-on-exit would replace it with an error.
+firebase emulators:start --inspect-functions --import=emcache &
 pid=$!
 node tool/import_rtdb.js emcache/rtdb.json || kill $pid
 wait $pid

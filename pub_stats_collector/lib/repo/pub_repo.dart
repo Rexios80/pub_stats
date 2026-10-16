@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:fetch_client/fetch_client.dart';
 import 'package:flutter_tools_task_queue/flutter_tools_task_queue.dart';
@@ -8,13 +9,13 @@ import 'package:pub_stats_collector/model/package_data_wrapper.dart';
 import 'package:pub_stats_collector/service/undici_client.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 
+typedef _LatestPackage = ({String version, Set<String> dependencies});
+
 class PubRepo {
   static const _printInterval = 100;
+  static final _http = UndiciClient();
 
-  final _client = PubClient(
-    client: UndiciClient(),
-    userAgent: Credentials.userAgent,
-  );
+  final _client = PubClient(client: _http, userAgent: Credentials.userAgent);
   final _fetchClient = PubClient(
     client: FetchClient(),
     userAgent: Credentials.userAgent,
@@ -47,15 +48,20 @@ class PubRepo {
     Future<void> fetchPackageData(String package) async {
       final result = await Future.wait([
         pubQueue.add(() => _client.packageScore(package)),
-        pubQueue.add(() => _client.packagePublisher(package)),
-        pubQueue.add(() => _client.packageOptions(package)),
-        pubQueue.add(() => _client.packageInfo(package)),
+        pubQueue.add(() => _fetchLatest(package)),
       ]);
-
       final score = result[0] as PackageScore;
-      final publisherData = result[1] as PackagePublisher;
-      final packageOptions = result[2] as PackageOptions;
-      final info = result[3] as PubPackage;
+      final latest = result[1] as _LatestPackage;
+
+      // `is:unlisted` is also applied to discontinued packages. When either
+      // tag is present, /options is the source of truth for the two flags.
+      final needsOptions =
+          score.tags.contains('is:discontinued') ||
+          score.tags.contains('is:unlisted');
+      final packageOptions = needsOptions
+          ? await pubQueue.add(() => _client.packageOptions(package))
+                as PackageOptions
+          : const PackageOptions();
 
       final popularityScore = score.popularityScore;
       final int? popularityPercent;
@@ -77,15 +83,15 @@ class PubRepo {
         mostDownloadedPackage = (package, downloadCount);
       }
 
-      final publisher = publisherData.publisherId;
+      final publisher = score.tags
+          .where((tag) => tag.startsWith('publisher:'))
+          .firstOrNull
+          ?.substring('publisher:'.length);
       final isFlutterFavorite = score.tags.contains(
         PackageTag.isFlutterFavorite,
       );
 
-      final dependencies = {
-        ...info.latestPubspec.dependencies.keys,
-        ...info.latestPubspec.devDependencies.keys,
-      };
+      final dependencies = latest.dependencies;
       for (final dependency in dependencies) {
         dependentMap.update(
           dependency,
@@ -100,7 +106,7 @@ class PubRepo {
           score,
           PackageData(
             publisher: publisher,
-            version: info.version,
+            version: latest.version,
             likeCount: likeCount,
             legacyPopularityScore: popularityPercent,
             downloadCount: score.downloadCount30Days,
@@ -240,6 +246,29 @@ class PubRepo {
       mostDownloadedPackage: mostDownloadedPackage.$1,
       mostDependedPackage: mostDependedPackage.$1,
       lastUpdated: DateTime.timestamp(),
+    );
+  }
+
+  Future<_LatestPackage> _fetchLatest(String package) async {
+    final response = await _http.get(
+      Uri.https('pub.dev', '/api/packages/$package'),
+      headers: {'user-agent': Credentials.userAgent},
+    );
+    if (response.statusCode != 200) {
+      throw Exception(
+        'Package info request failed for $package (${response.statusCode})',
+      );
+    }
+
+    final json = jsonDecode(response.body) as Map<String, dynamic>;
+    final latest = json['latest'] as Map<String, dynamic>;
+    final pubspec = latest['pubspec'] as Map<String, dynamic>;
+    return (
+      version: latest['version'] as String,
+      dependencies: {
+        for (final key in ['dependencies', 'dev_dependencies'])
+          ...?(pubspec[key] as Map?)?.keys.cast<String>(),
+      },
     );
   }
 }

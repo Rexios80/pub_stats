@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:pub_api_client/pub_api_client.dart' hide Credentials;
 import 'package:pub_stats_collector/repo/alert_handler.dart';
 import 'package:pub_stats_collector/repo/database_repo.dart';
@@ -13,12 +11,14 @@ class ScoreFetchController {
   final DatabaseRepo _database;
   final Map<String, List<AlertConfig>> _alertConfigs;
   final Map<String, PackageData> _data;
+  final _writes = <Future<void>>[];
 
   ScoreFetchController(this._database, this._alertConfigs, this._data);
 
   Future<void> fetchScores() async {
     final startTime = DateTime.timestamp();
     final globalStats = await _pub.fetchAllData(_handleData);
+    await Future.wait(_writes);
 
     await _database.writeGlobalStats(globalStats);
     print('Global stats:');
@@ -88,13 +88,19 @@ class ScoreFetchController {
           PackageDataField.downloadCount,
         }).isNotEmpty;
 
-    await Future.wait([
-      if (writeScore)
-        _database.writePackageScore(package: package, score: miniScore),
-      _database.writePackageData(package, data),
-      if (filteredDiff.isNotEmpty)
-        _database.writePackageDiff(package, filteredDiff),
-    ]);
+    _writes.add(() async {
+      try {
+        await Future.wait([
+          if (writeScore)
+            _database.writePackageScore(package: package, score: miniScore),
+          _database.writePackageData(package, data),
+          if (filteredDiff.isNotEmpty)
+            _database.writePackageDiff(package, filteredDiff),
+        ]);
+      } catch (e) {
+        print('Error writing data for $package: $e');
+      }
+    }());
   }
 
   Future<void> processAlert({

@@ -628,6 +628,10 @@ List<StyleRule> get styles => [
     fontSize: 0.9.em,
     fontWeight: .w500,
   ),
+  css('.footer-card .repo-stats:has(.presence)').styles(
+    opacity: 1,
+    raw: {'color': 'color-mix(in srgb, var(--on-surface) 60%, transparent)'},
+  ),
   css('.footer-card .repo-stats svg').styles(
     display: .block,
     width: 1.em,
@@ -640,9 +644,10 @@ List<StyleRule> get styles => [
     height: 0.55.em,
     radius: .circular(999.px),
     flex: .none,
-    backgroundColor: .variable('--positive'),
+    backgroundColor: Color('#72b17e'),
   ),
-  css('.footer-card .presence.members').styles(backgroundColor: Color('#80848e')),
+  css('.footer-card .presence.members').styles(backgroundColor: .variable('--on-surface')),
+  css(':root[data-theme="dark"] .footer-card .presence.members').styles(backgroundColor: Colors.white),
   css('.footer-card .count, .footer-card .repo-name').styles(
     transition: Transition('opacity', duration: 200.ms, curve: Curve.easeInOut),
   ),

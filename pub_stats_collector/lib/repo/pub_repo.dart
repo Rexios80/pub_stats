@@ -6,6 +6,7 @@ import 'package:flutter_tools_task_queue/flutter_tools_task_queue.dart';
 import 'package:pub_api_client/pub_api_client.dart' hide Credentials;
 import 'package:pub_stats_collector/credential/credentials.ops.dart';
 import 'package:pub_stats_collector/model/package_data_wrapper.dart';
+import 'package:pub_stats_collector/model/pub_catalog.dart';
 import 'package:pub_stats_collector/service/undici_client.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 
@@ -19,13 +20,9 @@ int _byScoreThenName(
   return a.package.compareTo(b.package);
 }
 
-class _LatestPackage({
-  required final String version,
-  required final Set<String> dependencies,
-});
-
 class PubRepo {
   static const _printInterval = 100;
+  static const _catalogPageSize = 100;
   static final _http = UndiciClient();
 
   final _client = PubClient(client: _http, userAgent: Credentials.userAgent);
@@ -33,6 +30,9 @@ class PubRepo {
     client: FetchClient(),
     userAgent: Credentials.userAgent,
   );
+
+  // Prevent too many concurrent calls to the pub API
+  final _queue = TaskQueue(maxJobs: 100);
 
   Future<GlobalStats> fetchAllData(
     Future<void> Function(
@@ -43,28 +43,31 @@ class PubRepo {
     )
     handleData,
   ) async {
-    final packages = await _fetchClient.packageNames();
-    print('Fetched ${packages.length} package names');
-
     var mostLikedPackage = ('', 0);
     var mostDownloadedPackage = ('', 0);
 
     var mostDependedPackage = ('', 0);
+
+    // The paged package list skips packages, so package-names decides what to
+    // fetch and the paged list only saves fetching each package's info.
+    // Its length is also the catalog page count, so the catalog fetch starts
+    // after the name list and requests exactly those pages.
+    final packages = await _fetchClient.packageNames();
+    print('Fetched ${packages.length} package names');
+    final catalog = await _fetchCatalog(packages.length);
+    print(
+      '${packages.where((e) => !catalog.containsKey(e)).length} packages are '
+      'missing from the package catalog',
+    );
 
     final wrappers = <PackageDataWrapper>[];
     final dependentMap = <String, Set<String>>{};
     final failedPackages = <String>{};
     var fetched = 0;
 
-    // Prevent too many concurrent calls to the pub API
-    final pubQueue = TaskQueue(maxJobs: 100);
     Future<void> fetchPackageData(String package) async {
-      final result = await Future.wait([
-        pubQueue.add(() => _client.packageScore(package)),
-        pubQueue.add(() => _fetchLatest(package)),
-      ]);
-      final score = result[0] as PackageScore;
-      final latest = result[1] as _LatestPackage;
+      final latest = catalog[package] ?? await _fetchLatest(package);
+      final score = await _client.packageScore(package);
 
       final popularityScore = score.popularityScore;
       final int? popularityPercent;
@@ -98,8 +101,7 @@ class PubRepo {
       );
       final isUnlisted = score.tags.contains(PackageTag.isTag('unlisted'));
 
-      final dependencies = latest.dependencies;
-      for (final dependency in dependencies) {
+      for (final dependency in latest.dependencies) {
         dependentMap.update(
           dependency,
           (value) => value..add(package),
@@ -130,10 +132,9 @@ class PubRepo {
       }
     }
 
-    final workQueue = TaskQueue(maxJobs: 100);
     for (final package in packages) {
       unawaited(
-        workQueue.add(() async {
+        _queue.add(() async {
           try {
             await fetchPackageData(package).timeout(
               Duration(seconds: 30),
@@ -148,7 +149,7 @@ class PubRepo {
         }),
       );
     }
-    await workQueue.tasksComplete;
+    await _queue.tasksComplete;
     print('Fetched all data');
 
     var handled = 0;
@@ -230,7 +231,7 @@ class PubRepo {
 
     for (final wrapper in overallWrappers) {
       unawaited(
-        workQueue.add(() async {
+        _queue.add(() async {
           final package = wrapper.package;
           try {
             await handleWrapper(wrapper);
@@ -241,7 +242,7 @@ class PubRepo {
         }),
       );
     }
-    await workQueue.tasksComplete;
+    await _queue.tasksComplete;
     print('Handled all wrappers');
 
     return GlobalStats(
@@ -254,7 +255,45 @@ class PubRepo {
     );
   }
 
-  Future<_LatestPackage> _fetchLatest(String package) async {
+  /// Map of package name to its latest version info
+  Future<Map<String, LatestPackage>> _fetchCatalog(int packageCount) async {
+    final catalog = <String, LatestPackage>{};
+    final lastPage = (packageCount / _catalogPageSize).ceil();
+
+    Future<void> fetchPage(int page) async {
+      try {
+        final response = await _http.get(
+          Uri.https('pub.dev', '/api/packages', {'page': '$page'}),
+          headers: {'user-agent': Credentials.userAgent},
+        );
+        // The name list can be a page ahead of the catalog
+        if (response.statusCode == 400) return;
+        if (response.statusCode != 200) {
+          throw Exception(
+            'Package list request failed for page $page (${response.statusCode})',
+          );
+        }
+
+        final catalogPage = PubCatalogPage.fromJson(
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
+        for (final package in catalogPage.packages) {
+          catalog[package.name] = package.latest;
+        }
+      } catch (e) {
+        // Packages on a failed page are fetched individually
+        print('Error fetching package list page $page: $e');
+      }
+    }
+
+    for (var page = 1; page <= lastPage; page++) {
+      unawaited(_queue.add(() => fetchPage(page)));
+    }
+    await _queue.tasksComplete;
+    return catalog;
+  }
+
+  Future<LatestPackage> _fetchLatest(String package) async {
     final response = await _http.get(
       Uri.https('pub.dev', '/api/packages/$package'),
       headers: {'user-agent': Credentials.userAgent},
@@ -265,15 +304,8 @@ class PubRepo {
       );
     }
 
-    final json = jsonDecode(response.body) as Map<String, dynamic>;
-    final latest = json['latest'] as Map<String, dynamic>;
-    final pubspec = latest['pubspec'] as Map<String, dynamic>;
-    return _LatestPackage(
-      version: latest['version'] as String,
-      dependencies: {
-        for (final key in ['dependencies', 'dev_dependencies'])
-          ...?(pubspec[key] as Map?)?.keys.cast<String>(),
-      },
-    );
+    return PubCatalogPackage.fromJson(
+      jsonDecode(response.body) as Map<String, dynamic>,
+    ).latest;
   }
 }

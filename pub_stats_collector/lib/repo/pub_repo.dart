@@ -9,6 +9,16 @@ import 'package:pub_stats_collector/model/package_data_wrapper.dart';
 import 'package:pub_stats_collector/service/undici_client.dart';
 import 'package:pub_stats_core/pub_stats_core.dart';
 
+int _byScoreThenName(
+  PackageDataWrapper a,
+  PackageDataWrapper b,
+  num Function(PackageDataWrapper wrapper) score,
+) {
+  final byScore = score(b).compareTo(score(a));
+  if (byScore != 0) return byScore;
+  return a.package.compareTo(b.package);
+}
+
 class _LatestPackage({
   required final String version,
   required final Set<String> dependencies,
@@ -172,11 +182,13 @@ class PubRepo {
     double calculateScore(int index) =>
         (wrappers.length - index) / wrappers.length;
 
-    wrappers.sort((a, b) {
-      final adc = a.score.downloadCount30Days ?? 0;
-      final bdc = b.score.downloadCount30Days ?? 0;
-      return bdc.compareTo(adc);
-    });
+    wrappers.sort(
+      (a, b) => _byScoreThenName(
+        a,
+        b,
+        (wrapper) => wrapper.score.downloadCount30Days ?? 0,
+      ),
+    );
 
     final downloadedWrappers = <PackageDataWrapper>[];
     for (var i = 0; i < wrappers.length; i++) {
@@ -190,11 +202,9 @@ class PubRepo {
       );
     }
 
-    downloadedWrappers.sort((a, b) {
-      final alc = a.score.likeCount;
-      final blc = b.score.likeCount;
-      return blc.compareTo(alc);
-    });
+    downloadedWrappers.sort(
+      (a, b) => _byScoreThenName(a, b, (wrapper) => wrapper.score.likeCount),
+    );
 
     final likedWrappers = <PackageDataWrapper>[];
     for (var i = 0; i < downloadedWrappers.length; i++) {
@@ -202,11 +212,9 @@ class PubRepo {
       likedWrappers.add(wrapper.copyWith(likeScore: calculateScore(i)));
     }
 
-    likedWrappers.sort((a, b) {
-      final ao = a.overallScore;
-      final bo = b.overallScore;
-      return bo.compareTo(ao);
-    });
+    likedWrappers.sort(
+      (a, b) => _byScoreThenName(a, b, (wrapper) => wrapper.overallScore),
+    );
 
     final topPackage = likedWrappers.first.package;
 

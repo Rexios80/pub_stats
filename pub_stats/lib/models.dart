@@ -90,6 +90,15 @@ class GlobalStats {
       lastUpdated: json['lastUpdated'] == null ? DateTime.timestamp() : DateTime.parse(json['lastUpdated'] as String),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'packageCount': packageCount,
+    'topPackage': topPackage,
+    'mostLikedPackage': mostLikedPackage,
+    'mostDownloadedPackage': mostDownloadedPackage,
+    'mostDependedPackage': mostDependedPackage,
+    'lastUpdated': lastUpdated.toIso8601String(),
+  };
 }
 
 class ScoreSnapshot {
@@ -135,6 +144,24 @@ class ScoreSnapshot {
       downloadCount: decode(_at(json, 3)),
     );
   }
+
+  factory ScoreSnapshot.fromJson(Map<String, dynamic> json) {
+    return ScoreSnapshot(
+      timestamp: DateTime.fromMillisecondsSinceEpoch((json['t'] as num).toInt()),
+      likeCount: (json['l'] as num?)?.toInt() ?? 0,
+      legacyPopularityScore: (json['p'] as num?)?.toInt(),
+      popularityScore: (json['p2'] as num?)?.toInt(),
+      downloadCount: (json['d'] as num?)?.toInt(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    't': timestamp.millisecondsSinceEpoch,
+    'l': likeCount,
+    'p': legacyPopularityScore,
+    'p2': popularityScore,
+    'd': downloadCount,
+  };
 }
 
 /// Score keys are hours since epoch, except older exports that used unix seconds.
@@ -195,19 +222,27 @@ class PackageData {
       numDependents: (json['nd'] as num?)?.toInt(),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'p': publisher,
+    'v': version,
+    'lc': likeCount,
+    'ps': legacyPopularityScore,
+    'ps2': popularityScore,
+    'dc': downloadCount,
+    'id': isDiscontinued,
+    'iu': isUnlisted,
+    'iff': isFlutterFavorite,
+    'n': overallRank,
+    'nd': numDependents,
+  };
 }
 
 class PackageStats {
-  const PackageStats({
-    required this.package,
-    required this.stats,
-    required this.firstScan,
-    required this.data,
-  });
+  const PackageStats({required this.package, required this.stats, required this.data});
 
   final String package;
   final List<ScoreSnapshot> stats;
-  final DateTime firstScan;
   final PackageData data;
 }
 

@@ -54,15 +54,6 @@ class _HomeState extends State<Home> {
         ],
       );
     }
-    if (!controller.ready || (packages.isNotEmpty && !controller.settled(packages))) {
-      return div(
-        classes: 'page',
-        [
-          Document.head(title: title),
-          const LoadingView(),
-        ],
-      );
-    }
 
     if (packages.isEmpty) {
       return div(
@@ -73,7 +64,17 @@ class _HomeState extends State<Home> {
         ],
       );
     }
-    if (controller.loadedStats.isEmpty) {
+    final stats = controller.statsFor(packages);
+    if (stats == null) {
+      return div(
+        classes: 'page',
+        [
+          Document.head(title: title),
+          const LoadingView(),
+        ],
+      );
+    }
+    if (stats.isEmpty) {
       return div(
         classes: 'page',
         [
@@ -92,7 +93,7 @@ class _HomeState extends State<Home> {
       classes: 'page',
       [
         Document.head(title: title),
-        PackageStatsView(stats: controller.loadedStats),
+        PackageStatsView(stats: stats),
       ],
     );
   }
@@ -111,7 +112,18 @@ class GlobalStatsView extends StatelessComponent {
   Component build(BuildContext context) {
     final controller = AppScope.of(context);
     final stats = controller.globalStats;
-    if (stats == null) return const LoadingView();
+    if (stats == null) {
+      if (controller.homeFailed) {
+        return div(
+          classes: 'message',
+          [
+            strong([.text('Unable to load pubstats')]),
+            p([.text('Global stats are unavailable.')]),
+          ],
+        );
+      }
+      return const LoadingView();
+    }
     final cards = [
       (stats.topPackage, 'Top package', true),
       (stats.mostDownloadedPackage, 'Most downloaded package', true),
@@ -148,22 +160,25 @@ class GlobalStatsView extends StatelessComponent {
                 ),
           ],
         ),
-        div(
-          classes: controller.loading ? 'chart-slot is-loading' : 'chart-slot',
-          [
-            StatChart(
-              label: 'Total Package Count',
-              formatValue: formatNumber,
-              series: [
-                ChartSeries(
-                  label: 'Packages',
-                  color: chartColors.first,
-                  points: [for (final count in counts) ChartPoint(count.timestamp, count.count.toDouble())],
-                ),
-              ],
-            ),
-          ],
-        ),
+        if (!controller.countsLoaded)
+          const LoadingView(label: 'Loading chart')
+        else
+          div(
+            classes: controller.loading ? 'chart-slot is-loading' : 'chart-slot',
+            [
+              StatChart(
+                label: 'Total Package Count',
+                formatValue: formatNumber,
+                series: [
+                  ChartSeries(
+                    label: 'Packages',
+                    color: chartColors.first,
+                    points: [for (final count in counts) ChartPoint(count.timestamp, count.count.toDouble())],
+                  ),
+                ],
+              ),
+            ],
+          ),
       ],
     );
   }
@@ -250,7 +265,7 @@ class PackageStatsView extends StatelessComponent {
           classes: 'hint',
           [.text('Hover/touch the charts for more information')],
         ),
-        if (stats.length == 1) HistoryList(package: stats.first.package, firstScan: stats.first.firstScan),
+        if (stats.length == 1 && controller.ready) HistoryList(package: stats.first.package),
       ],
     );
   }
@@ -354,10 +369,9 @@ class _PopularityChartState extends State<PopularityChart> {
 }
 
 class HistoryList extends StatefulComponent {
-  const HistoryList({required this.package, required this.firstScan, super.key});
+  const HistoryList({required this.package, super.key});
 
   final String package;
-  final DateTime firstScan;
 
   @override
   State<HistoryList> createState() => _HistoryListState();
@@ -367,6 +381,7 @@ class _HistoryListState extends State<HistoryList> {
   final _entries = <HistoryEntry>[];
   StreamSubscription<web.Event>? _scroll;
   web.Element? _scroller;
+  DateTime? _firstScan;
   var _loading = true;
   var _busy = false;
   var _hasMore = false;
@@ -412,14 +427,18 @@ class _HistoryListState extends State<HistoryList> {
     final endBefore = more && _entries.isNotEmpty
         ? (_entries.last.timestamp.millisecondsSinceEpoch / 1000).round().toString()
         : null;
+    final pageFuture = controller.history(component.package, endBefore: endBefore);
+    final scanFuture = endBefore == null ? _firstScanOf(component.package) : null;
     try {
-      final page = await controller.history(component.package, endBefore: endBefore);
+      final page = await pageFuture;
+      final scan = scanFuture == null ? _firstScan : await scanFuture;
       final fresh = endBefore == null
           ? page
           : page.where((entry) => entry.timestamp.isBefore(_entries.last.timestamp)).toList();
       if (!mounted) return;
       setState(() {
         _entries.addAll(fresh);
+        _firstScan = scan ?? _firstScan;
         _hasMore = fresh.isNotEmpty && page.length >= 20;
         _loading = false;
         _busy = false;
@@ -437,6 +456,14 @@ class _HistoryListState extends State<HistoryList> {
       controller.snack('Unable to load history');
     } finally {
       _busy = false;
+    }
+  }
+
+  Future<DateTime?> _firstScanOf(String package) async {
+    try {
+      return await AppScope.of(context).firstScan(package);
+    } catch (_) {
+      return null;
     }
   }
 
@@ -468,11 +495,11 @@ class _HistoryListState extends State<HistoryList> {
                   attributes: {'role': 'status'},
                   [const Spinner()],
                 ),
-              if (!_loading && !_hasMore)
+              if (!_loading && !_hasMore && _firstScan != null)
                 div(
                   classes: 'history-card',
                   [
-                    span(classes: 'when', [.text(shortDate(component.firstScan))]),
+                    span(classes: 'when', [.text(shortDate(_firstScan!))]),
                     span([.text('First scan')]),
                   ],
                 ),

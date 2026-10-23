@@ -3,6 +3,10 @@ import 'dart:js_interop';
 import 'firebase.dart';
 import 'models.dart';
 
+/// Hour keys stay below 1e9. This end bound keeps legacy unix-second keys out of
+/// the hour-key query so a miss can fall back to the seconds format.
+const _maxHourKey = '999999999';
+
 class StatsDatabase {
   DatabaseReference _ref(String path) => firebase.database().ref(path);
 
@@ -25,14 +29,22 @@ class StatsDatabase {
   }
 
   Future<List<ScoreSnapshot>> scores(String package, TimeSpan span) async {
+    final ranged = await _snapshots(package, span.hoursStart, end: _maxHourKey);
+    if (ranged.isNotEmpty) return ranged;
+
     final first = await readValue(_ref('stats/$package').orderByKey().limitToFirst(1).once('value'));
     if (first is! Map || first.isEmpty) return [];
-    final start = statKeyIsSeconds(first.keys.first.toString()) ? span.secondsStart : span.hoursStart;
-    final value = await readValue(_ref('stats/$package').orderByKey().startAt(start).once('value'));
+    if (!statKeyIsSeconds(first.keys.first.toString())) return [];
+    return _snapshots(package, span.secondsStart);
+  }
+
+  Future<List<ScoreSnapshot>> _snapshots(String package, String start, {String? end}) async {
+    var query = _ref('stats/$package').orderByKey().startAt(start);
+    if (end != null) query = query.endAt(end);
+    final value = await readValue(query.once('value'));
     if (value is! Map) return [];
-    final snapshots = value.entries.map((entry) => ScoreSnapshot.fromEntry(entry.key.toString(), entry.value)).toList()
+    return value.entries.map((entry) => ScoreSnapshot.fromEntry(entry.key.toString(), entry.value)).toList()
       ..sort((a, b) => a.timestamp.compareTo(b.timestamp));
-    return snapshots;
   }
 
   Future<DateTime> firstScan(String package) async {

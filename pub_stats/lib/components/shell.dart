@@ -229,7 +229,10 @@ class _ToolsState extends State<Tools> {
                         _active = 0;
                       }),
                       events: {
-                        'focus': (_) => setState(() => _open = true),
+                        'focus': (_) {
+                          controller.ensureNames();
+                          setState(() => _open = true);
+                        },
                         'blur': (_) {
                           Future.delayed(const Duration(milliseconds: 160), () {
                             if (mounted) setState(() => _open = false);
@@ -266,10 +269,7 @@ class _ToolsState extends State<Tools> {
                       classes: 'icon-btn',
                       type: ButtonType.button,
                       attributes: {'aria-label': 'Feeling lucky?'},
-                      onClick: () {
-                        final package = controller.randomPackage();
-                        if (package != null) context.push('/packages/$package');
-                      },
+                      onClick: () => unawaited(_lucky(context)),
                       [const Icon('casino')],
                     ),
                   ],
@@ -326,6 +326,12 @@ class _ToolsState extends State<Tools> {
     final raw = RouteState.of(context).params['packages'];
     if (raw == null || raw.isEmpty) return const [];
     return raw.split(',').where((item) => item.isNotEmpty).toList();
+  }
+
+  Future<void> _lucky(BuildContext context) async {
+    final package = await AppScope.of(context).randomPackage();
+    if (!mounted || package == null) return;
+    context.push('/packages/$package');
   }
 
   void _openPackage(String package, {bool compare = false}) {

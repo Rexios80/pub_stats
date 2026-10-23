@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:js_interop';
 import 'dart:math';
 
@@ -16,6 +17,7 @@ bool isDiscordWebhook(String value) => _discordWebhook.hasMatch(value.trim());
 bool isTelegramChatId(String value) => int.tryParse(value.trim()) != null;
 
 final _publisherId = RegExp(r'^([a-z0-9-]{1,63}\.)+[a-z0-9-]{1,63}$');
+const _sessionKey = 'pubstats.cache';
 
 bool isPublisherId(String value) {
   final name = value.trim().toLowerCase();
@@ -37,6 +39,8 @@ class AppController {
   var ready = false;
   var loading = false;
   var namesReady = false;
+  var homeFailed = false;
+  var countsLoaded = false;
   String? startupError;
   ThemePreference theme = ThemePreference.system;
   TimeSpan timeSpan = TimeSpan.month;
@@ -55,12 +59,18 @@ class AppController {
   String? packageDialogTitle;
 
   var _request = 0;
+  var _countsRequest = 0;
   var _alertsRequest = 0;
   var _loadingAlerts = false;
   List<String>? _pendingPackages;
   var _refreshPending = false;
   Timer? _snackTimer;
   StreamSubscription<web.Event>? _themeMedia;
+  Future<void>? _namesTask;
+  TimeSpan? _countsCoverage;
+  TimeSpan? _statsCoverage;
+  List<String> _inflightPackages = [];
+  final _cachedPackages = <String, PackageStats>{};
 
   void addListener(void Function() listener) => _listeners.add(listener);
 
@@ -75,6 +85,7 @@ class AppController {
 
   Future<void> start() async {
     _restoreTheme();
+    _restoreSession();
     try {
       await initializeFirebase();
       firebase.auth().onAuthStateChanged(
@@ -82,22 +93,22 @@ class AppController {
           unawaited(_onAuth(user));
         }.toJS,
       );
-      globalStats = await _database.globalStats();
-      packageCounts = await _database.packageCounts(timeSpan);
-      ready = true;
       startupError = null;
     } catch (error) {
       startupError = '$error';
       ready = true;
+      notify();
+      return;
     }
+    ready = true;
     notify();
-    unawaited(_loadNames());
+
     final pending = _pendingPackages;
-    if (pending != null && startupError == null) {
-      _pendingPackages = null;
-      await loadPackages(pending, refresh: _refreshPending);
-      _refreshPending = false;
-    }
+    _pendingPackages = null;
+    final refresh = _refreshPending;
+    _refreshPending = false;
+    final packages = pending == null ? null : loadPackages(pending, refresh: refresh);
+    await Future.wait([_loadHome(), ?packages]);
   }
 
   void dispose() {
@@ -124,75 +135,122 @@ class AppController {
     return source.where((name) => name.startsWith(lower)).take(5);
   }
 
+  void ensureNames() {
+    _namesTask ??= _loadNames();
+  }
+
+  List<PackageStats>? statsFor(List<String> packages) {
+    if (settled(packages)) return loadedStats;
+    return _cachedStats(packages);
+  }
+
+  List<PackageStats>? _cachedStats(List<String> packages) {
+    if (packages.isEmpty || !_covers(_statsCoverage, timeSpan)) return null;
+    final stats = <PackageStats>[];
+    for (final package in packages) {
+      final cached = _cachedPackages[package];
+      if (cached == null) return null;
+      stats.add(cached);
+    }
+    return stats;
+  }
+
   Future<void> loadPackages(List<String> packages, {bool refresh = false}) async {
     if (!ready || startupError != null) {
       _pendingPackages = packages;
       _refreshPending = refresh;
       return;
     }
-    final request = ++_request;
-    if (!refresh && settled(packages)) {
-      if (loading) {
-        loading = false;
-        notify();
-      }
-      return;
-    }
-    if (packages.isEmpty) {
-      loading = false;
-      final changed = loadedStats.isNotEmpty || settledPackages.isNotEmpty;
-      loadedStats = [];
-      settledPackages = [];
-      if (changed) notify();
-      return;
-    }
+    if (!refresh && settled(packages)) return;
     if (packages.length > chartColors.length) {
-      loading = false;
       snack('Cannot add more packages to compare');
       return;
     }
-
-    loading = true;
-    notify();
-
-    final results = <PackageStats>[];
-    for (final package in packages) {
-      final stats = await _fetch(package, allowEmpty: refresh);
-      if (request != _request) return;
-      if (stats != null) {
-        results.add(stats);
-        if (!refresh) logSearch(package);
-      }
+    if (packages.isEmpty) {
+      _finishEarly();
+      loadedStats = [];
+      settledPackages = [];
+      notify();
+      return;
     }
 
-    if (request != _request) return;
-    loading = false;
-    if (results.isNotEmpty || !refresh) loadedStats = results;
-    settledPackages = List.of(packages);
+    final cached = !refresh ? _cachedStats(packages) : null;
+    if (cached != null) {
+      _finishEarly();
+      loadedStats = cached;
+      settledPackages = List.of(packages);
+      for (final stats in cached) {
+        logSearch(stats.package);
+      }
+      notify();
+      return;
+    }
+    if (!refresh && _samePackages(_inflightPackages, packages)) return;
+
+    final request = ++_request;
+    final span = timeSpan;
+    loading = true;
+    _inflightPackages = List.of(packages);
     notify();
+    try {
+      final fetched = await Future.wait([
+        for (final package in packages) _fetch(package, allowEmpty: refresh, span: span),
+      ]);
+      if (request != _request) return;
+      final results = <PackageStats>[];
+      for (final stats in fetched) {
+        if (stats == null) continue;
+        results.add(stats);
+        if (!refresh) logSearch(stats.package);
+      }
+      if (results.isNotEmpty) {
+        _statsCoverage = span;
+        _cachedPackages
+          ..clear()
+          ..addEntries([for (final stats in results) MapEntry(stats.package, stats)]);
+        _persistSession();
+        loadedStats = results;
+        settledPackages = List.of(packages);
+      } else if (!refresh) {
+        loadedStats = [];
+        settledPackages = List.of(packages);
+      }
+    } finally {
+      if (request == _request) {
+        _inflightPackages = [];
+        loading = false;
+        notify();
+      }
+    }
+  }
+
+  void _finishEarly() {
+    ++_request;
+    _inflightPackages = [];
+    loading = false;
   }
 
   Future<void> setTimeSpan(TimeSpan span) async {
     if (span == timeSpan) return;
     timeSpan = span;
-    loading = true;
-    notify();
-    try {
-      packageCounts = await _database.packageCounts(span);
-    } catch (error) {
-      snack('Unable to update package counts');
-    }
-    final packages = loadedStats.map((stats) => stats.package).toList();
-    final requested = packages.isNotEmpty ? packages : settledPackages;
-    if (requested.isNotEmpty) {
-      await loadPackages(requested, refresh: true);
+    final packages = _packageNames();
+    final needCounts = !_covers(_countsCoverage, span);
+    final needStats = packages.isNotEmpty && !_covers(_statsCoverage, span);
+    if (!needCounts && !needStats) {
+      notify();
       return;
     }
-    loading = false;
+    if (needCounts) countsLoaded = false;
     notify();
+    await Future.wait([
+      if (needCounts) _fetchCounts(span),
+      if (needStats) loadPackages(packages, refresh: true),
+    ]);
   }
 
-  String? randomPackage() {
+  Future<String?> randomPackage() async {
+    ensureNames();
+    await _namesTask;
     final names = _namesByPrefix.values.expand((names) => names).toList();
     if (names.isEmpty) {
       snack(namesReady ? 'No packages are available' : 'Package list is still loading');
@@ -205,16 +263,72 @@ class AppController {
     return _database.history(package, endBefore: endBefore);
   }
 
-  Future<PackageStats?> _fetch(String package, {required bool allowEmpty}) async {
+  Future<DateTime> firstScan(String package) => _database.firstScan(package);
+
+  Future<void> _loadHome() {
+    return Future.wait([
+      if (globalStats == null) _loadGlobal(),
+      if (!_covers(_countsCoverage, timeSpan)) _fetchCounts(timeSpan),
+    ]);
+  }
+
+  Future<void> _loadGlobal() async {
     try {
-      final snapshots = await _database.scores(package, timeSpan);
+      globalStats = await _database.globalStats();
+      homeFailed = false;
+      _persistSession();
+      notify();
+    } catch (_) {
+      if (globalStats == null) {
+        homeFailed = true;
+        notify();
+      }
+    }
+  }
+
+  Future<void> _fetchCounts(TimeSpan span) async {
+    final request = ++_countsRequest;
+    try {
+      final counts = await _database.packageCounts(span);
+      if (request != _countsRequest) return;
+      packageCounts = counts;
+      _countsCoverage = span;
+      countsLoaded = true;
+      _persistSession();
+    } catch (_) {
+      if (request != _countsRequest) return;
+      countsLoaded = true;
+      snack('Unable to load package counts');
+    }
+    notify();
+  }
+
+  List<String> _packageNames() {
+    if (loadedStats.isNotEmpty) return [for (final stats in loadedStats) stats.package];
+    if (settledPackages.isNotEmpty) return List.of(settledPackages);
+    return List.of(_inflightPackages);
+  }
+
+  bool _covers(TimeSpan? loaded, TimeSpan requested) {
+    final loadedDays = loaded?.days;
+    if (loaded == null) return false;
+    if (loadedDays == null) return true;
+    final requestedDays = requested.days;
+    return requestedDays != null && loadedDays >= requestedDays;
+  }
+
+  Future<PackageStats?> _fetch(String package, {required bool allowEmpty, required TimeSpan span}) async {
+    try {
+      final results = await Future.wait<Object>([
+        _database.scores(package, span),
+        _database.packageData(package),
+      ]);
+      final snapshots = results[0] as List<ScoreSnapshot>;
       if (snapshots.isEmpty && !allowEmpty) {
         snack('No stats for $package in the selected time span');
         return null;
       }
-      final scan = await _database.firstScan(package);
-      final data = await _database.packageData(package);
-      return PackageStats(package: package, stats: snapshots, firstScan: scan, data: data);
+      return PackageStats(package: package, stats: snapshots, data: results[1] as PackageData);
     } catch (error, stackTrace) {
       snack(
         'Unable to get stats for $package',
@@ -239,6 +353,90 @@ class AppController {
     } catch (_) {
       namesReady = true;
     }
+    notify();
+  }
+
+  void _restoreSession() {
+    try {
+      final raw = web.window.sessionStorage.getItem(_sessionKey);
+      if (raw == null || raw.isEmpty) return;
+      final decoded = jsonDecode(raw);
+      if (decoded is! Map) return;
+      final json = asStringMap(decoded);
+      final global = json['global'];
+      if (global is Map) globalStats = GlobalStats.fromJson(asStringMap(global));
+
+      final counts = json['counts'];
+      if (counts is Map) {
+        final body = asStringMap(counts);
+        final span = TimeSpan.values.asNameMap()[body['span']];
+        final points = body['points'];
+        if (span != null && points is List) {
+          packageCounts = [
+            for (final point in points)
+              if (point is Map)
+                PackageCount(
+                  timestamp: DateTime.fromMillisecondsSinceEpoch((asStringMap(point)['t'] as num).toInt()),
+                  count: (asStringMap(point)['c'] as num).toInt(),
+                ),
+          ]..sort((a, b) => a.timestamp.compareTo(b.timestamp));
+          _countsCoverage = span;
+          countsLoaded = _covers(span, timeSpan);
+        }
+      }
+
+      final stats = json['stats'];
+      if (stats is Map) {
+        final body = asStringMap(stats);
+        final span = TimeSpan.values.asNameMap()[body['span']];
+        final packages = body['packages'];
+        if (span != null && packages is Map) {
+          for (final entry in packages.entries) {
+            if (entry.value is! Map) continue;
+            final item = asStringMap(entry.value);
+            final data = item['data'];
+            final points = item['points'];
+            if (data is! Map || points is! List) continue;
+            _cachedPackages[entry.key.toString()] = PackageStats(
+              package: entry.key.toString(),
+              data: PackageData.fromJson(asStringMap(data)),
+              stats: [
+                for (final point in points)
+                  if (point is Map) ScoreSnapshot.fromJson(asStringMap(point)),
+              ]..sort((a, b) => a.timestamp.compareTo(b.timestamp)),
+            );
+          }
+          if (_cachedPackages.isNotEmpty) _statsCoverage = span;
+        }
+      }
+    } catch (_) {}
+  }
+
+  void _persistSession() {
+    try {
+      final payload = <String, Object?>{
+        if (globalStats case final stats?) 'global': stats.toJson(),
+        if (_countsCoverage case final span?)
+          'counts': {
+            'span': span.name,
+            'points': [
+              for (final count in packageCounts) {'t': count.timestamp.millisecondsSinceEpoch, 'c': count.count},
+            ],
+          },
+        if (_statsCoverage != null && _cachedPackages.isNotEmpty)
+          'stats': {
+            'span': _statsCoverage!.name,
+            'packages': {
+              for (final entry in _cachedPackages.entries)
+                entry.key: {
+                  'data': entry.value.data.toJson(),
+                  'points': [for (final point in entry.value.stats) point.toJson()],
+                },
+            },
+          },
+      };
+      web.window.sessionStorage.setItem(_sessionKey, jsonEncode(payload));
+    } catch (_) {}
   }
 
   Future<void> _onAuth(JSAny? user) async {
